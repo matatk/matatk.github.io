@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>{{ page.title }}</title>
+		<link rel='stylesheet' type='text/css' href='/style/me.css'/>
+		<script type="text/javascript">
+			var _gaq = _gaq || [];
+			_gaq.push(['_setAccount', 'UA-3310950-2']);
+			_gaq.push(['_trackPageview']);
+
+			(function() {
+				var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+				ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+				var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+			})();
+		</script>
+	</head>
+{% if page.abstract %}
+	<body id='homeBody'>
+{% else %}
+	<body id='pageBody'>
+{% endif %}
+		<header>
+			<h1>{{ page.title }}</h1>
+		</header>
+		{{ content }}
+		<div id='footerContainer'> <!-- new div for IE 8 -->
+		<footer>
+			<p>Copyright 2012 Matthew Tylee Atkinson</p>
+		</footer>
+		</div>
+	</body>
+</html>

@@ -1,0 +1,21 @@
+	<div id='navContainer'> <!-- extra div for IE 8 -->
+	{% if page.abstract %}
+		<nav><div id='homeNav'> <!-- seperate div for IE 8 -->
+	{% else %}
+		<nav><div id='pageNav'>
+	{% endif %}
+			<dl>
+				<dt><p>this site</p></dt>
+				<dd><a href='/'>Home</a></dd>
+				<dd><a href='/research/'>Research and Publications</a></dd>
+				<dd><a href='/creations/'>Creations</a></dd>
+				<dd><a href='/contact/'>Contact Links</a></dd>
+			{% if page.abstract %}
+				<dt><p>other sites</p></dt>
+				<dd><a href='http://twitter.com/matatk'>Twitter</a></dd>
+				<!--<dd><a href='https://dspace.lboro.ac.uk/dspace-jspui/browse?type=author&value=Atkinson%2C+Matthew+T.'>Publications</a></dd>-->
+				<dd><a href='http://agrip.org.uk/'>The AGRIP Project</a></dd>
+			{% endif %}
+			</dl>
+		</nav></div>
+	</div>

@@ -1,0 +1,76 @@
+body {
+	font-family: Verdana, Geneva, sans-serif;
+	margin-top: 5%;
+	margin-bottom: 5%;
+	background: #E9E9EF;
+	color: #333;
+	line-height: 1.5em;
+}
+#homeBody {
+	width: 35em;
+	max-width: 95%;
+	margin-left: auto;
+	margin-right: auto;
+}
+#pageBody {
+	width: 45em;
+	max-width: 95%;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+#picture {
+	float: left;
+	background-image: url('/images/me.png');
+	background-repeat: no-repeat;
+	width: 234px;
+	height: 308px;
+}
+
+#navContainer {
+	padding-left: 1em;
+}
+#homeNav {
+	margin-left: 234px;
+}
+#pageNav {
+	margin-top: -1em;
+	padding: 0;
+	float: right;
+	width: 10em;
+	margin-left: 1em;
+	margin-bottom: 1em;
+}
+#navContainer dl, #navContainer dd, #navContainer dt {
+	margin: 0;
+	padding: 0;
+}
+#navContainer p {
+	padding: 0.75em;
+	background: #999;
+	color: #E9E9EF;
+}
+#navContainer a {
+	margin: 0;
+	display: block;
+	padding: 0.75em;
+	text-decoration: none;
+}
+
+a {
+	color: purple;
+	$trans: 0.25s;
+	transition: $trans;
+	-moz-transition: $trans;
+	-o-transition: $trans;
+	-webkit-transition: $trans;
+}
+a:hover {
+	background-color: #999;
+	color: #E9E9EF;
+}
+
+#footerContainer {
+	padding-top: 0.5em;
+	font-size: 0.8em;
+}
