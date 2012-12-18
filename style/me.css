@@ -5,6 +5,11 @@ body {
 	background: #E9E9EF;
 	color: #333;
 	line-height: 1.5em;
+	-webkit-hyphens: auto;
+	-moz-hyphens: auto;
+	-ms-hyphens: auto;
+	-o-hyphens: auto;
+	hyphens: auto;
 }
 #homeBody {
 	width: 35em;
