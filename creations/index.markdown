@@ -5,7 +5,7 @@ title: Creations
 
 ## Software
 
- * [AGRIP AudioQuake and Level Description Language](http://agrip.org.uk/)--making Quake playable *and editable* by blind and vision-impaired gamers.
+ * [AGRIP AudioQuake and Level Description Language](http://agrip.org.uk)--making Quake playable *and editable* by blind and vision-impaired gamers.
 
 ### Small Software
 
@@ -14,4 +14,4 @@ title: Creations
 
 ## LaTeX
 
- * [gcite](http://www.ctan.org/tex-archive/help/Catalogue/entries/gcite.html)--citations in the German style.
+ * [gcite](http://www.ctan.org/pkg/gcite)--citations in the German style.

@@ -5,7 +5,7 @@ title: Research
 
 ## Background
 
-I am a research assistant on the [Sus-IT NDA-funded project](http://www.newdynamics.group.shef.ac.uk/sus-it.html) and student in the Computer Science department at Loughborough University.
+I am an Accessibility Consultant with [The Paciello Group](http://paciellogroup.com/).  Previously I was a research assistant on the [Sus-IT NDA-funded project](http://www.newdynamics.group.shef.ac.uk/sus-it.html) and student in the [Computer Science department at Loughborough University](http://www.cs.lboro.ac.uk/).
 
 ## Publications
 
