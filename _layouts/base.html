@@ -6,19 +6,23 @@
 		<meta name="author" content="Dr Matthew Tylee Atkinson B.Sc.(Hons) Ph.D."/>
 		<script src="script/ga.js"></script>
 	</head>
-{% if page.abstract %}
-	<body id='homeBody'>
-{% else %}
-	<body id='pageBody'>
-{% endif %}
+	<body>
+		<nav>
+			<ul>
+				<li><a href='/'>Home</a></li>
+				<li><a href='/research/'>Research and Publications</a></li>
+				<li><a href='/creations/'>Creations</a></li>
+				<li><a href='/contact/'>Contact Links</a></li>
+			</ul>
+		</nav>
 		<header>
 			<h1>{{ page.title }}</h1>
 		</header>
-		{{ content }}
-		<div id='footerContainer'> <!-- new div for IE 8 -->
+		<section>
+			{{ content }}
+		</section>
 		<footer>
-			<p>Copyright 2012 Matthew Tylee Atkinson</p>
+			<p>Copyright 2012&ndash;2013 Matthew Tylee Atkinson</p>
 		</footer>
-		</div>
 	</body>
 </html>

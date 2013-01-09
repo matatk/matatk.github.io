@@ -1,6 +1,6 @@
 ---
-layout: page
-title: Research
+layout: base
+title: Research and Publications
 ---
 
 ## Background
@@ -23,10 +23,11 @@ My publications can be accessed from [Loughborough's Institutional Repository](h
 
 ### Accessible Gaming
 
- * Games that are playable by people with disabilities but--more than that--promote social inclusion by allowing disabled gamers to take part in
-  - playing games co-operatively and competitively,
-  - modifying games,
-  - and creating new maps/levels for the games.
+Games that are playable by people with disabilities but--more than that--promote social inclusion by allowing disabled gamers to take part in
+
+ * playing games co-operatively and competitively,
+ * modifying games,
+ * and creating new maps/levels for the games.
 
 ### Information Retrieval and Document Accessibility
 
