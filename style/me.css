@@ -16,28 +16,6 @@ body {
 	hyphens: auto;
 }
 
-#picture {
-	float: left;
-	background-image: url('/images/me.png');
-	background-repeat: no-repeat;
-	width: 234px;
-	height: 308px;
-	margin-right: 2em;
-	margin-bottom: 1em;
-}
-
-a {
-	color: purple;
-	transition: 0.25s;
-	-moz-transition: 0.25s;
-	-o-transition: 0.25s;
-	-webkit-transition: 0.25s;
-}
-a:hover {
-	background-color: #999;
-	color: #e9e9ef;
-}
-
 nav ul {
 	list-style-type: none;
 	float: left;
@@ -54,7 +32,6 @@ nav li {
 nav a {
 	display: block;
 	padding: 1.5em;
-	margin: 0;
 }
 
 header {
@@ -62,13 +39,35 @@ header {
 	padding-top: 1em;
 }
 
-section {
-	padding-bottom: 1em;
-}
-
 footer {
 	padding-top: 0.5em;
 	font-size: 0.8em;
 	clear: both;
 	border-top: 1px solid #999;
+}
+
+h1 {
+	font-size: 2em;
+}
+
+a {
+	color: purple;
+	transition: 0.25s;
+	-moz-transition: 0.25s;
+	-o-transition: 0.25s;
+	-webkit-transition: 0.25s;
+}
+a:hover {
+	background-color: #999;
+	color: #e9e9ef;
+}
+
+#picture {
+	float: left;
+	background-image: url('http://gravatar.com/avatar/56e9bd14e2fd4b3e85c62baae76ef700?s=250');
+	background-repeat: no-repeat;
+	width: 250px;
+	height: 250px;
+	margin-right: 2em;
+	margin-bottom: 1em;
 }
