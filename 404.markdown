@@ -1,5 +1,0 @@
----
-layout: home
-title: Page Not Found
-abstract: Sorry; the page you were looking for could not be found.  Please try one of the following instead.
----

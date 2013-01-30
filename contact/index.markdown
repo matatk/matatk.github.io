@@ -1,6 +1,6 @@
 ---
 layout: page
-title: Contact Links
+title: Contact
 ---
 
 There are a number of ways to contact me.  Here's a list of the other services I use most actively.

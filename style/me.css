@@ -5,9 +5,10 @@ body {
 	margin-right: auto;
 	margin-top: 0;
 	margin-bottom: 5%;
-	font-family: Verdana, Geneva, sans-serif;
 	background-color: #e9e9ef;
 	color: #333;
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: 1.2em;
 	line-height: 1.5em;
 	-webkit-hyphens: auto;
 	-moz-hyphens: auto;
@@ -15,6 +16,7 @@ body {
 	-o-hyphens: auto;
 	hyphens: auto;
 }
+
 
 nav ul {
 	list-style-type: none;
@@ -34,10 +36,28 @@ nav a {
 	padding: 1.5em;
 }
 
+
+dl.article-meta dt, dl.article-meta dd {
+	display: inline;
+	margin: 0;
+}
+dl.article-meta dt:not(:first-child):before {
+	content: "\A";
+	white-space: pre;
+}
+dl.article-meta dt:after {
+	content: ":";
+}
+dl.article-meta ul {
+	margin-top: 0;
+}
+
+
 header {
 	clear: both;
 	padding-top: 1em;
 }
+
 
 footer {
 	padding-top: 0.5em;
@@ -46,9 +66,11 @@ footer {
 	border-top: 1px solid #999;
 }
 
+
 h1 {
 	font-size: 2em;
 }
+
 
 a {
 	color: purple;
@@ -62,12 +84,18 @@ a:hover {
 	color: #e9e9ef;
 }
 
-#picture {
-	float: left;
-	background-image: url('http://gravatar.com/avatar/56e9bd14e2fd4b3e85c62baae76ef700?s=250');
+
+#home-content {
+	float: right;
+	margin-left: 250px;
+	padding-left: 2em;
+}
+#home-content p:first-child {
+	margin-top: 0;
+}
+#home-picture {
+	background-image: url("http://gravatar.com/avatar/56e9bd14e2fd4b3e85c62baae76ef700?s=250");
 	background-repeat: no-repeat;
 	width: 250px;
 	height: 250px;
-	margin-right: 2em;
-	margin-bottom: 1em;
 }

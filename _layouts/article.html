@@ -4,7 +4,32 @@ layout: base
 <article>
 	<header>
 		<h1>{{ page.title }}</h1>
-		<p>Published: <time pubdate>{{ page.date | date: "%Y-%m-%d" }}</time></p>
+		<dl class="article-meta">
+			<dt>Published</dt>
+			<dd><time pubdate>{{ page.date | date: "%Y-%m-%d" }}</time></dd>
+			<dt>Tags</dt>
+			<dd>{{ page.tags | array_to_sentence_string }}</dd>
+		</dl>
 	</header>
 {{ content }}
+	<footer>
+		<dl class="article-meta">
+			<dt>Previous</dt>
+			<dd>{% if page.previous %}<a href="{{ page.previous.url }}">{{ page.previous.title }}</a>{% else %}(none){% endif %}</dd>
+			<dt>Next</dt>
+			<dd>{% if page.next %}<a href="{{ page.next.url }}">{{ page.next.title }}</a>{% else %}(none){% endif %}</dd>
+			<dt>Related posts</dt>
+			<dd>
+				{% if site.related_posts.size > 0 %}
+				<ul>
+					{% for rel in site.related_posts %}
+					<li><a href="{{ rel.url }}">{{ rel.title }}</a></li>
+					{% endfor %}
+				</ul>
+				{% else %}
+				(none)
+				{% endif %}
+			</dd>
+		</dl>
+	</footer>
 </article>
