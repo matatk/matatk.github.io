@@ -3,7 +3,6 @@ layout: article
 title: Static Site Tricks with Jekyll
 tags:
  - website
- - static
  - jekyll
 ---
 This site is powered by [Jekyll](http://jekyllrb.com) and hosted on [GitHub Pages](http://pages.github.com).  Whilst this is a great platform for hosting, it has some limitations brought about by the fact that the sites must be static and one can't run custom Jekyll plugins to do things like generate article indexes.
@@ -13,6 +12,7 @@ Luckily, however, there are industrious people out there who've come up with wor
  * [Blogging with Jekyll and GitHub Pages](http://brianscaturro.com/2012/06/12/blog-with-jekyll-and-github.html) is a comprehensive tutorial, covering everything from bootstrapping to Atom feeds and sitemaps.
  * How to [make an article series](http://realjenius.com/2012/11/03/jekyll-series-list/). Haven't used this one in its entirety yet, but expect to, and the templating techniques are powerful and well-explained.
  * [Mark Withall's site](http://www.markwithall.com/) gave me pointers on CSS and layout and has thoughtful touches such as including page-specific CSS/JavaScript, as well as interesting content.
+ * Syntax highlighting courtessy of [Solarized](http://ethanschoonover.com/solarized) via [modified version](https://github.com/matatk/matatk.github.com/blob/master/style/syntax.css) Edward Hotchkiss' [syntax.css](https://gist.github.com/2005058).
 
 There are also the standard reference pages I found myself coming back to often.
 
