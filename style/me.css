@@ -37,22 +37,6 @@ nav a {
 }
 
 
-dl.article-meta dt, dl.article-meta dd {
-	display: inline;
-	margin: 0;
-}
-dl.article-meta dt:not(:first-child):before {
-	content: "\A";
-	white-space: pre;
-}
-dl.article-meta dt:after {
-	content: ":";
-}
-dl.article-meta ul {
-	margin-top: 0;
-}
-
-
 header {
 	clear: both;
 	padding-top: 1em;
@@ -85,6 +69,35 @@ a:hover {
 }
 
 
+.hidden {
+	/* <http://yaccessibilityblog.com/library/css-clip-hidden-content.html> */
+	position: absolute !important;
+	clip: rect(1px 1px 1px 1px);  /* can put in commas when IE6, IE7 go away */
+	/* Remove the following when browsers work... */
+	padding: 0 !important;
+	border: 0 !important;
+	height: 1px !important;
+	width: 1px !important;
+	overflow: hidden;
+}
+
+
+dl.article-meta dt, dl.article-meta dd {
+	display: inline;
+	margin: 0;
+}
+dl.article-meta dt:not(:first-child):before {
+	content: "\A";
+	white-space: pre;
+}
+dl.article-meta dt:after {
+	content: ":";
+}
+dl.article-meta ul {
+	margin-top: 0;
+}
+
+
 #home-content {
 	float: right;
 	margin-left: 250px;
@@ -98,4 +111,15 @@ a:hover {
 	background-repeat: no-repeat;
 	width: 250px;
 	height: 250px;
+}
+
+
+#tag-cloud {
+	line-height: 2.5em;  /* a little cosy, with the largest font size of 4em */
+	margin: 0
+	margin-top: 1em;
+	margin-bottom: 1em;
+}
+#tag-cloud a {
+	text-decoration: none;
 }
