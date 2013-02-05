@@ -1,34 +1,55 @@
 $(document).ready(function() 
 {
+	// FIXME explain flow; removing <dl> eventually
+
 	var PREFIX_LIST = "list-";  // used as part of @id for static <ul>s
 	var PREFIX_LINK = "link-";  // used as part of @id for cloud <a>s
 	var SIZE_MIN = 0.25;
 	var SIZE_MAX = 4;
-	var LIVE_REGION_ID = 'article-list-area';
 	var max_article_count = 0;  // for a given tag
-	var struct = $("#posts-by-tag");
-	var live_region;
-	var tag_cloud;
 	var tag_to_count = {};
 	// A mapping from tag name to number of articles and font size
 	// The format is [tag_name]: { raw: [article_count], size: [] }
-
-	// The <dl> structure that lists all the tags and articles for each
-	// is good for static presentation, but in order to show/hide the
-	// article lists, we need to extract them from it (or they'll be
-	// removed when the containing <dl> is removed).
+	var tag_cloud_container;
+	var article_list_container;
+	var struct = $("#posts-by-tag");
 	
-	// Create a holding area for the lists of tags, changes to which will
-	// be announced to users of assistive technologies.
-	live_region = $('<div '
-		+ 'id="' + LIVE_REGION_ID + '" '
-		+ 'aria-live="polite">'
+	// Create the tag cloud area
+	tag_cloud_container = $('<div '
+		+ 'id="tag-cloud">'
+		+ '<a name="cloud"></a>'  // allows us to return the user here
+		+ '</div>'
+	).insertBefore(struct);
+
+	// Create an anchor that takes the user to just before the list of
+	// articles for a given tag.  This allows us to put the user in the
+	// right place on the page, even if the article list has not yet
+	// appeared due to ongoing DOM manipulations.
+	// Thanks to <http://blog.ginader.de/> for the tipoff!
+	$('<a '
+		+ 'name="list" '
+		+ 'tabindex="-1" '
+		+ 'class="hidden">'
+		+ 'Article list</a>'  // Doesn't seem to get announced, but is needed
+	).insertAfter(tag_cloud_container);
+
+	// Create a holding area for the lists of articles.
+	article_list_container = $('<div '
+		+ 'id="article-list-container" '
 		+ '</div>'
 	).insertAfter(struct);
 
+	// Create a link that returns the user to the tag cloud after
+	// they have gone through the article list
+	$('<a '
+		+ 'href="#cloud" '
+		+ 'class="hidden">'
+		+ 'Return to tag cloud</a>'
+	).insertAfter(article_list_container);
+
 	// Iterate over each <ul> in the <dl> to find the tag names and sizes.
 	// The <ul>'s id includes the tag name, and its length is the size.
-	// Make the <ul> hidden, then move it to the live region for later.
+	// Make the <ul> hidden, then move it to the article list container.
 	struct.find("ul").each(function(index, element)
 	{
 		var tag_name = $(element).attr("id").slice(PREFIX_LIST.length);
@@ -43,7 +64,7 @@ $(document).ready(function()
 		$(element).hide();
 		$(element).attr('aria-hidden', 'true');  // until full HTML5 support
 		$(element).attr('hidden', 'true');
-		$(element).appendTo('#' + LIVE_REGION_ID);
+		$(element).appendTo(article_list_container);
 	});
 
 	// Normalise the article count against the given scale
@@ -58,20 +79,13 @@ $(document).ready(function()
 	// Debugging
 	//console.log("tag_to_count:", tag_to_count);
 	
-	// Create the tag cloud
-	tag_cloud = $('<div '
-		+ 'id="tag-cloud">'
-		+ '</div>'
-	).insertBefore(struct);
-
 	// Populate the tag cloud
 	$.each(tag_to_count, function(tag_name, record)
 	{
-		var tag_link = tag_cloud.append(
+		tag_cloud_container.append(
 			'<a '
 			// Attributes
-			+ 'href="#" '
-			+ 'role="button" '
+			+ 'href="#list" '
 			+ 'id="' + PREFIX_LINK + tag_name + '" '
 			+ 'style="font-size: ' + record.size + 'em;">'
 			// Content
@@ -88,7 +102,7 @@ $(document).ready(function()
 		var target = $('#' + list_id);
 		
 		// Hide all <ul>s currently in the live region
-		$('#' + LIVE_REGION_ID)
+		article_list_container
 			.children()
 			.attr('aria-hidden', 'true')  // until browsers support HTML5
 			.attr('hidden', 'true')
@@ -101,14 +115,6 @@ $(document).ready(function()
 			.show('slow');
 	});
 	
-	// Suppress SPACE scrolling behaviour; use as activation
-	$('#tag-cloud a').keydown(function(event) {
-		if( event.keyCode == 32 ) {
-			this.click();
-			event.preventDefault();
-		}
-	});
-
 	// Now that all of the <ul>s are in the live area...
 	struct.remove();
 });
