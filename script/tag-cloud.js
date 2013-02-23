@@ -1,11 +1,23 @@
 $(document).ready(function() 
 {
-	// FIXME explain flow; removing <dl> eventually
+	// Overall process:
+	//	* Create holding areas for the tag cloud and article lists.
+	//	* Move the article lists from being nested in the <dl> to being
+	//	  inside the above holding area.
+	//	* Create the tag cloud, with size of links proprortional to
+	//	  number of articles, and including accessibility info for
+	//	  non-visual browsers.
+	//	* Attach a function to each tag cloud link that hides all of the
+	//	  article lists except the one corresponding to that particular tag.
+	//	* Create anchors before the tag cloud and article list holding
+	//	  area to ease navigation for non-visual browsers.
+	//	* Remove what remains of the original <dl>.
 
 	var PREFIX_LIST = "list-";  // used as part of @id for static <ul>s
 	var PREFIX_LINK = "link-";  // used as part of @id for cloud <a>s
 	var SIZE_MIN = 0.25;
 	var SIZE_MAX = 4;
+	var hash = '';  // bit of the URL
 	var max_article_count = 0;  // for a given tag
 	var tag_to_count = {};
 	// A mapping from tag name to number of articles and font size
@@ -27,10 +39,10 @@ $(document).ready(function()
 	// appeared due to ongoing DOM manipulations.
 	// Thanks to <http://blog.ginader.de/> for the tipoff!
 	$('<a '
-		+ 'name="list" '
-		+ 'tabindex="-1" '
-		+ 'class="hidden">'
-		+ 'Article list</a>'  // Doesn't seem to get announced, but is needed
+		+ 'id="anchor-list" '
+		+ 'name="list"></a>'
+		+ '<span class="hidden">'  // follow the link with some text
+		+ 'Article list</span>'
 	).insertAfter(tag_cloud_container);
 
 	// Create a holding area for the lists of articles.
@@ -117,4 +129,17 @@ $(document).ready(function()
 	
 	// Now that all of the <ul>s are in the live area...
 	struct.remove();
+
+	// If a tag is specified as part of the URL after the # and it
+	// is a valid tag, then show it as if it had been clicked.
+	hash = location.hash.slice(1);
+	if( hash ) {
+		// Use find to avoid executing arbitrary code from the URL
+		$('body').find('#' + PREFIX_LINK + hash).click();
+		// TODO: find always seems to return something, so no point
+		//       in checking to ensure we found a valid tag :-/.
+		
+		// FIXME: why does this not work?
+		document.getElementById("anchor-list").focus();
+	}
 });

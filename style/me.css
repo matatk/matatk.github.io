@@ -5,9 +5,9 @@ body {
 	margin-right: auto;
 	margin-top: 0;
 	margin-bottom: 5%;
-	background-color: #e9e9ef;
+	background-color: #eee;
 	color: #333;
-	font-family: Verdana, Geneva, sans-serif;
+	font-family: Verdana, sans-serif;
 	font-size: 1.2em;
 	line-height: 1.5em;
 	-webkit-hyphens: auto;
@@ -65,7 +65,7 @@ a {
 }
 a:hover {
 	background-color: #999;
-	color: #e9e9ef;
+	color: #eee;
 }
 
 
