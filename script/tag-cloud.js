@@ -29,7 +29,6 @@ $(document).ready(function()
 	// Create the tag cloud area
 	tag_cloud_container = $('<div '
 		+ 'id="tag-cloud">'
-		+ '<a name="cloud"></a>'  // allows us to return the user here
 		+ '</div>'
 	).insertBefore(struct);
 
@@ -38,10 +37,9 @@ $(document).ready(function()
 	// right place on the page, even if the article list has not yet
 	// appeared due to ongoing DOM manipulations.
 	// Thanks to <http://blog.ginader.de/> for the tipoff!
-	$('<a '
-		+ 'id="anchor-list" '
-		+ 'name="list"></a>'
-		+ '<span class="hidden">'  // follow the link with some text
+	$('<span '
+		+ 'id="article-list-anchor" '
+		+ 'class="hidden">'
 		+ 'Article list</span>'
 	).insertAfter(tag_cloud_container);
 
@@ -54,7 +52,7 @@ $(document).ready(function()
 	// Create a link that returns the user to the tag cloud after
 	// they have gone through the article list
 	$('<a '
-		+ 'href="#cloud" '
+		+ 'href="#tag-cloud" '
 		+ 'class="hidden">'
 		+ 'Return to tag cloud</a>'
 	).insertAfter(article_list_container);
@@ -97,7 +95,7 @@ $(document).ready(function()
 		tag_cloud_container.append(
 			'<a '
 			// Attributes
-			+ 'href="#list" '
+			+ 'href="#article-list-anchor" '
 			+ 'id="' + PREFIX_LINK + tag_name + '" '
 			+ 'style="font-size: ' + record.size + 'em;">'
 			// Content
@@ -140,6 +138,6 @@ $(document).ready(function()
 		//       in checking to ensure we found a valid tag :-/.
 		
 		// FIXME: why does this not work?
-		document.getElementById("anchor-list").focus();
+		$("#article-list-anchor").focus();
 	}
 });
