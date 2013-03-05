@@ -28,7 +28,8 @@ $(document).ready(function()
 	
 	// Create the tag cloud area
 	tag_cloud_container = $('<div '
-		+ 'id="tag-cloud">'
+		+ 'id="tag-cloud" '
+		+ 'tabindex="-1">'
 		+ '</div>'
 	).insertBefore(struct);
 
@@ -39,6 +40,7 @@ $(document).ready(function()
 	// Thanks to <http://blog.ginader.de/> for the tipoff!
 	$('<span '
 		+ 'id="article-list-anchor" '
+		+ 'tabindex="-1" '
 		+ 'class="hidden">'
 		+ 'Article list</span>'
 	).insertAfter(tag_cloud_container);
@@ -52,10 +54,12 @@ $(document).ready(function()
 	// Create a link that returns the user to the tag cloud after
 	// they have gone through the article list
 	$('<a '
-		+ 'href="#tag-cloud" '
+		+ 'href="#" '
 		+ 'class="hidden">'
 		+ 'Return to tag cloud</a>'
-	).insertAfter(article_list_container);
+	).click(function(){
+		$('#tag-cloud').focus();
+	}).insertAfter(article_list_container);
 
 	// Iterate over each <ul> in the <dl> to find the tag names and sizes.
 	// The <ul>'s id includes the tag name, and its length is the size.
@@ -95,7 +99,7 @@ $(document).ready(function()
 		tag_cloud_container.append(
 			'<a '
 			// Attributes
-			+ 'href="#article-list-anchor" '
+			+ 'href="#" '
 			+ 'id="' + PREFIX_LINK + tag_name + '" '
 			+ 'style="font-size: ' + record.size + 'em;">'
 			// Content
@@ -122,7 +126,9 @@ $(document).ready(function()
 		$(target)
 			.attr('aria-hidden', 'false')  // until browsers support HTML5
 			.removeAttr('hidden')
-			.show('slow');
+			.show('slow');	
+
+		$('#article-list-anchor').focus();
 	});
 	
 	// Now that all of the <ul>s are in the live area...
@@ -134,10 +140,5 @@ $(document).ready(function()
 	if( hash ) {
 		// Use find to avoid executing arbitrary code from the URL
 		$('body').find('#' + PREFIX_LINK + hash).click();
-		// TODO: find always seems to return something, so no point
-		//       in checking to ensure we found a valid tag :-/.
-		
-		// FIXME: why does this not work?
-		$("#article-list-anchor").focus();
 	}
 });
