@@ -3,8 +3,8 @@ $(document).ready(function()
 	// Overall process:
 	//	* Create holding areas for the tag cloud and article lists.
 	//	* Move the article lists from being nested in the <dl> to being
-	//	  inside the above holding area.
-	//	* Create the tag cloud, with size of links proprortional to
+	//	  inside the new holding area.
+	//	* Create the tag cloud, with size of links' text proprortional to
 	//	  number of articles, and including accessibility info for
 	//	  non-visual browsers.
 	//	* Attach a function to each tag cloud link that hides all of the
@@ -40,7 +40,7 @@ $(document).ready(function()
 	// Thanks to <http://blog.ginader.de/> for the tipoff!
 	$('<span '
 		+ 'id="article-list-anchor" '
-		+ 'tabindex="-1" '
+		+ 'tabindex="-1" '  // so it can be focussed
 		+ 'class="hidden">'
 		+ 'Article list</span>'
 	).insertAfter(tag_cloud_container);
@@ -54,7 +54,7 @@ $(document).ready(function()
 	// Create a link that returns the user to the tag cloud after
 	// they have gone through the article list
 	$('<a '
-		+ 'href="#" '
+		+ 'href="#" '  // to keep it in the tab order
 		+ 'class="hidden">'
 		+ 'Return to tag cloud</a>'
 	).click(function(){
@@ -99,7 +99,7 @@ $(document).ready(function()
 		tag_cloud_container.append(
 			'<a '
 			// Attributes
-			+ 'href="#" '
+			+ 'href="#" '  // to keep it in the tab order
 			+ 'id="' + PREFIX_LINK + tag_name + '" '
 			+ 'style="font-size: ' + record.size + 'em;">'
 			// Content
@@ -128,10 +128,12 @@ $(document).ready(function()
 			.removeAttr('hidden')
 			.show('slow');	
 
+		// Ensure users of assistive technologies are redirected to the
+		// point just before the list of articles is being shown
 		$('#article-list-anchor').focus();
 	});
 	
-	// Now that all of the <ul>s are in the live area...
+	// Now that all of the <ul>s are in the live area, remove the <dl>
 	struct.remove();
 
 	// If a tag is specified as part of the URL after the # and it

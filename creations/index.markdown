@@ -21,5 +21,8 @@ title: Creations
 
 ## LaTeX
 
+[LUThesis](http://luthesis.blogspot.com/)
+:A documentclass to help you write your thesis according to university guidelines, written with Iain Phillips, based on contributions from John Whitley and Mark Withall.
+
 [gcite](http://www.ctan.org/pkg/gcite)
 :Reader-friendly citations for long documents.

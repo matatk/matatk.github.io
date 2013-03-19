@@ -17,6 +17,7 @@ Luckily, however, there are industrious people out there who've come up with wor
 There are also the standard reference pages I found myself coming back to often.
 
  * [Markdown Syntax](http://daringfireball.net/projects/markdown/syntax).
+ * Jekyll's default Markdown engine, [Maruku](https://github.com/bhollis/maruku), supports [PHP Markdown Extra](http://michelf.ca/projects/php-markdown/extra/) syntax.
  * [Liquid's standard tags and filters](https://github.com/shopify/liquid/wiki/liquid-for-designers).
  * [Jekyll's Liquid extensions](https://github.com/mojombo/jekyll/wiki/Liquid-Extensions).
  * The [template data reference](https://github.com/mojombo/jekyll/wiki/Template-Data).
