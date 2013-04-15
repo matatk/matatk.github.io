@@ -16,10 +16,11 @@ Luckily, however, there are industrious people out there who've come up with wor
 
 There are also the standard reference pages I found myself coming back to often.
 
- * [Markdown Syntax](http://daringfireball.net/projects/markdown/syntax).
+ * [Markdown syntax](http://daringfireball.net/projects/markdown/syntax).
  * Jekyll's default Markdown engine, [Maruku](https://github.com/bhollis/maruku), supports [PHP Markdown Extra](http://michelf.ca/projects/php-markdown/extra/) syntax.
  * [Liquid's standard tags and filters](https://github.com/shopify/liquid/wiki/liquid-for-designers).
  * [Jekyll's Liquid extensions](https://github.com/mojombo/jekyll/wiki/Liquid-Extensions).
- * The [template data reference](https://github.com/mojombo/jekyll/wiki/Template-Data).
+ * Jekyll's [template data reference](https://github.com/mojombo/jekyll/wiki/Template-Data).
+ * You can also take a look at the [default Jekyll config variables used by GitHub Pages](https://help.github.com/articles/using-jekyll-with-pages).
 
 There are a few generally-expected features that aren't supported out of the box: tag clouds; automatic indexes of articles with a given tag/category and comments.  Whilst a number of solutions are out there, some future posts here will be looking at developing alternatives that are open and don't require custom plugins.
