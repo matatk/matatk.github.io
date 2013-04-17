@@ -13,9 +13,6 @@ title: Creations
 [tinker apps](http://matatk.github.com/tinker/)
 :A collection of single-page tools to scratch itches and help me learn development techniques.
 
-[twitipedia](http://matatk.github.com/twitipedia/)
-:Bookmarklet to help users of Twitter's Mac app link to Wikipedia articles.
-
 [netBeep](http://netbeep.agrip.org.uk)
 :My first foray into Perl, networking code, revision control, Debian packaging and Makefiles, with **many** thanks to Craig Shelley.
 
