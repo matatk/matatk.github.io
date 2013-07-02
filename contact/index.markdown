@@ -3,7 +3,7 @@ layout: page
 title: Contact
 ---
 
-There are a number of ways to contact me.  Here's a list of the other services I use most actively.
+There are a number of ways to contact me.  Here's a list of the services I use most actively.
 
  * [Twitter](http://twitter.com/matatk)
  * [GitHub](http://github.com/matatk)

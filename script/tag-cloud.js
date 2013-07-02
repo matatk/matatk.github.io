@@ -1,6 +1,5 @@
-$(document).ready(function() 
-{
-	// Overall process:
+$(document).ready(function() {
+	// Overall process
 	//	* Create holding areas for the tag cloud and article lists.
 	//	* Move the article lists from being nested in the <dl> to being
 	//	  inside the new holding area.
@@ -24,30 +23,30 @@ $(document).ready(function()
 	// The format is [tag_name]: { raw: [article_count], size: [] }
 	var tag_cloud_container;
 	var article_list_container;
-	var struct = $("#posts-by-tag");
-	
+	var struct = $("#posts-by-tag");  // the <dl> we have originally
+
 	// Create the tag cloud area
 	tag_cloud_container = $('<div '
 		+ 'id="tag-cloud" '
-		+ 'tabindex="-1">'
+		+ 'tabindex="-1">'  // it can be focussed only by script, not keyb.
 		+ '</div>'
 	).insertBefore(struct);
 
-	// Create an anchor that takes the user to just before the list of
+	// Create an element that can take the user to just before the list of
 	// articles for a given tag.  This allows us to put the user in the
 	// right place on the page, even if the article list has not yet
 	// appeared due to ongoing DOM manipulations.
 	// Thanks to <http://blog.ginader.de/> for the tipoff!
 	$('<span '
-		+ 'id="article-list-anchor" '
-		+ 'tabindex="-1" '  // so it can be focussed
+		+ 'id="article-list-pointer" '
+		+ 'tabindex="-1" '  // it can be focussed only by script, not keyb.
 		+ 'class="hidden">'
 		+ 'Article list</span>'
 	).insertAfter(tag_cloud_container);
 
 	// Create a holding area for the lists of articles.
 	article_list_container = $('<div '
-		+ 'id="article-list-container" '
+		+ 'id="article-list-container">'
 		+ '</div>'
 	).insertAfter(struct);
 
@@ -57,21 +56,19 @@ $(document).ready(function()
 		+ 'href="#" '  // to keep it in the tab order
 		+ 'class="hidden">'
 		+ 'Return to tag cloud</a>'
-	).click(function(){
+	).click(function() {
 		$('#tag-cloud').focus();
 	}).insertAfter(article_list_container);
 
 	// Iterate over each <ul> in the <dl> to find the tag names and sizes.
 	// The <ul>'s id includes the tag name, and its length is the size.
 	// Make the <ul> hidden, then move it to the article list container.
-	struct.find("ul").each(function(index, element)
-	{
+	struct.find("ul").each(function(index, element) {
 		var tag_name = $(element).attr("id").slice(PREFIX_LIST.length);
 		var article_count = $(element).children().length;
 		tag_to_count[tag_name] = { raw: article_count };
 
-		if( article_count > max_article_count )
-		{
+		if( article_count > max_article_count ) {
 			max_article_count = article_count;
 		}
 
@@ -83,8 +80,7 @@ $(document).ready(function()
 
 	// Normalise the article count against the given scale
 	// to form the font size for each tag.
-	$.each(tag_to_count, function(tag_name, record)
-	{
+	$.each(tag_to_count, function(tag_name, record) {
 		var raw = record.raw;
 		var rank = raw / max_article_count;
 		record.size = SIZE_MIN + ( rank * ( SIZE_MAX - SIZE_MIN ) );
@@ -92,10 +88,9 @@ $(document).ready(function()
 
 	// Debugging
 	//console.log("tag_to_count:", tag_to_count);
-	
+
 	// Populate the tag cloud
-	$.each(tag_to_count, function(tag_name, record)
-	{
+	$.each(tag_to_count, function(tag_name, record) {
 		tag_cloud_container.append(
 			'<a '
 			// Attributes
@@ -114,7 +109,7 @@ $(document).ready(function()
 	$("#tag-cloud a").click(function() {
 		var list_id = PREFIX_LIST + this.id.slice(PREFIX_LINK.length);
 		var target = $('#' + list_id);
-		
+
 		// Hide all <ul>s currently in the live region
 		article_list_container
 			.children()
@@ -126,19 +121,19 @@ $(document).ready(function()
 		$(target)
 			.attr('aria-hidden', 'false')  // until browsers support HTML5
 			.removeAttr('hidden')
-			.show('slow');	
+			.show('slow');
 
 		// Ensure users of assistive technologies are redirected to the
 		// point just before the list of articles is being shown
-		$('#article-list-anchor').focus();
+		$('#article-list-pointer').focus();
 	});
-	
+
 	// Now that all of the <ul>s are in the live area, remove the <dl>
 	struct.remove();
 
 	// If a tag is specified as part of the URL after the # and it
 	// is a valid tag, then show it as if it had been clicked.
-	hash = location.hash.slice(1);
+	var hash = window.location.hash.substring(1);
 	if( hash ) {
 		// Use find to avoid executing arbitrary code from the URL
 		$('body').find('#' + PREFIX_LINK + hash).click();
