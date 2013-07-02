@@ -39,7 +39,9 @@ nav a {
 
 header {
 	clear: both;
-	padding-top: 1em;
+	/* Why does drawing a border/doing this suddenly make the element
+	   display as intended (i.e. a block with [virtually] no padding)? */
+	padding-top: 0.1em;
 }
 
 
