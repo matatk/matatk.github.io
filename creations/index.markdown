@@ -10,11 +10,14 @@ title: Creations
 
 ### Small Software
 
+[landmarks](http://github.com/matatk/landmarks/)
+:A Firefox extension to help people [navigate pages via the keyboard, using ARIA landmarks](http://matatk.agrip.org.uk/articles/keyboard-landmark-navigation-firefox/).
+
 [tinker apps](http://matatk.github.com/tinker/)
 :A collection of single-page tools to scratch itches and help me learn development techniques.
 
-[netBeep](http://netbeep.agrip.org.uk)
-:My first foray into Perl, networking code, revision control, Debian packaging and Makefiles, with **many** thanks to Craig Shelley.
+[netBeep](http://netbeep.agrip.org.uk) *(link currently borked; sorry)*
+:My first foray into Perl, networking code, revision control, Debian packaging and Makefiles, with **many** thanks to [Craig Shelley](http://www.microtron.org.uk).
 
 ## LaTeX
 

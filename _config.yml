@@ -1,6 +1,4 @@
 permalink: /articles/:title/
-server: true
-auto: true
 
 # GitHub defaults
 safe: true
