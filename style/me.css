@@ -68,7 +68,7 @@ a {
 	-o-transition: 0.25s;
 	-webkit-transition: 0.25s;
 }
-a:hover, a:focus {
+a:focus, a:hover {
 	background-color: #999;
 	color: #eee;
 }
