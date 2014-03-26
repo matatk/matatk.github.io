@@ -1,0 +1,13 @@
+---
+layout: article
+title: Edge Conference 3
+tags: web accessibility conference panel
+---
+
+I had the great opportunity to attend Edge 3 last Friday and contribute to the accessibility panel alongside awesome accessibility folk.  The session video is [available on YouTube](https://www.youtube.com/watch?v=4gr9rG5rf4w&t=4m08s).  You can also find 'blog articles about it from [Christian Heilmann](http://christianheilmann.com/2014/03/22/edgeconf-3-just-be-there-next-time-trust-me/) and [Sarah Lewthwaite](http://slewth.co.uk/blog/2014/03/22/edge-3-accessibility-panel-video/).
+
+Edge as a whole was varied and insightful; I learnt loads on a variety of topics, from developer tools and build processes to web components, [pointer events](https://www.youtube.com/watch?list=UUnUYZLuoy1rq1aVMwx4aTzw&v=dlw9CbPwU90) (which featured my colleague [Patrick Lauke](https://twitter.com/patrick_h_lauke)) and performance.
+
+The day involved seven panel discussions, with several questions pre-proposed by delegates via [Google Moderator](https://www.google.com/moderator/).  Each slot was an hour long and began with a ten-minute presentation on the topic, from one of the panellists.  I found this format refreshing, particularly the discussions between panellists and the audience (helped along by [onslyde](http://www.onslyde.com)), as it gives a much "rounder" picture of the issues involved.  It was also encouraging that accessibility (as well as security and performance) cropped up many times throughout the day; not just on their respective panels.
+
+I’ve come away from Edge benefiting from the perspective and experience of great developers, motivated to continue learning and having met loads of talented and engaging people; many thanks to the organisers, hosts, panellists and delegates!
