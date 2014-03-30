@@ -8,9 +8,11 @@
 		{% for css in page.extra-style %}
 		<link rel="stylesheet" type="text/css" href="/style/{{ css }}.css"/>
 		{% endfor %}
-		<meta name="author" content="Dr Matthew Tylee Atkinson B.Sc.(Hons) Ph.D."/>
-		<meta name="description" content="Personal web site and blog"/>
-		<meta name="keywords" content="accessibility,programming,computing,blog"/>
+		<meta name="viewport" content="initial-scale=1">
+		<meta name="author" content="Dr Matthew Tylee Atkinson Ph.D.">
+		<meta name="description" content="Personal web site and blog">
+		<meta name="keywords"
+			content="accessibility,programming,computing,blog">
 		{% for js in page.script %}
 		<script type="text/javascript" src="{{ js }}"></script>
 		{% endfor %}
@@ -29,8 +31,8 @@
 		<main role="main">
 {{ content }}
 		</main>
-		<footer>
-			<p>Copyright 2012&ndash;2013 Matthew Tylee Atkinson</p>
+		<footer role="contentinfo">
+			<p>Copyright 2012&ndash;2014 Matthew Tylee Atkinson</p>
 		</footer>
 	</body>
 </html>

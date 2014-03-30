@@ -1,10 +1,4 @@
 body {
-	width: 45em;
-	max-width: 95%;
-	margin-left: auto;
-	margin-right: auto;
-	margin-top: 0;
-	margin-bottom: 5%;
 	background-color: #eee;
 	color: #333;
 	font-family: Verdana, sans-serif;
@@ -17,41 +11,27 @@ body {
 	hyphens: auto;
 }
 
+header, main, footer {
+	display: block;
+}
 
 nav ul {
 	list-style-type: none;
-	float: left;
-	padding: 0;
 	margin: 0;
-	width: 100%;
-	border-bottom: 1px solid #999;
-}
-nav li {
-	float: left;
 	padding: 0;
-	margin: 0;
 }
 nav a {
 	display: block;
-	padding: 1.5em;
+	padding: 0.5em;
 }
 
-
-header {
-	clear: both;
-	/* Why does drawing a border/doing this suddenly make the element
-	   display as intended (i.e. a block with [virtually] no padding)? */
-	padding-top: 0.1em;
-}
-
-
-footer {
-	padding-top: 0.5em;
-	font-size: 0.8em;
-	clear: both;
+main {
 	border-top: 1px solid #999;
 }
 
+footer {
+	border-top: 1px solid #999;
+}
 
 h1 {
 	font-size: 2em;
@@ -59,7 +39,6 @@ h1 {
 h1, h2, h3, h4, h5, h6 {
 	line-height: 1.2em;
 }
-
 
 a {
 	color: purple;
@@ -73,8 +52,7 @@ a:focus, a:hover {
 	color: #eee;
 }
 
-
-.hidden {
+.visually-hidden {
 	/* <http://yaccessibilityblog.com/library/css-clip-hidden-content.html> */
 	position: absolute !important;
 	clip: rect(1px 1px 1px 1px);  /* can put in commas when IE6, IE7 go away */
@@ -85,7 +63,6 @@ a:focus, a:hover {
 	width: 1px !important;
 	overflow: hidden;
 }
-
 
 dl.article-meta dt, dl.article-meta dd {
 	display: inline;
@@ -102,15 +79,6 @@ dl.article-meta ul {
 	margin-top: 0;
 }
 
-
-#home-content {
-	float: right;
-	margin-left: 250px;
-	padding-left: 2em;
-}
-#home-content p:first-child {
-	margin-top: 0;
-}
 #home-picture {
 	background-image: url("http://gravatar.com/avatar/56e9bd14e2fd4b3e85c62baae76ef700?s=250");
 	background-repeat: no-repeat;
@@ -118,13 +86,41 @@ dl.article-meta ul {
 	height: 250px;
 }
 
-
 #tag-cloud {
 	line-height: 2.5em;  /* a little cosy, with the largest font size of 4em */
-	margin: 0
-	margin-top: 1em;
-	margin-bottom: 1em;
 }
 #tag-cloud a {
-	text-decoration: none;
+}
+
+@media screen and (min-width: 34em) {
+	nav li {
+		float: left;
+	}
+	nav a {
+		padding: 1.25em;
+	}
+
+	main {
+		clear: both;
+	}
+}
+
+@media screen and (min-width: 54em) {
+	body {
+		margin: auto;
+		max-width: 45em;
+	}
+	nav a {
+		padding: 1.5em;
+	}
+
+	#home-content {
+		float: right;
+		margin-left: 250px;
+		padding-left: 2em;
+	}
+
+	footer {
+		clear: both;
+	}
 }

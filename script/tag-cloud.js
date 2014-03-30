@@ -1,22 +1,22 @@
 $(document).ready(function() {
 	// Overall process
-	//	* Create holding areas for the tag cloud and article lists.
-	//	* Move the article lists from being nested in the <dl> to being
-	//	  inside the new holding area.
-	//	* Create the tag cloud, with size of links' text proprortional to
-	//	  number of articles, and including accessibility info for
-	//	  non-visual browsers.
-	//	* Attach a function to each tag cloud link that hides all of the
-	//	  article lists except the one corresponding to that particular tag.
-	//	* Create anchors before the tag cloud and article list holding
-	//	  area to ease navigation for non-visual browsers.
-	//	* Remove what remains of the original <dl>.
+	//  * Create holding areas for the tag cloud and article lists.
+	//  * Move the article lists from being nested in the <dl> to being
+	//    inside the new holding area.
+	//  * Create the tag cloud, with size of links' text proprortional to
+	//    number of articles, and including accessibility info for
+	//    non-visual browsers.
+	//  * Attach a function to each tag cloud link that hides all of the
+	//    article lists except the one corresponding to that particular tag.
+	//  * Create anchors before the tag cloud and article list holding
+	//    area to ease navigation for non-visual browsers.
+	//  * Remove what remains of the original <dl>.
 
 	var PREFIX_LIST = "list-";  // used as part of @id for static <ul>s
 	var PREFIX_LINK = "link-";  // used as part of @id for cloud <a>s
 	var SIZE_MIN = 0.25;
 	var SIZE_MAX = 4;
-	var hash = '';  // bit of the URL
+	var hash = '';              // bit of the URL
 	var max_article_count = 0;  // for a given tag
 	var tag_to_count = {};
 	// A mapping from tag name to number of articles and font size
@@ -40,7 +40,7 @@ $(document).ready(function() {
 	$('<span '
 		+ 'id="article-list-pointer" '
 		+ 'tabindex="-1" '  // it can be focussed only by script, not keyb.
-		+ 'class="hidden">'
+		+ 'class="visually-hidden">'
 		+ 'Article list</span>'
 	).insertAfter(tag_cloud_container);
 
@@ -53,12 +53,10 @@ $(document).ready(function() {
 	// Create a link that returns the user to the tag cloud after
 	// they have gone through the article list
 	$('<a '
-		+ 'href="#" '  // to keep it in the tab order
-		+ 'class="hidden">'
+		+ 'href="#tag-cloud" '  // to keep it in the tab order
+		+ 'class="visually-hidden">'
 		+ 'Return to tag cloud</a>'
-	).click(function() {
-		$('#tag-cloud').focus();
-	}).insertAfter(article_list_container);
+	).insertAfter(article_list_container);
 
 	// Iterate over each <ul> in the <dl> to find the tag names and sizes.
 	// The <ul>'s id includes the tag name, and its length is the size.
@@ -99,7 +97,7 @@ $(document).ready(function() {
 			+ 'style="font-size: ' + record.size + 'em;">'
 			// Content
 			+ tag_name
-			+ '<span class="hidden"> (' + record.raw
+			+ '<span class="visually-hidden"> (' + record.raw
 			+ ( record.raw > 1 ? ' articles' : ' article' )
 			+ ")</span></a>&nbsp; "
 		);
