@@ -3,19 +3,15 @@
 	<head>
 		<meta charset="utf-8">
 		<title>{{ page.title }}&mdash;Matthew Tylee Atkinson</title>
-		<link rel="alternate" type="application/rss+xml" title="matatk.agrip.org.uk Feed" href="http://matatk.agrip.org.uk/atom.xml"/>
-		<link rel="stylesheet" type="text/css" href="/style/me.css"/>
-		{% for css in page.extra-style %}
-		<link rel="stylesheet" type="text/css" href="/style/{{ css }}.css"/>
-		{% endfor %}
+		<link rel="alternate" type="application/rss+xml" title="matatk.agrip.org.uk Feed" href="http://matatk.agrip.org.uk/atom.xml">
+		<link rel="stylesheet" type="text/css" href="/style/me.css">
+		{% for css in page.extra-style %}<link rel="stylesheet" type="text/css" href="/style/{{ css }}.css">{% endfor %}
 		<meta name="viewport" content="initial-scale=1">
 		<meta name="author" content="Dr Matthew Tylee Atkinson Ph.D.">
 		<meta name="description" content="Personal web site and blog">
 		<meta name="keywords"
 			content="accessibility,programming,computing,blog">
-		{% for js in page.script %}
-		<script type="text/javascript" src="{{ js }}"></script>
-		{% endfor %}
+		{% for js in page.script %}<script type="text/javascript" src="{{ js }}"></script>{% endfor %}
 		<script src="/script/ga.js"></script>
 	</head>
 	<body>

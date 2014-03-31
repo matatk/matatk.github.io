@@ -7,6 +7,8 @@ layout: base
 		<dl class="article-meta">
 			<dt>Published</dt>
 			<dd><time pubdate>{{ page.date | date: "%Y-%m-%d" }}</time></dd>
+			{% if page.updated %}<dt>Updated</dt>
+			<dd><time>{{ page.updated }}</time></dd>{% endif %}
 			<dt>Tags</dt>
 			<dd>{{ page.tags | array_to_sentence_string }}</dd>
 		</dl>
