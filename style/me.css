@@ -124,6 +124,7 @@ dl.article-meta ul {
 
 /* Minor breakpoints */
 /* Horizontal nav items with more padding -- grab more as space allows */
+/* Creep in a little body margin as the viewport size increases */
 @media screen and (min-width: 38em) {
 	nav a {
 		padding: 1em;
@@ -133,10 +134,20 @@ dl.article-meta ul {
 	nav a {
 		padding: 1.25em;
 	}
+
+	body {
+		margin-left: 0.5em;
+		margin-right: 0.5em;
+	}
 }
 @media screen and (min-width: 45em) {
 	nav a {
 		padding: 1.5em;
+	}
+
+	body {
+		margin-left: 1em;
+		margin-right: 1em;
 	}
 }
 
