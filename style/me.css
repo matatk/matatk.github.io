@@ -68,6 +68,13 @@ li p {
 	margin-bottom: 0;
 }
 
+pre {
+	overflow: auto;
+	/* Safari (Mac and iOS) inserted hyphens here! */
+	-webkit-hyphens: none;
+	hyphens: none;
+}
+
 /* Hide from visual users but not screen readers */
 .visually-hidden {
 	/* <http://yaccessibilityblog.com/library/css-clip-hidden-content.html> */

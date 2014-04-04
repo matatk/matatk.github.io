@@ -10,13 +10,13 @@ I have recently created a basic responsive layout for this site.  The two main p
  1. [Progressive enhancement, starting with the most constrained layout](http://verekia.com/initializr/responsive-template).
 
  2. [Using em units for the breakpoints, ensuring an inherently more content-centric, device-agnostic and accessible design](http://blog.cloudfour.com/the-ems-have-it-proportional-media-queries-ftw/).
-	- It's more accessible because using em units for viewport widths allows the browser to react to both the physical size of the device *and* the base font size as set by the user---so, if they have a bigger base font size, or (text-only) zoom the page, the layout adapts if necessary.
+	- It's more accessible because using em units for viewport widths allows the browser to react to both the physical size of the device *and* the base font size as set by the user---so, if they have a bigger base font size, or zoom the page, the layout adapts if necessary.
 	- Since the article was published, browser support has come on even further and I found no reloading requirement.
 
-Remember to [use the viewport meta-tag (and CSS @viewport) to ensure correct mobile rendering](http://webdesign.tutsplus.com/articles/quick-tip-dont-forget-the-viewport-meta-tag--webdesign-5972)---but **[do not disable zoom gestures](http://a11yproject.com/posts/never-use-maximum-scale/) as this would render your site unreadable to vision-impaired people**, which includes those with minor to severe sight problems.  The following HTML and CSS were recommended and are used here.
+Remember to [use the viewport meta-tag (and CSS @viewport) to ensure correct mobile rendering](http://webdesign.tutsplus.com/articles/quick-tip-dont-forget-the-viewport-meta-tag--webdesign-5972)---but **[do not disable zoom gestures](http://a11yproject.com/posts/never-use-maximum-scale/) as this would render your site unreadable to vision-impaired people**, which includes those with minor to severe sight problems.  The following HTML and CSS work well.
 
 {% highlight html %}
-<meta name="viewport" content="initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 {% endhighlight %}
 
 {% highlight css %}
