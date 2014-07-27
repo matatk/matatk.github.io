@@ -114,6 +114,11 @@ dl.article-meta ul {
 	line-height: 2.5em;  /* a little cosy, with the largest font size of 4em */
 }
 
+img {
+	width: 100%;
+	box-shadow: 0.25em 0.25em 0.5em #888;
+}
+
 /* Major breakpoint */
 /* Horizontal nav items */
 @media screen and (min-width: 35em) {
