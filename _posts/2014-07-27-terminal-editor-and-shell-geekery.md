@@ -10,13 +10,13 @@ It's been a busy few months and I am lucky to be learning lots through work and 
 
 The first step was to move to [iTerm2](http://iterm2.com) which allows me to have a full-screen terminal window with three panes: a full-height left-hand one for code; a top-right one for revision control and a bottom-right one continually running tests in a loop.
 
-![Coding kata screenshot with some omni completion occuring](/images/posts/2014-07-27-terminal-editor-and-shell-geekery/coding-kata-session.png)
+![Coding kata screenshot with some omni completion occurring](/images/posts/2014-07-27-terminal-editor-and-shell-geekery/coding-kata-session.png)
 
 I need rather large text, so there's a bit of a trade-off between pane widths, though I try to ensure they're all at least 80 by 25 characters if possible.
 
 ## Editor
 
-I've been using Vim since my undergrad year in industry, where it made short work of manipulating large volumes of text-based data, but I've never really grokked it.  Recently I've cranked my [Vim](http://www.vim.org) config up to eleven using the excellend [Vundle](https://github.com/gmarik/Vundle.vim) and several plugins such as
+I've been using Vim since my undergrad year in industry, where it made short work of manipulating large volumes of text-based data, but I've never really grokked it.  Recently I've cranked my [Vim](http://www.vim.org) config up to eleven using the excellent [Vundle](https://github.com/gmarik/Vundle.vim) and several plugins such as
 
  * [ropevim](https://github.com/python-rope/ropevim) for refactoring Python
  * [jedi-vim](https://github.com/davidhalter/jedi-vim) for autocompleting Python
@@ -25,7 +25,7 @@ I've been using Vim since my undergrad year in industry, where it made short wor
 
 and I'm looking forward to becoming proficient with these and more in due course!  When smoothly rocking along with Vim, it seems a good idea to thoroughly check out Emacs again in order to pick things up from a different perspective.
 
-Some have asked why I don't move into the 21st century---maybe I should try some more modern editors, but for me (and it seems others) Vim still offers a clean, yet also helpful and productive development environment and I do enjoy its modal nature, keyboard-centricity, maleability and aesthetic.  Also I love that, whilst so many systems, platforms and hardware/software standards have come and gone, we can still rely on these trusty tools (along with serial ports, who still [KBO](http://www.urbandictionary.com/define.php?term=kbo&defid=2137593))---it's almost as if I'm a "real hacker", not just out of obsession with the supposed quaint or eccentric, but because these tools seriously deliver the goods.
+Some have asked why I don't move into the 21st century---maybe I should try some more modern editors, but for me (and it seems others) Vim still offers a clean, yet also helpful and productive development environment and I do enjoy its modal nature, keyboard-centricity, malleability and aesthetic.  Also I love that, whilst so many systems, platforms and hardware/software standards have come and gone, we can still rely on these trusty tools (along with serial ports, who still [KBO](http://www.urbandictionary.com/define.php?term=kbo&defid=2137593))---it's almost as if I'm a "real hacker", not just out of obsession with the supposed quaint or eccentric, but because these tools seriously deliver the goods.
 
 ## Shell
 
