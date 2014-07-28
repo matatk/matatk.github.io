@@ -1,7 +1,7 @@
 ---
 layout: article
 title: Terminal, Editor and Shell Geekery
-tags: unix shell editor programming productivity
+tags: unix shell editor programming productivity dotfiles
 ---
 
 It's been a busy few months and I am lucky to be learning lots through work and other projects, though somewhat failing to share interesting stuff here! Anyway, inspired by watching one of my friends use a computer almost exclusively sans mouse/trackpad, and by a [test-driven development](http://en.wikipedia.org/wiki/Test-driven_development) kata on which [Mark Withall](http://markwithall.com/) and I are working [I should make a separate post on this soon], I wanted to get more productive with my coding.
@@ -29,13 +29,12 @@ Some have asked why I don't move into the 21st century---maybe I should try some
 
 ## Shell
 
-Another change I've made, with a helpful nudge from my colleague [Karl Groves](http://www.karlgroves.com) and [a presentation I read online](http://www.slideshare.net/jaguardesignstudio/why-zsh-is-cooler-than-your-shell-16194692), is to move to [zsh](http://www.zsh.org) from Bash (which taught me so much and I have enjoyed and relied on for many years).  There is a great distribution of configuration, themes and plugins for zsh called [oh-my-zsh](http://ohmyz.sh) but so far I've decided to roll my own config, drawing a lot from the examples there and in the manual and tutorials many others have written.  So far I'm really enjoying
+Another change I've made, with a helpful nudge from my colleague [Karl Groves](http://www.karlgroves.com) and [a presentation I read online](http://www.slideshare.net/jaguardesignstudio/why-zsh-is-cooler-than-your-shell-16194692), is to move to [zsh](http://www.zsh.org) from Bash (which taught me so much and I have enjoyed and relied on for many years).  There is a great distribution of configuration, themes and plugins for zsh called [oh-my-zsh](http://ohmyz.sh) but so far I've decided to roll my own config, drawing a lot from the examples there and in the manual and tutorials many others have written.  So far I'm really enjoying...
 
- * The even more awesome completion,
- * including being able to expand paths (e.g. `/u/l/b` to `/usr/local/bin`).
- * Dropping the `cd` and just issuing directory names to change to them and
- * the directory history stack.
- * Customising the autocompletion and other interfaces, and my prompt and using colour names instead of escape codes.
+ * The even more awesome completion, including being able to expand paths (e.g. `/u/l/b` to `/usr/local/bin`).
+ * The even more awesome globbing, including [recursive globbing, negation, approximate matching and qualifiers](http://www.refining-linux.org/archives/37/ZSH-Gem-2-Extended-globbing-and-expansion/).  (Also, check out the other [zsh gems](http://www.refining-linux.org/archives/2011/12.html) in that series.)
+ * Dropping the `cd` and just issuing directory names to change to them---plus, the directory history stack.
+ * Customising the autocompletion, other interfaces and my prompt, including using colour names instead of escape codes.
 
 Whilst Bash is still awesome, I'm enjoying the way that zsh works---though all this exploration of shells has also lead me to discover [fish](http://fishshell.com), which sounds compelling (it has a sort-of "there's only one way to do it"/"it just works" [philosophy](http://fishshell.com/docs/current/design.html) and even includes syntax highlighting); when my zsh config has settled, I intend to explore fish, too.
 
