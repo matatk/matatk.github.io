@@ -16,6 +16,15 @@ body {
 	hyphens: auto;
 }
 
+/* Nested ordered lists */
+ol ol {
+	list-style-type: lower-alpha;
+}
+
+ol ol ol {
+	list-style-type: lower-roman;
+}
+
 /* HTML5 for IE */
 header, main, footer {
 	display: block;

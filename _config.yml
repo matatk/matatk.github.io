@@ -3,4 +3,4 @@ permalink: /articles/:title/
 # GitHub defaults
 safe: true
 lsi: false
-pygments: true
+highlighter: pygments
