@@ -6,6 +6,8 @@ tags: demos games history
 
 ...because these days you can relive the good/bad old days in HD(ish)!  I'll try to update this post as I find more 'cool' stuff.  This is somewhat biased towards the UK, and specifically 8-bit eras, with some '90s and early-web thrown in.  My first machine just for me was an Amiga; so much celebration and nostalgia to be had there, it's probably worth a separate article at some point.
 
+These links come from both my own ramblings through cyberspace, as well as the recommendations of others (thanks!)
+
 ## Computing Milestones
 
  * [The Mother of all Demos](http://www.dougengelbart.org/firsts/dougs-1968-demo.html)---a truly inspirational part of computing history; just watch it! Links to various versions included on that page.
