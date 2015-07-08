@@ -5,7 +5,7 @@ tags:
  - productivity
  - pragmatism
 ---
-[Twenty-twelve](http://en.wikipedia.org/wiki/Twenty_Twelve) was a watershed year for me: I got a Ph.D. at last; underwent my eighth and hopefully final operation in the six years following an RTA and relocated to London.  An era has ended, as I finally left academia---I miss my friends and colleagues, teaching and the swimming pool.  Now I'm figuring out what I want to get out of, and what I can contribute to, the next phase of my life.
+[Twenty-twelve](http://en.wikipedia.org/wiki/Twenty_Twelve) was a watershed year for me: I got a Ph.D. at last; underwent my eighth and hopefully final operation in the six years following a RTA and relocated to London.  An era has ended, as I finally left academia---I miss my friends and colleagues, teaching and the swimming pool.  Now I'm figuring out what I want to get out of, and what I can contribute to, the next phase of my life.
 
 Over the past several years, "I haven't the time" has been a recurring theme.  There are many things I was doing but was unable to continue, due in no small part to said RTA, and there have been many things put on the "for when the dust has settled" shelf.  I have been getting better at time management and there have been creative highlights---making an "album in a day" with friends, for instance, was great fun---but my ongoing treatment had massively disruptive knock-on effects.  Nevertheless, with a new start, and medical stuff slowly winding down, now's the time...
 
