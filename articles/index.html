@@ -5,16 +5,13 @@ script:
  - https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js
  - /script/tag-cloud.js
 ---
-<dl id="posts-by-tag">
-	{% for tag in site.tags %}
-	{% assign cur_tag = tag[0] %}
-	<dt>{{ cur_tag }}</dt>
-	<dd>
-		<ul id="list-{{ cur_tag }}">
-			{% for post in site.tags.[cur_tag] %}
-			<li><a href="{{ post.url }}">{{ post.title }}</a> ({{ post.date | date: "%Y-%m-%d"}})</li>
-			{% endfor %}
-		</ul>
-	</dd>
+<div id="tag-cloud"></div>
+{% for tag in site.tags %}
+{% assign cur_tag = tag[0] %}
+<h2 id="{{ cur_tag }}" data-posts="{{ site.tags.[cur_tag].size }}">{{ cur_tag }}</h2>
+<ul>
+	{% for post in site.tags.[cur_tag] %}
+	<li><a href="{{ post.url }}">{{ post.title }}</a> ({{ post.date | date: "%Y-%m-%d"}})</li>
 	{% endfor %}
-</dl>
+</ul>
+{% endfor %}
