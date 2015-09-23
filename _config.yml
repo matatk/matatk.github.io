@@ -1,6 +1,9 @@
 permalink: /articles/:title/
+exclude:
+ - Gemfile
+ - Gemfile.lock
 
 # GitHub defaults
+highlighter: pygments
 safe: true
 lsi: false
-highlighter: pygments
