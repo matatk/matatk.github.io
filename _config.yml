@@ -2,8 +2,11 @@ permalink: /articles/:title/
 exclude:
  - Gemfile
  - Gemfile.lock
+gems:
+ - jekyll-feed
+ - jekyll-sitemap
 
 # GitHub defaults
 highlighter: pygments
-safe: true
+#safe: true -- only way to test plugins locally is to not have this
 lsi: false
