@@ -8,10 +8,6 @@ tags:
 extra-style: syntax
 ---
 
-***NOTE: THERE IS A LINK TO 'LAST TIME' BELOW THAT YOU WILL NEED TO UPDATE FOR
-YOUR SITE.***
-{: style="color: yellow; background-color: black; padding: 1em; border: 0.5em dashed yellow;" }
-
 {% include series.html %}
 
 This article was written with and is [also published
@@ -64,7 +60,7 @@ there is no notion of ‘a board’ specifically).
 Our first test is somewhat contrived due to the restrictions of the process. One
 could argue that the inclusion of the move variable is taking things a step too
 far and that the initial test should have been `assert 0 > 0` followed by using
-the extract variable refactoring to get to the current state, after having made
+the [Extract Variable](http://refactoring.com/catalog/extractVariable.html) refactoring to get to the current state, after having made
 the test pass.
 
 ### GREEN - 2015-03-02 13:09
@@ -123,7 +119,7 @@ the tests pass -- it is the tests, not their solutions, that are intended to
 direct the overall design of the code. This is why, in this case, the GREEN
 step does seem rather simplistic. Arguably, we should have changed the `==` to
 `!=` to make the test pass. By making the test pass in this way, we are
-introducing some duplication that need addressing and moves us nearer to our
+introducing some duplication that needs addressing and moves us nearer to our
 goal.
 
 ### REFACTOR Extract `is_legal` function - 2015-03-02 13:28
@@ -178,7 +174,7 @@ def is_legal(move):
     return move == 0
 {% endhighlight %}
 
-We need to expand the range of legal move. We start by testing the highest
+We need to expand the range of legal moves. We start by testing the highest
 legal value. Of course, there are many possible moves in the game and, whilst
 we’d not want to test all of them separately, we do need to add at least one
 more in order to pin down the range of valid moves -- think of it along the
@@ -436,7 +432,7 @@ def is_legal(move):
 {% endhighlight %}
 
 We have now run out of the basic failing tests that we can think of for the
-`is_legal()` method. We now move on to expand its behaviour by considering
+`is_legal()` method. We move on to expand its behaviour by considering
 moves that have been played previously to be illegal. Again, this is somewhat
 contrived as we are inventing some state that we aren’t initially using in the
 test.
