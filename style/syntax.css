@@ -1,7 +1,7 @@
 /* Originally from <https://gist.github.com/2005058>
-   Reset the background to the Solarized default */
+   (but reset the background to the Solarized default) */
 
-.highlight { 
+.highlight {
   background-color: #fdf6e3;
   padding-left: 1em;
   padding-right: 1em;
@@ -12,7 +12,7 @@
   margin: 0;
   overflow: hidden;
 }
- 
+
 .highlight .c { color: #586E75 } /* Comment */
 .highlight .err { color: #93A1A1 } /* Error */
 .highlight .g { color: #93A1A1 } /* Generic */
@@ -81,3 +81,5 @@
 .highlight .vg { color: #268BD2 } /* Name.Variable.Global */
 .highlight .vi { color: #268BD2 } /* Name.Variable.Instance */
 .highlight .il { color: #2AA198 } /* Literal.Number.Integer.Long */
+
+.highlight .lineno { color: #93A1A1; } /* added by matatk */
