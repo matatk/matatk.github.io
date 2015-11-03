@@ -11,7 +11,7 @@ extra-style: syntax
 {% include series.html %}
 
 This article was written with and is [also published
-by](http://markwithall.com/programming/2015/10/xx/test-driven-development-as-if-you-meant-it-reviewed-part-iii.html)
+by](http://markwithall.com/programming/2015/11/03/test-driven-development-as-if-you-meant-it-reviewed-part-iii.html)
 Mark Withall.
 
 Having done a few practice attempts at TDDAIYMI, it’s clear that the hardest
