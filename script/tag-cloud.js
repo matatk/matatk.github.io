@@ -2,7 +2,7 @@ $(document).ready(function() {
 	// Static page layout (fragment):
 	//    <h1>Articles</h1>
 	//    <div id="tag-cloud"></div>
-	//    <h2 data-posts="[number of posts]">[tag]</h2>
+	//    <h2 id="[tag]" data-posts="[number of posts]">[tag]</h2>
 	//    <ul>
 	//      [ list of posts with this tag ]
 	//    </ul>
@@ -10,7 +10,7 @@ $(document).ready(function() {
 
 	// Overall process:
 	//  * Find each article list header and extract the tag name and number
-	//    of posts for each tag (from the <h2>'s value and data attribute).
+	//    of posts for each tag (from the <h2>'s attributes).
 	//  * Create the tag cloud, with size of links' text proprortional to
 	//    number of articles, also including accessibility info for
 	//    non-visual browsers.
@@ -29,7 +29,7 @@ $(document).ready(function() {
 	// The <h2>'s text is the tag name, and it has an attribute giving the
 	// number of posts.
 	$('h2').each(function() {
-		var tag_name = $(this).text();
+		var tag_name = $(this).attr('id');
 		var article_count = $(this).attr('data-posts');
 		tag_to_count[tag_name] = { posts: article_count };
 
