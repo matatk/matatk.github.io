@@ -1,27 +1,24 @@
 $(document).ready(function() {
-	// Static page layout
-	//    . . .
+	// Static page layout (fragment):
 	//    <h1>Articles</h1>
-	//    <div id='tag-cloud'></div>
-	//    <h2 id='[tag]' data-posts='[number of posts]'>[tag]</h2>
+	//    <div id="tag-cloud"></div>
+	//    <h2 data-posts="[number of posts]">[tag]</h2>
 	//    <ul>
-	//      . . .
 	//      [ list of posts with this tag ]
-	//      . . .
 	//    </ul>
 	//    . . .
 
-	// Overall process
-	//  * Explore each article list header and extract the tag name and
-	//    number of articles for each tag (from the <h2>'s attributes).
+	// Overall process:
+	//  * Find each article list header and extract the tag name and number
+	//    of posts for each tag (from the <h2>'s value and data attribute).
 	//  * Create the tag cloud, with size of links' text proprortional to
-	//    number of articles, and including accessibility info for
+	//    number of articles, also including accessibility info for
 	//    non-visual browsers.
-	//  * Make each tag cloud link point to the appropriate statically-
+	//  * Make each tag cloud link point to the relevant existing statically-
 	//    generated <h2>.
 
-	var SIZE_MIN = 0.25;        // minimum font size (ems)
-	var SIZE_MAX = 4;           // maximum font size (ems)
+	var SIZE_MIN = 0.25;        // minimum font size (em)
+	var SIZE_MAX = 4;           // maximum font size (em)
 	var max_article_count = 0;  // for a given tag
 	var tag_cloud_container = $('#tag-cloud');  // <div> containing the cloud
 	// A mapping from tag name to number of articles and font size
@@ -29,10 +26,10 @@ $(document).ready(function() {
 	var tag_to_count = {};
 
 	// Iterate over each <h2> to find the tag names and sizes.
-	// The <h2>'s `id` is the tag name, and it has an attribute giving the
+	// The <h2>'s text is the tag name, and it has an attribute giving the
 	// number of posts.
 	$('h2').each(function() {
-		var tag_name = $(this).attr('id');
+		var tag_name = $(this).text();
 		var article_count = $(this).attr('data-posts');
 		tag_to_count[tag_name] = { posts: article_count };
 
@@ -52,15 +49,15 @@ $(document).ready(function() {
 	// Populate the tag cloud
 	$.each(tag_to_count, function(tag_name, record) {
 		tag_cloud_container.append(
-			'<a '
+			'<a ' +
 			// Attributes
-			+ 'href="#' + tag_name + '"'  // link to the <h2>
-			+ 'style="font-size: ' + record.size + 'em;">'
+			'href="#' + tag_name + '"' +  // link to the <h2>
+			'style="font-size: ' + record.size + 'em;">' +
 			// Content
-			+ tag_name
-			+ '<span class="visually-hidden"> (' + record.posts + ' '
-			+ ( record.posts > 1 ? 'articles' : 'article' )
-			+ ')</span></a>&nbsp; '
+			tag_name +
+			'<span class="visually-hidden"> (' + record.posts + ' ' +
+			( record.posts > 1 ? 'articles' : 'article' ) +
+			')</span></a>&nbsp; '
 		);
 	});
 });
