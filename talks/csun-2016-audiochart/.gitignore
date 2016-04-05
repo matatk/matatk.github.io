@@ -1,0 +1,5 @@
+node_modules
+!node_modules/jquery/dist/jquery.js
+!node_modules/jmpress/jmpress.js
+!node_modules/qwerty-hancock/demo/**/*
+!node_modules/qwerty-hancock/src/**/*

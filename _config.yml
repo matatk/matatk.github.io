@@ -2,6 +2,8 @@ permalink: /articles/:title/
 exclude:
  - Gemfile
  - Gemfile.lock
+include:
+ - _AudioChart.spec.js
 gems:
  - jekyll-feed
  - jekyll-sitemap

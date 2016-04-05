@@ -1,0 +1,275 @@
+/** GENERAL **/
+body {
+	font-family: Verdana, sans-serif;
+	min-height: 740px;
+	background-color: white;
+	color: #333;
+	-webkit-font-smoothing: antialiased;
+	font-size: 2em;
+	line-height: 2.5em;
+}
+
+/** STEP STYLES **/
+.step {
+	width: calc(1280px * 0.9);
+	height: calc(720px * 0.9);
+
+	display: block;
+
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing:    border-box;
+	-ms-box-sizing:     border-box;
+	-o-box-sizing:      border-box;
+	box-sizing:         border-box;
+
+	-webkit-transition: opacity 1s;
+	-moz-transition:    opacity 1s;
+	-ms-transition:     opacity 1s;
+	-o-transition:      opacity 1s;
+	transition:         opacity 1s;
+
+	outline: 10px solid transparent;
+	/* http://stackoverflow.com/a/14386672 */
+	-webkit-transition: outline 1s;
+	-moz-transition:    outline 1s;
+	-ms-transition:     outline 1s;
+	-o-transition:      outline 1s;
+	transition:         outline 1s;
+}
+
+/* fade out inactive slides */
+.step:not(.active) {
+	opacity: 0.3;
+}
+
+/* hint on the first slide */
+.hint {
+	position: fixed;
+	left: 0;
+	right: 0;
+	bottom: 0px;
+
+	background: #333;
+	color: white;
+	text-align: right;
+
+	padding: 10px;
+	z-index: 100;
+
+	opacity: 0;
+
+	-webkit-transform: translateY(400px);
+	-moz-transform:    translateY(400px);
+	-ms-transform:     translateY(400px);
+	-o-transform:      translateY(400px);
+	transform:         translateY(400px);
+
+	-webkit-transition: opacity 1s, -webkit-transform 0.5s 1s;
+	-moz-transition:    opacity 1s,    -moz-transform 0.5s 1s;
+	-ms-transition:     opacity 1s,     -ms-transform 0.5s 1s;
+	-o-transition:      opacity 1s,      -o-transform 0.5s 1s;
+	transition:         opacity 1s,         transform 0.5s 1s;
+}
+.step-home + .hint {
+	opacity: 1;
+
+	-webkit-transition: opacity 1s 5s, -webkit-transform 0.5s;
+	-moz-transition:    opacity 1s 5s,    -moz-transform 0.5s;
+	-ms-transition:     opacity 1s 5s,     -ms-transform 0.5s;
+	-o-transition:      opacity 1s 5s,      -o-transform 0.5s;
+	transition:         opacity 1s 5s,         transform 0.5s;
+
+	-webkit-transform: translateY(0px);
+	-moz-transform:    translateY(0px);
+	-ms-transform:     translateY(0px);
+	-o-transform:      translateY(0px);
+	transform:         translateY(0px);
+}
+
+/* overview must show all other steps */
+#overview {
+	display: none;
+}
+.step-overview .step {
+	opacity: 1;
+	outline: 15px solid #333;
+	cursor: pointer;
+}
+
+/** NOT SUPPORTED STYLES **/
+.not-supported .step {
+	position: relative;
+	opacity: 1;
+	margin: 20px auto;
+}
+
+/** PRINT STYLE **/
+@media print {
+	body {
+		background: white;
+	}
+	.hint {
+		display: none;
+	}
+	#presentation {
+		width: auto;
+		margin: 0 5%;
+		padding: 0;
+		border: 0;
+		float: none !important;
+		color: #333;
+		background: transparent;
+	}
+	.step {
+		page-break-after: always;
+		opacity: 1;
+		clear: both;
+		display: block;
+		float: none !important;
+		position: relative;
+		margin: 20px auto;
+
+		-webkit-transition: rotate(0deg);
+		-moz-transition:    rotate(0deg);
+		-ms-transition:     rotate(0deg);
+		-o-transition:      rotate(0deg);
+		transition:         rotate(0deg);
+	}
+	.step:not(.active) {
+		opacity: 1;
+	}
+}
+
+/** ANIMATION **/
+.will-fade {
+	-webkit-transition: opacity 1s;
+	-moz-transition:    opacity 1s;
+	-ms-transition:     opacity 1s;
+	-o-transition:      opacity 1s;
+	transition:         opacity 1s;
+
+	opacity: 0;
+}
+.do-fade {
+	opacity: 1
+}
+
+/** EXTRAS **/
+.step {
+	text-align: center;
+}
+
+/* the parents of nested steps have to have opacity 1, or the opacity
+ * of the child steps will be limited to whatever the opacity of the
+ * parent step is.
+ * adapted from http://stackoverflow.com/a/13328976 */
+.step.nested-active {
+	opacity: 1;
+}
+
+/* title slides and other centred stuff */
+/* (bit of a hack ATM; should centre anything within itself) */
+/* Note: they're explicit direct child selectors because of nested slides */
+.step.centre > h1,
+.step.centre > p:first-child {
+	display: block;
+	text-align: center;
+	margin-top: 5em;
+}
+.step.centre > p {
+	margin-top: 2em;
+}
+
+/* Don't put any padding/margin above step headings */
+h1, h2, h3 {
+	margin-top: 0;
+	padding-top: 0;
+}
+/* ...except the real header one */
+#header h1 {
+	margin-top: 1em;
+}
+
+/* Lists */
+.step ul {
+	text-align: left;
+	width: 55%;
+	margin: auto;
+}
+/* Decrease line-spacing slightly in nested lists */
+.step ul ul {
+	line-height: 2em;
+	margin-left: 0;
+	padding-left: 2em;
+}
+
+/** MAYBE SPECIFIC TO CSUN PRESENTATION **/
+input[type="button"], button {  /* safari */
+	font-size: inherit;
+}
+
+.chart {
+	width: 100%;
+	height: 80%;
+}
+
+.step-long-way-down .step {
+	opacity: 1;
+}
+
+#long-way-down {
+	display: none;
+}
+
+table {
+	border-collapse: collapse;
+	margin: auto;
+}
+th {
+	background-color: #333;
+	color: white;
+}
+th, td {
+	border: 1px solid #333;
+	padding: 0.5rem;
+	margin: 0;
+}
+
+#sortable-tables img {
+	width: 50%;
+}
+
+#sonification img {
+	max-height: 55%;
+}
+
+header img {
+	max-width: 55%;
+}
+
+.step iframe {
+	width: 100%;
+	height: 100%;
+	border: none;
+	outline: none;
+}
+
+.step-web-audio-api #web-audio-api {  /* black border for qwerty hancock */
+	outline: 200px solid black;
+}
+
+#audio-table th, #audio-table td {
+	padding: 1.5rem;
+	line-height: 1.5rem;
+}
+.current-datum {
+	background-color: yellow;
+}
+
+/* DEBUGGING */
+/*.step {
+border: 2px solid green;
+}
+.step.active {
+border: 2px solid red;
+}*/
