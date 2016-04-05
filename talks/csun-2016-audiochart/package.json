@@ -7,7 +7,7 @@
   "license": "MIT",
   "devDependencies": {
     "jmpress": "^0.4.5",
-    "jquery": "2.1.4",
+    "jquery": "^2.1.4",
     "qwerty-hancock": "^0.5.1"
   }
 }
