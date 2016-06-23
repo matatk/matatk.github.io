@@ -13,18 +13,20 @@ I have recently created a basic responsive layout for this site.  The two main p
 	- It's more accessible because using em units for viewport widths allows the browser to react to both the physical size of the device *and* the base font size as set by the user---so, if they have a bigger base font size, or zoom the page, the layout adapts if necessary.
 	- Since the article was published, browser support has come on even further and I found no reloading requirement.
 
-Remember to [use the viewport meta-tag (and CSS @viewport) to ensure correct mobile rendering](http://webdesign.tutsplus.com/articles/quick-tip-dont-forget-the-viewport-meta-tag--webdesign-5972)---but **[do not disable zoom gestures](http://a11yproject.com/posts/never-use-maximum-scale/) as this would render your site unreadable to vision-impaired people**, which includes those with minor to severe sight problems.  The following HTML and CSS work well.
+Remember to [use the viewport meta-tag (and CSS @viewport) to ensure correct mobile rendering](http://webdesign.tutsplus.com/articles/quick-tip-dont-forget-the-viewport-meta-tag--webdesign-5972)---but **[do not disable zoom gestures](http://a11yproject.com/posts/never-use-maximum-scale/) as this would render your site unreadable to vision-impaired people**, which includes those with minor to severe sight problems.  The following HTML and CSS work well:
 
-{% highlight html %}
+```html
 <meta name="viewport" content="width=device-width, initial-scale=1">
-{% endhighlight %}
+```
 
-{% highlight css %}
+...and the CSS:
+
+```css
 @viewport, @-ms-viewport {
     zoom: 1.0;
     width: extend-to-zoom
 }
-{% endhighlight %}
+```
 
 [The layout's CSS](http://matatk.agrip.org.uk/style/me.css) is fairly simple; just a couple of major breakpoints (flipping from vertical to horizontal navigation and finally to a wide layout) and a few minor ones (to grab progressively more whitespace around the navigation links).  Note that the ems appearing in CSS media queries are the same as [root ems](https://www.google.co.uk/search?&q=root+ems), which is perfectly logical---it just means that even if you use e.g. a larger font on the `<body>`, as this layout does, the content breakpoints are still in root ems (so the '45em' cap on body width actually occurs at a viewport width of 54rems).
 

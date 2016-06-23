@@ -37,11 +37,11 @@ Each commit is presented, followed by the commentary on it.
 ### RED Test that a legal move is legal - 2015-02-19 13:25
 {: style="color: red" }
 
-{% highlight python %}
+```python
 def test_legal_move_is_legal():
     move = 0
     assert move > 0
-{% endhighlight %}
+```
 
 As mentioned [last
 time](/articles/test-driven-development-as-if-you-meant-it-reviewed-part-2), we
@@ -66,11 +66,11 @@ the test pass.
 ### GREEN - 2015-03-02 13:09
 {: style="color: green" }
 
-{% highlight python %}
+```python
 def test_legal_move_is_legal():
     move = 0
     assert move == 0  # changed
-{% endhighlight %}
+```
 
 Making the test pass is trivial; as, of course, it should be. We change the
 contrived ‘less than’ test to use an equals comparison. As we only have the one
@@ -80,7 +80,7 @@ test.
 ### RED Test that an illegal move is not legal - 2015-03-02 13:20
 {: style="color: red" }
 
-{% highlight python %}
+```python
 def test_legal_move_is_legal():
     move = 0
     assert move == 0
@@ -89,7 +89,7 @@ def test_legal_move_is_legal():
 def test_illegal_move_is_not_legal():
     move = -1
     assert move == 0
-{% endhighlight %}
+```
 
 We are essentially starting from scratch again with test number 2. That said, we
 want to try and keep going in the same direction to triangulate some behaviour
@@ -103,7 +103,7 @@ Method](http://refactoring.com/catalog/extractMethod.html) in future.
 ### GREEN - 2015-03-02 13:25
 {: style="color: green" }
 
-{% highlight python %}
+```python
 def test_legal_move_is_legal():
     move = 0
     assert move == 0
@@ -112,7 +112,7 @@ def test_legal_move_is_legal():
 def test_illegal_move_is_not_legal():
     move = -1
     assert (move == 0) is False  # changed
-{% endhighlight %}
+```
 
 Note that the GREEN step is supposed to take the least-complex means to make
 the tests pass -- it is the tests, not their solutions, that are intended to
@@ -125,7 +125,7 @@ goal.
 ### REFACTOR Extract `is_legal` function - 2015-03-02 13:28
 {: style="color: blue" }
 
-{% highlight python %}
+```python
 def test_legal_move_is_legal():
     move = 0
     assert is_legal(move)  # changed
@@ -139,7 +139,7 @@ def test_illegal_move_is_not_legal():
 # added function
 def is_legal(move):
     return move == 0
-{% endhighlight %}
+```
 
 This REFACTOR step may seem somewhat ‘aggressive’, in the sense that it
 lengthens the code, but it’s also vital (for any form of TDD) to refactor as
@@ -153,7 +153,7 @@ structure such as this, and is a technique we used often.
 ### RED Test a different legal move - 2015-03-03 12:40
 {: style="color: red" }
 
-{% highlight python %}
+```python
 def test_legal_move_is_legal():
     move = 0
     assert is_legal(move)
@@ -172,7 +172,7 @@ def test_different_legal_move_is_legal():
 
 def is_legal(move):
     return move == 0
-{% endhighlight %}
+```
 
 We need to expand the range of legal moves. We start by testing the highest
 legal value. Of course, there are many possible moves in the game and, whilst
@@ -184,7 +184,7 @@ can draw a meaningful line through them.
 ### GREEN - 2015-03-03 12:48
 {: style="color: green" }
 
-{% highlight python %}
+```python
 def test_legal_move_is_legal():
     move = 0
     assert is_legal(move)
@@ -202,7 +202,7 @@ def test_different_legal_move_is_legal():
 
 def is_legal(move):
     return move == 0
-{% endhighlight %}
+```
 
 We make this test pass, **in the test method**, and by **using the simplest
 possible means** which, again, may seem somewhat insufficient at first glance.
@@ -212,7 +212,7 @@ test case to ‘1’ instead of ‘8’ at this point; which was rather naughty.
 ### REFACTOR Improve design by moving code - 2015-03-03 12:50
 {: style="color: blue" }
 
-{% highlight python %}
+```python
 def test_legal_move_is_legal():
     move = 0
     assert is_legal(move)
@@ -230,7 +230,7 @@ def test_different_legal_move_is_legal():
 
 def is_legal(move):
     return move == 0 or move > 0  # changed
-{% endhighlight %}
+```
 
 Next, for the first time, we have a few consecutive refactorings, and thus make
 two separate REFACTOR commits. In the first, we move the extra legality check
@@ -244,7 +244,7 @@ improve the design.
 ### REFACTOR Simplify expression - 2015-03-03 12:52
 {: style="color: blue" }
 
-{% highlight python %}
+```python
 def test_legal_move_is_legal():
     move = 0
     assert is_legal(move)
@@ -262,7 +262,7 @@ def test_different_legal_move_is_legal():
 
 def is_legal(move):
     return move >= 0  # changed
-{% endhighlight %}
+```
 
 Now we are able to simplify the legality check, because all of the code is
 together...
@@ -270,7 +270,7 @@ together...
 ### REFACTOR Explicitly state expected result of tests - 2015-03-03 12:53
 {: style="color: blue" }
 
-{% highlight python %}
+```python
 def test_legal_move_is_legal():
     move = 0
     assert is_legal(move) is True  # changed
@@ -288,7 +288,7 @@ def test_different_legal_move_is_legal():
 
 def is_legal(move):
     return move >= 0
-{% endhighlight %}
+```
 
 At this point, we realised that, as per [The Zen of
 Python](https://www.python.org/dev/peps/pep-0020/)
@@ -300,7 +300,7 @@ expected the results of the tests to be, so we add the cases where we want a
 ### RED Test the first illegal move on upper boundary - 2015-03-03 12:55
 {: style="color: red" }
 
-{% highlight python %}
+```python
 def test_legal_move_is_legal():
     move = 0
     assert is_legal(move) is True
@@ -324,7 +324,7 @@ def test_high_illegal_move_is_not_legal():
 
 def is_legal(move):
     return move >= 0
-{% endhighlight %}
+```
 
 The next logical failing test we can write is to use an illegal move at the
 other end of the range. When we are no longer able to write a failing test, we
@@ -334,7 +334,7 @@ legal, it would pass, so it doesn’t need to be written.)
 ### GREEN - 2015-03-03 12:58
 {: style="color: green" }
 
-{% highlight python %}
+```python
 def test_legal_move_is_legal():
     move = 0
     assert is_legal(move) is True
@@ -357,7 +357,7 @@ def test_high_illegal_move_is_not_legal():
 
 def is_legal(move):
     return move >= 0
-{% endhighlight %}
+```
 
 Again, making the test pass is done in the test method itself, using the
 simplest code.
@@ -365,7 +365,7 @@ simplest code.
 ### REFACTOR Improve design by moving code - 2015-03-03 13:05
 {: style="color: blue" }
 
-{% highlight python %}
+```python
 def test_legal_move_is_legal():
     move = 0
     assert is_legal(move) is True
@@ -388,7 +388,7 @@ def test_high_illegal_move_is_not_legal():
 
 def is_legal(move):
     return move >= 0 and move < 9  # changed
-{% endhighlight %}
+```
 
 We refactor to improve the design by moving the extra code to the `is_legal()`
 method. The tests are run automatically after each change we make, so we know
@@ -399,7 +399,7 @@ change the behaviour of the function.
 ### RED Test previously-played move is illegal - 2015-03-04 12:39
 {: style="color: red" }
 
-{% highlight python %}
+```python
 def test_legal_move_is_legal():
     move = 0
     assert is_legal(move) is True
@@ -429,7 +429,7 @@ def test_move_is_illegal_if_already_played():
 
 def is_legal(move):
     return move >= 0 and move < 9
-{% endhighlight %}
+```
 
 We have now run out of the basic failing tests that we can think of for the
 `is_legal()` method. We move on to expand its behaviour by considering
@@ -444,7 +444,7 @@ are just writing tests and will see what ‘design’ emerges.
 ### GREEN - 2015-03-04 12:44
 {: style="color: green" }
 
-{% highlight python %}
+```python
 def test_legal_move_is_legal():
     move = 0
     assert is_legal(move) is True
@@ -473,14 +473,14 @@ def test_move_is_illegal_if_already_played():
 
 def is_legal(move):
     return move >= 0 and move < 9
-{% endhighlight %}
+```
 
 We now use the state information to make the test pass in the test method.
 
 ### REFACTOR Introduce Parameter - 2015-03-04 12:56
 {: style="color: blue" }
 
-{% highlight python %}
+```python
 def test_legal_move_is_legal():
     move = 0
     assert is_legal(move, []) is True  # changed
@@ -509,7 +509,7 @@ is False
 
 def is_legal(move, moves_played):  # changed
     return move >= 0 and move < 9
-{% endhighlight %}
+```
 
 We want to improve the design of the code by moving the new code that made the
 test pass to the `is_legal()` method but to do this we need to pass the state
@@ -520,7 +520,7 @@ to update all the other tests that use `is_legal()`).
 ### REFACTOR Move history-checking code to is\_legal() - 2015-03-04 12:59
 {: style="color: blue" }
 
-{% highlight python %}
+```python
 def test_legal_move_is_legal():
     move = 0
     assert is_legal(move, []) is True
@@ -549,7 +549,7 @@ def test_move_is_illegal_if_already_played():
 
 def is_legal(move, moves_played):
     return move >= 0 and move < 9 and move not in moves_played  # changed
-{% endhighlight %}
+```
 
 Now that we have passed in the parameter, we can move the extra check into
 `is_legal()` and make sure that all of the tests still pass, which they do.
