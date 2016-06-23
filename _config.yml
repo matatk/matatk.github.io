@@ -9,6 +9,6 @@ gems:
  - jekyll-sitemap
 
 # GitHub defaults
-highlighter: pygments
+highlighter: rouge
 #safe: true -- only way to test plugins locally is to not have this
 lsi: false
