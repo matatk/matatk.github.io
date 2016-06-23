@@ -1,7 +1,7 @@
-node_modules/**
 # "It is not possible to re-include a file if a parent directory
 # of that file is excluded."
-# Explanation: http://stackoverflow.com/a/26517475
+# http://stackoverflow.com/a/26517475
+node_modules/**
 !node_modules/jquery/
 node_modules/jquery/**
 !node_modules/jquery/dist/
