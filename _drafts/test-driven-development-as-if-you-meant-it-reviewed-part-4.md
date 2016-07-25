@@ -178,7 +178,7 @@ Rule Violations
 
 One of the most common violations of ‘the rules’ of TDD was to modify the behaviour of code during a ‘refactoring’. This most commonly took the form of moving behaviour into existing methods.
 
-For example, starting from the GREEN state:
+For example, starting from the <span style="color: green;">GREEN</span> state:
 
 ```python
 def test_illegal_move_is_not_legal():
@@ -211,7 +211,7 @@ def is_legal(move):
 
 What would have been the correct way of going about this change? One possible approach would be to make all of the uses of the method look the same first. Then extract a new method and inline the old one.
 
-This would look something like the following.  Start from the same GREEN state as above:
+This would look something like the following.  Start from the same <span style="color: green;">GREEN</span> state as above:
 
 ```python
 def test_illegal_move_is_not_legal():
