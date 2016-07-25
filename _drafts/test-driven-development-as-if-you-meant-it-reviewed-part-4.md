@@ -176,17 +176,123 @@ index 84b3cc7..9109cfd 100644
 Rule Violations
 ---------------
 
-One of the most common violations of ‘the rules’ of TDD was to modify the behaviour of code during a ‘refactoring’. This most commonly took the form of moving behaviour into existing methods. For example: …
-{: style="color: red" }
+One of the most common violations of ‘the rules’ of TDD was to modify the behaviour of code during a ‘refactoring’. This most commonly took the form of moving behaviour into existing methods.
+
+For example, starting from the GREEN state:
+
+```python
+def test_illegal_move_is_not_legal():
+    move = -1
+    assert is_legal(move) is False
+
+def test_different_legal_move_is_legal():
+    move = 1
+    assert (is_legal(move) or move > 0) is True
+
+def is_legal(move):
+    return move == 0
+```
+
+we move directly to the following, in a single 'refactoring':
+
+```python
+def test_illegal_move_is_not_legal():
+    move = -1
+    assert is_legal(move) is False
+
+def test_different_legal_move_is_legal():
+    move = 1
+    assert is_legal(move) is True
+
+def is_legal(move):
+    return move == 0 or move > 0
+```
 
 
-TODO EXAMPLE INSERT CONTENT HERE
+What would have been the correct way of going about this change? One possible approach would be to make all of the uses of the method look the same first. Then extract a new method and inline the old one.
 
-What would have been the correct way of going about this change? One possible approach would be to make all of the uses of the method look the same first. Then extract a new method and inline the old one. This would look something like the following: …
-{: style="color: red" }
+This would look something like the following.  Start from the same GREEN state as above:
 
+```python
+def test_illegal_move_is_not_legal():
+    move = -1
+    assert is_legal(move) is False
 
-TODO EXAMPLE
+def test_different_legal_move_is_legal():
+    move = 1
+    assert (is_legal(move) or move > 0) is True
+
+def is_legal(move):
+    return move == 0
+```
+
+we start by changing the assertion in `test_illegal_move_is_not_legal` to match the form of that in `test_different_legal_move_is_legal`:
+
+```python
+def test_illegal_move_is_not_legal():
+    move = -1
+    assert (is_legal(move) or move > 0) is False
+
+def test_different_legal_move_is_legal():
+    move = 1
+    assert (is_legal(move) or move > 0) is True
+
+def is_legal(move):
+    return move == 0
+```
+
+the assertion for `test_illegal_move_is_not_legal` is clearly still valid.
+
+We then refactor, step-by-step, staring by renaming the original `is_legal` function:
+
+```python
+def test_illegal_move_is_not_legal():
+    move = -1
+    assert (original_is_legal(move) or move > 0) is False
+
+def test_different_legal_move_is_legal():
+    move = 1
+    assert (original_is_legal(move) or move > 0) is True
+
+def original_is_legal(move):
+    return move == 0
+```
+
+then extracting a new `is_legal` function from the two tests:
+
+```python
+def test_illegal_move_is_not_legal():
+    move = -1
+    assert is_legal(move) is False
+
+def test_different_legal_move_is_legal():
+    move = 1
+    assert is_legal(move) is True
+
+def is_legal(move):
+    return original_is_legal(move) or move > 0
+
+def original_is_legal(move):
+    return move == 0
+```
+
+and finally, inlining the `original_is_legal` function:
+
+```python
+def test_illegal_move_is_not_legal():
+    move = -1
+    assert is_legal(move) is False
+
+def test_different_legal_move_is_legal():
+    move = 1
+    assert is_legal(move) is True
+
+def is_legal(move):
+    return move == 0 or move > 0
+```
+
+The result is the same as the single-step refactoring.
+
 
 Another instance where we were a bit aggressive in the refactoring step was in [b873939](https://github.com/matatk/NoughtsAndCrosses/commit/b873939af49e97ec69eed930013de18e818affd0) (below) where we introduced use of sets and the `any` function (which is nice and neat, but does alter the behaviour somewhat.
 {: style="color: red" }
@@ -283,3 +389,6 @@ Next Time
 ---------
 
 Next time we will look at a more traditional TDD approach (in a London/Mockist style - as we’re British) to this exercise and see how it compares and contrasts to the TDDAIYMI style of development.
+
+
+
