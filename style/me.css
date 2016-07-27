@@ -16,6 +16,20 @@ body {
 	hyphens: auto;
 }
 
+blockquote {
+	margin: 0;
+	padding-left: 1em;
+	padding-right: 1em;
+	border-left: 0.5em solid #888;
+	color: #666;
+	/* Colours chosen because:
+	   - Contrast of text to background is OK by WCAG 2 Level AA.
+	   - The thick border looks (about) the same colour as the text
+	     (there must be a formula/rule-of-thumb for this?)
+	   - Contrast betwwen <blockquote> and <body> text is greater than 2:1.
+	*/
+}
+
 /* Nested ordered lists */
 ol ol {
 	list-style-type: lower-alpha;
@@ -88,8 +102,7 @@ pre {
 .visually-hidden {
 	/* <http://yaccessibilityblog.com/library/css-clip-hidden-content.html> */
 	position: absolute !important;
-	clip: rect(1px 1px 1px 1px);  /* can put in commas when IE6, IE7 go away */
-	/* Remove the following when browsers work... */
+	clip: rect(1px, 1px, 1px, 1px);
 	padding: 0 !important;
 	border: 0 !important;
 	height: 1px !important;
