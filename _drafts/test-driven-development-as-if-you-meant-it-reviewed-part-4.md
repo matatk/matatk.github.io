@@ -103,7 +103,7 @@ index 56222aa..d6bee00 100644
  		bottom_row = set([6, 7, 8])
 ```
 
-What about when the need for a class comes up that does something different to an existing class, so can’t simply be extracted from it? In commit ***FIXME*** we stopped because we saw no immediate way to introduce further classes that we believed were required, the reason being that we could not think a TDDAIYMI-compliant means to introduce the communication between classes. When we know we want to adopt an MVC design, how do we use TDDAIYMI to help us wire up the Model and View, via the Controller? They have to be able to communicate.
+What about when the need for a class comes up that does something different to an existing class, so can’t simply be extracted from it? On [branch "attempt_002"](https://github.com/matatk/NoughtsAndCrosses/blob/attempt_002/nac.py) we stopped because we saw no immediate way to introduce further classes that we believed were required, the reason being that we could not think a TDDAIYMI-compliant means to introduce the communication between classes. When we know we want to adopt an MVC design, how do we use TDDAIYMI to help us wire up the Model and View, via the Controller? They have to be able to communicate.
 
 Fortunately the answer to this one is straightforward, too. Imagine that we have already separately developed the View and Model, and wish to write the Controller (this seems like a sufficiently bottom-up way of doing things, which we feel fits TDDAIYMI). In this case, we can write the tests for the wiring between the Model and View, making them pass within the test methods, as stipulated by the rules. It is fine for us to use the existing Model and View objects in the test methods, as they are already part of the established, tested, codebase. We will then start to be able to extract methods (as per rule 4.1).
 
@@ -179,7 +179,7 @@ Rule Violations
 
 One of the most common violations of ‘the rules’ of TDD was to modify the behaviour of code during a ‘refactoring’. This most commonly took the form of moving behaviour into existing methods.
 
-For example, starting from the <span style="color: green;">GREEN</span> state:
+For example, starting from the <span style="color: green;">GREEN</span> state ([7940ebb](https://github.com/matatk/NoughtsAndCrosses/commit/7940ebb724b878d75a2c6b84202a38991aaa5dd7), with the explicit `True`/`False` tests added for clarity):
 
 ```python
 def test_illegal_move_is_not_legal():
@@ -194,7 +194,7 @@ def is_legal(move):
     return move == 0
 ```
 
-we move directly to the following, in a single 'refactoring':
+we move directly to the following, in a single 'refactoring' ([ac29b93](https://github.com/matatk/NoughtsAndCrosses/commit/ac29b93507fe4dd1367043ffe0d7214b00be3f41), again with the explicit `True`/`False` tests added for clarity):
 
 ```python
 def test_illegal_move_is_not_legal():
@@ -317,7 +317,7 @@ Data vs Code
 
 The approach we took to determining whether a position was a win in early attempts took the form of gradually building up example cases of win/not-win conditions and adding to the code that evaluated the position to pass the tests. This often got us into a very repetitive rut with the TDD process, where not much was added to the code, but we couldn’t seem to get off that path, as can be seen below.
 
-Start of this run of commits [63c0795](https://github.com/matatk/NoughtsAndCrosses/commit/63c0795942088d391cd39bf0d3d64c37b433eee3):
+The start of this run of commits is [63c0795](https://github.com/matatk/NoughtsAndCrosses/commit/63c0795942088d391cd39bf0d3d64c37b433eee3):
 
 ```diff
 diff --git a/nac.py b/nac.py
@@ -338,7 +338,7 @@ index a444c5e..b0a2ddd 100644
  	def __init__(self):
 ```
 
-The end of this run of commits [bce901b](https://github.com/matatk/NoughtsAndCrosses/commit/bce901b44f23403e722977e3decfd785833aa960):
+The end of this run of commits is [bce901b](https://github.com/matatk/NoughtsAndCrosses/commit/bce901b44f23403e722977e3decfd785833aa960):
 
 ```diff
 diff --git a/nac.py b/nac.py
@@ -375,8 +375,7 @@ index 21c4da1..c54fa7c 100644
 
 *You can explore the whole run of commits using the [GitHub Desktop app](https://desktop.github.com), or by visiting the page for [bce901b](https://github.com/matatk/NoughtsAndCrosses/commit/bce901b44f23403e722977e3decfd785833aa960) and following the "parent" link (it will take you backwards through the commits, but still demonstrates the repetitive and fairly content-free nature of the endeavour).*
 
-
-In later attempts, for example attempt 006 (***FIXME*** link), we moved to an approach of having a the list of winning conditions as data, and wrote tests to drive a solution that looked to see if the win condition was contained in the list of winning conditions.
+In later attempts, for example [in our final run through](https://github.com/matatk/NoughtsAndCrosses/blob/attempt_006_tddaiymi_2/nac.py), we moved to an approach of having a list of winning conditions as data, and wrote tests to drive a solution that looked to see if the win condition was contained in the list of winning conditions.
 
 The later approach ends up with a much simpler and more flexible result, which would allow us to change the size of the board almost trivially. This level of flexibility could have been achieved in the algorithmic position evaluation too but would have required many more tests to get to that stage.
 
