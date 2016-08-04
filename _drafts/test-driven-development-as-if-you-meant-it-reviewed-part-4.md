@@ -103,7 +103,7 @@ index 56222aa..d6bee00 100644
  		bottom_row = set([6, 7, 8])
 ```
 
-What about when the need for a class comes up that does something different to an existing class, so can’t simply be extracted from it? On [branch "attempt_002"](https://github.com/matatk/NoughtsAndCrosses/blob/attempt_002/nac.py) we stopped because we saw no immediate way to introduce further classes that we believed were required, the reason being that we could not think a TDDAIYMI-compliant means to introduce the communication between classes. When we know we want to adopt an MVC design, how do we use TDDAIYMI to help us wire up the Model and View, via the Controller? They have to be able to communicate.
+What about when the need for a class comes up that does something different to an existing class, so can’t simply be extracted from it? On [branch "attempt_002"](https://github.com/matatk/NoughtsAndCrosses/blob/attempt_002/nac.py) we stopped because we saw no immediate way to introduce further classes that we believed were required, the reason being that we could not think of a TDDAIYMI-compliant means to introduce the communication between classes. When we know we want to adopt an MVC design, how do we use TDDAIYMI to help us wire up the Model and View, via the Controller? They have to be able to communicate.
 
 Fortunately the answer to this one is straightforward, too. Imagine that we have already separately developed the View and Model, and wish to write the Controller (this seems like a sufficiently bottom-up way of doing things, which we feel fits TDDAIYMI). In this case, we can write the tests for the wiring between the Model and View, making them pass within the test methods, as stipulated by the rules. It is fine for us to use the existing Model and View objects in the test methods, as they are already part of the established, tested, codebase. We will then start to be able to extract methods (as per rule 4.1).
 
@@ -211,22 +211,7 @@ def is_legal(move):
 
 What would have been the correct way of going about this change? One possible approach would be to make all of the uses of the method look the same first. Then extract a new method and inline the old one.
 
-This would look something like the following.  Start from the same <span style="color: green;">GREEN</span> state as above:
-
-```python
-def test_illegal_move_is_not_legal():
-    move = -1
-    assert is_legal(move) is False
-
-def test_different_legal_move_is_legal():
-    move = 1
-    assert (is_legal(move) or move > 0) is True
-
-def is_legal(move):
-    return move == 0
-```
-
-we start by changing the assertion in `test_illegal_move_is_not_legal()` to match the form of that in `test_different_legal_move_is_legal()`:
+This would look something like the following.  Starting from the same <span style="color: green;">GREEN</span> state as above, we start by changing the assertion in `test_illegal_move_is_not_legal()` to match the form of that in `test_different_legal_move_is_legal()`:
 
 ```python
 def test_illegal_move_is_not_legal():
@@ -293,7 +278,7 @@ def is_legal(move):
 
 The result is the same as the single-step refactoring.
 
-Another instance where we were a bit aggressive in the refactoring step was in [b873939](https://github.com/matatk/NoughtsAndCrosses/commit/b873939af49e97ec69eed930013de18e818affd0) (below) where we introduced use of sets and the `any` function (which is nice and neat, but does alter the behaviour somewhat).
+Another instance where we were a bit aggressive in the refactoring step was in [b873939](https://github.com/matatk/NoughtsAndCrosses/commit/b873939af49e97ec69eed930013de18e818affd0) (below) where we introduced the use of sets and the `any` function (which is nice and neat, but does alter the behaviour somewhat).
 
 ```diff
 diff --git a/nac.py b/nac.py
