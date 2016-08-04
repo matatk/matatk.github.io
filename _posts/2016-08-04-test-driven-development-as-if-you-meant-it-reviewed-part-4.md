@@ -8,13 +8,9 @@ tags:
 extra-style: syntax
 ---
 
-This is the fourth in a short series of articles about Test Driven Development.
-
 {% include series.html %}
 
-This article was written with and is [also published by](http://markwithall.com/programming/2016/07/xx/test-driven-development-as-if-you-meant-it-reviewed-part-iv.html) Mark Withall.
-
-This article was written with and is [also published by](http://matatk.agrip.org.uk/articles/test-driven-development-as-if-you-meant-it-reviewed-part-4/) Matthew Atkinson.
+This article was written with and is [also published by](http://markwithall.com/programming/2016/08/04/test-driven-development-as-if-you-meant-it-reviewed-part-iv.html) Mark Withall.
 
 We’ve taken a detailed look, in the previous part, at how to get started with TDDAIYMI, in this part we will jump around a bit more and look at several of the interesting moments that came about during the exercise.
 
