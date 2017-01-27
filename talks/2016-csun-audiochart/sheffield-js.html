@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+	<head>
+		<meta charset="utf-8" />
+		<title>Exploring the Use of the Web Audio API to Improve Chart Accessibility</title>
+		<meta name="description" content="Charts and plots are engaging and widely used, but present barriers to people with vision impairments. AudioChart provides an aural, keyboard-accessible means to experience them." />
+		<meta name="author" content="Dr Matthew Tylee Atkinson Ph.D." />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<link href="style/presentation.css" rel="stylesheet" />
+		<script src="https://www.google.com/jsapi"></script>
+		<script src="node_modules/jquery/dist/jquery.js"></script>
+		<script src="node_modules/jmpress/jmpress.js"></script>
+		<script src="script/audiochart-0.2.1.min.js"></script>
+		<script src="script/presentation-sjs.js"></script>
+	</head>
+	<body>
+		<div id="presentation">
+			<div id="home" class="step" data-template="flow-down">
+				<!-- Home is empty/transparent but still there as a step -->
+				<div class="stop" data-template="flow-right">
+					<div id="header" class="step" data-template="flow-right">
+						<header>
+							<h1>Exploring the Use of the Web Audio API to Improve Chart Accessibility</h1>
+							<p><a href="http://matatk.agrip.org.uk/">Matthew Tylee Atkinson</a> &mdash; <a href="https://twitter.com/matatk/">@matatk</a></p>
+						</header>
+						<div class="step">
+							<div id="chart-csun" class="chart"></div>
+							<p>Source: <a href="https://www.google.co.uk/trends/explore#q=csun">https://www.google.co.uk/trends/explore#q=csun</a></p>
+						</div>
+						<div class="step" data-x="3500" data-y="-400" data-z="-1000" data-rotate-x="-80" data-rotate-y="50" data-rotate-z="0" data-src="assets/csun-searches-table.html">
+							<!-- Data Table -->
+						</div>
+						<div id="long-way-down" class="step" data-rel-x="300" data-rel-y="200" data-rel-z="-300" data-rotate-x="0" data-rotate-y="0" data-rotate-z="0">
+							<!-- Long way down -->
+						</div>
+						<div class="step">
+							<h2>Accessibility Barriers</h2>
+							<ul>
+								<li data-jmpress="fade">Overview</li>
+								<li data-jmpress="fade">Navigation</li>
+								<li data-jmpress="fade">Time to perceive and understand</li>
+								<li data-jmpress="fade">Interactivity</li>
+							</ul>
+						</div>
+						<div class="step">
+							<h2>Barriers for Authors/Developers</h2>
+							<ul>
+								<li data-jmpress="fade">Many charts</li>
+								<li data-jmpress="fade">Many accessibility approaches</li>
+								<li data-jmpress="fade">Implementation time</li>
+								<li data-jmpress="fade">Support time</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+
+				<section class="step centre" data-template="flow-right">
+					<h1>Aims &amp; Approaches</h1>
+					<div class="step">
+						<h2>Aims</h2>
+						<ul>
+							<li data-jmpress="fade">Improved accessibility
+								<ul>
+									<li data-jmpress="fade">Overview, navigation</li>
+									<li data-jmpress="fade">Time</li>
+									<li data-jmpress="fade">Understanding</li>
+								</ul>
+							</li>
+							<li data-jmpress="fade">Adoption
+								<ul>
+									<li data-jmpress="fade">Generic approach</li>
+									<li data-jmpress="fade">Robust</li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+
+					<div class="step">
+						<h2>Approaches</h2>
+						<ul>
+							<li data-jmpress="fade">Text-based</li>
+							<li data-jmpress="fade">Semantic</li>
+							<li data-jmpress="fade">Multimodal</li>
+						</ul>
+					</div>
+
+					<div class="step" data-template="nest-tree">
+						<h2>Text-based</h2>
+						<ul>
+							<li data-jmpress="fade">Table</li>
+							<li data-jmpress="fade">Description</li>
+							<li data-jmpress="fade">Statistical description</li>
+						</ul>
+						<div id="sortable-tables" class="step">
+							<h3>Table</h3>
+							<img alt="Sortable table example" src="images/sortable-table.png">
+							<p><a href="https://en.wikipedia.org/wiki/Help:Sorting#Tables_with_complex_headers">Source: Wikipedia</a></p>
+						</div>
+						<div class="step">
+							<h3>Description</h3>
+							<p>&quot;There is a slight upwards trend, with a slight dip around 2011. There are seasonal variations, with regular troughs in June, but significantly higher interest during the rest of the year.&quot;</p>
+						</div>
+						<div class="step">
+							<h3>Statistical description</h3>
+							<p>&quot;The data are approximately normally-distributed with a mean of 42 and a standard deviation of 6.&quot;</p>
+						</div>
+					</div>
+
+					<div class="step">
+						<h2>Semantic</h2>
+						<ul>
+							<li data-jmpress="fade"><a href="https://www.paciellogroup.com/blog/2013/12/using-aria-enhance-svg-accessibility/">Using ARIA to enhance SVG accessibility</a></li>
+							<li data-jmpress="fade"><a href="https://css-tricks.com/accessible-svgs/">CSS Tricks: Accessible SVGs</a></li>
+							<li data-jmpress="fade"><a href="https://www.sitepoint.com/tips-accessible-svg/">Tips for Creating Accessible SVG</a></li>
+						</ul>
+					</div>
+					<div class="step">
+						<h2>Multimodal</h2>
+						<ul>
+							<li data-jmpress="fade">Reinforcement</li>
+							<li data-jmpress="fade">Visualisation environments</li>
+							<li data-jmpress="fade">CSUN session: <a href="http://www.csun.edu/cod/conference/2016/sessions/index.php/public/presentations/view/120">Dig Into Your Data: Interactive Charts, Graphs and Maps</a></li>
+							<li data-jmpress="fade">CSUN session: <a href="http://www.csun.edu/cod/conference/2016/sessions/index.php/public/presentations/view/108">Translating Visual Information into Tactile Information</a></li>
+						</ul>
+					</div>
+
+					<div id="sonification" class="step">
+						<h2>The Sonification Handbook</h2>
+						<p>
+						<img src="images/SHB-cover.jpg" alt="">
+						<img src="images/SHB-backcover.jpg" alt="">
+						</p>
+						<p><a href="http://sonification.de/handbook/">http://sonification.de/handbook/</a></p>
+					</div>
+
+					<div id="web-audio-api" class="step">
+						<iframe title="Web Audio API demo: Qwerty Hancock" src="node_modules/qwerty-hancock/demo/index.html"></iframe>
+					</div>
+				</section>
+
+				<section class="step centre" data-template="flow-right">
+					<h1>AudioChart<br>Examples</h1>
+					<div class="step">
+						<div id="chart-hello" class="chart"></div>
+						<button id="play-hello">Play/Pause</button>
+					</div>
+					<div class="step">
+						<div id="chart-sin" class="chart"></div>
+						<button id="play-sin">Play/Pause</button>
+					</div>
+					<div class="step">
+						<div id="chart-csun-2" class="chart"></div>
+						<button id="play-csun-2">Play/Pause</button>
+					</div>
+					<div id="audio-table" class="step" data-template="nest-tree">
+						<table id='table1'>
+							<tr><th>Test Series</th></tr>
+							<tr><td>0</td></tr>
+							<tr><td>42</td></tr>
+							<tr><td>84</td></tr>
+							<tr><td>198</td></tr>
+							<tr><td>84</td></tr>
+							<tr><td>42</td></tr>
+							<tr><td>0</td></tr>
+						</table>
+						<button id="btn_table1">Play/Pause</button>
+					</div>
+				</section>
+
+				<section class="step centre" data-template="flow-right">
+					<h1>AudioChart<br>Research &amp; Development</h1>
+					<div class="step">
+						<h2>Research/Evaluation</h2>
+						<ul>
+							<li data-jmpress="fade">
+								&hellip;is ongoing
+							</li>
+							<li data-jmpress="fade">
+								Relation to other approaches
+							</li>
+							<li data-jmpress="fade">
+								Objective
+							</li>
+							<li data-jmpress="fade">
+								Subjective
+							</li>
+						</ul>
+					</div>
+					<div class="step" data-template="nest-tree">
+						<h2>Development</h2>
+						<ul>
+							<li data-jmpress="fade">Library (running client-side)</li>
+							<li data-jmpress="fade">No additional dependencies</li>
+							<li data-jmpress="fade">Interfaces with chart library
+								<ul>
+									<li data-jmpress="fade">&hellip;or table/JSON</li>
+								</ul>
+							</li>
+							<li data-jmpress="fade">Data-independent</li>
+							<li data-jmpress="fade">Test-driven</li>
+						</ul>
+						<div class="step">
+							<iframe title="Code tests" src="audiochart-test/index.html"></iframe>
+						</div>
+						<div class="step">
+							<iframe title="Test coverage" src="audiochart-test/coverage/index.html"></iframe>
+						</div>
+					</div>
+					<div class="step">
+						<h2>Features Roadmap</h2>
+						<ul>
+							<li data-jmpress="fade">
+								Sound output sophistication
+								<ul>
+									<li data-jmpress="fade">Timbre, tempo, grid</li>
+									<li data-jmpress="fade">Smoothing</li>
+									<li data-jmpress="fade">Multiple series</li>
+								</ul>
+							</li>
+							<li data-jmpress="fade">
+								Interactivity
+								<ul>
+									<li data-jmpress="fade"><a href="http://matatk.agrip.org.uk/audiochart/examples/examples-gallery.html">Keyboard handling</a></li>
+									<li data-jmpress="fade">Mouse</li>
+									<li data-jmpress="fade">Touch</li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+					<div class="step">
+						<h2>Features Roadmap II</h2>
+						<ul>
+							<li data-jmpress="fade">
+								Chart libraries (e.g. <a href="http://c3js.org">C3.js</a>, SVG, &hellip;)
+							</li>
+							<li data-jmpress="fade">
+								Browser extension
+								<ul>
+									<li data-jmpress="fade">GreaseMonkey-style apparoch</li>
+									<li data-jmpress="fade">More customisation?</li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+					<div class="step centre">
+						<p>You may also like&hellip;</p>
+						<p><a href="https://heydon.github.io/beadz-drum-machine/">Beadz&mdash;a quantum polymetric drum machine</a>. A really cool drum machine, built on the Web Audio API, and with all sorts of accessibility in mind.</p>
+					</div>
+				</section>
+				<footer class="step centre">
+					<p>Thank you. Any questions?</p>
+					<p><a href="http://matatk.agrip.org.uk/audiochart">http://matatk.agrip.org.uk/audiochart</a></p>
+				</footer>
+			</div>
+
+			<div id="overview" class="step" data-x="4800" data-y="2400" data-z="1000" data-scale="7.2"></div>
+		</div>
+
+		<div class="hint">
+			<p>Use <kbd>Space</kbd> or the arrow keys to navigate.</p>
+			<p>Press <kbd>o</kbd> at any time for the overview.</p>
+		</div>
+
+		<script>
+$(function() {
+	$('#presentation').jmpress({
+		keyboard: {
+			keys: {
+				79: ['select', '#overview']
+			}
+		},
+		initStep: function(step, eventData) {
+			var DIMS = ['x', 'y', 'z'];
+
+			var data = eventData.data;
+			var stepData = eventData.stepData;
+
+			for (var dim in DIMS) {
+				var relDim = 'rel' + dim.toUpperCase();
+				if (data[relDim]) {
+					stepData['dim'] = step.prev().data("stepData")['dim'] + parseFloat(data[relDim]);
+				}
+			}
+		}
+	});
+});
+
+$.jmpress("template", "flow-down", {
+	children: function(idx, current_child, children) {
+		return {
+			y: (idx + 1) * 1200
+		}
+	}
+});
+
+$.jmpress("template", "flow-right", {
+	children: function(idx, current_child, children) {
+		return {
+			y: 0,
+			x: (idx + 1) * (1500 - (idx * 10)),
+			rotateY: (idx + 1) * 5
+		}
+	}
+});
+
+$.jmpress("template", "peek-down", {
+	children: function(idx, current_child, children) {
+		return {
+			y: (idx + 1) * 100,
+			rotateX: 50
+		}
+	}
+});
+
+// http://jmpressjs.github.io/docs/templates.html
+$.jmpress("template", "nest-tree", {
+	children: function( idx, current_child, children ) {
+		return {
+			y: 600
+				,x: -400 + idx * 800
+				,template: "nest-tree"
+				,scale: 0.5
+				,rotateY: (idx + 1) * 10
+		}
+	}
+});
+		</script>
+	</body>
+</html>
