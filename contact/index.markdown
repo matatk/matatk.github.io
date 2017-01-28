@@ -7,6 +7,5 @@ There are a number of ways to contact me.  Here's a list of the services I use m
 
  * [Twitter](http://twitter.com/matatk)
  * [GitHub](http://github.com/matatk)
- * [LinkedIn](http://linkedin.com/in/matatk)
 
 I am not publishing my current email address due to spam problems.  Apologies if this presents any inconvenience.
