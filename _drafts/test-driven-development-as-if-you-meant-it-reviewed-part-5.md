@@ -10,7 +10,7 @@ extra-style: syntax
 
 {% include series.html %}
 
-This article was written with and is [also published by](http://markwithall.com/programming/2017/05/17/test-driven-development-as-if-you-meant-it-reviewed-part-v.html) Mark Withall.
+This article was written with and is [also published by](http://markwithall.com/programming/2017/06/01/test-driven-development-as-if-you-meant-it-reviewed-part-v.html) Mark Withall.
 
 We've had a thorough look at TDDAIYMI over the last few parts of this series. Now we're going to look at how the task might have been completed using 'normal' TDD.
 
