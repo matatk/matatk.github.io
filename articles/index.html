@@ -9,9 +9,9 @@ script:
 <div id="tag-cloud"></div>
 {% for tag in site.tags %}
 {% assign cur_tag = tag[0] %}
-<h2 id="{{ cur_tag }}" data-posts="{{ site.tags.[cur_tag].size }}">{{ cur_tag }}</h2>
+<h2 id="{{ cur_tag }}" data-posts="{{ site.tags[cur_tag].size }}">{{ cur_tag }}</h2>
 <ul>
-	{% for post in site.tags.[cur_tag] %}
+	{% for post in site.tags[cur_tag] %}
 	<li><a href="{{ post.url }}">{{ post.title }}</a> ({{ post.date | date: "%Y-%m-%d"}})</li>
 	{% endfor %}
 </ul>
