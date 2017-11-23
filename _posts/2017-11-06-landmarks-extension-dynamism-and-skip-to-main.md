@@ -29,4 +29,4 @@ First of all, please give this a go and [let me know if you find any problems by
 
 The next big feature to address will be making the highlihgting of landmarks clearer and more robust—that will be the focus of the 2.2.0 release.
 
-Thanks to [Carolyn MacLeod](https://github.com/carmacleod), [fstorr](https://github.com/fstorr) and [Heydon Pickering](https://github.com/heydon) for feedback that shaped this release.
+Thanks to [Carolyn MacLeod](https://github.com/carmacleod), [Dan Nye](https://github.com/BillyRayPreachersSon), [fstorr](https://github.com/fstorr) and [Heydon Pickering](https://github.com/heydon) for feedback that shaped this release.
