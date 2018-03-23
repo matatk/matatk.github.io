@@ -22,6 +22,10 @@ Having completed the initial development of the controller, we now have a we def
 AUTHOR NOTES
 ------------
 
+The comments from the Google Doc are not included here.
+
+Stuff in the document ***highlighted thusly*** is TBD.
+
 -   [GitHub branch for this line of development](https://github.com/BillionthMonkey/NoughtsAndCrosses/tree/attempt_005_normal_tdd_separate_board_renderer) (we should link this into the text somewhere?)
 -   Transitions between C and M, M and V
 -   [Model](https://github.com/BillionthMonkey/NoughtsAndCrosses/commit/ea5d659b14c124bbc037e3e38c34a9d06e3db526)
@@ -41,22 +45,114 @@ We'll start off in this part by looking, step-by-step, at each of the initial co
 The Model API
 -------------
 
-[as defined by TDDing the controller]
+***[as defined by TDDing the controller]***
 
-Start: [ea5d659](https://github.com/BillionthMonkey/NoughtsAndCrosses/commit/ea5d659b14c124bbc037e3e38c34a9d06e3db526)
+***Start: [ea5d659](https://github.com/BillionthMonkey/NoughtsAndCrosses/commit/ea5d659b14c124bbc037e3e38c34a9d06e3db526)***
 
 The first few commits are filling in `is_legal()` and then making it actually do stuff (previously we only tested that the controller called it; its return value was provided by a mock and was either `True` or `False`, depending on whether we were testing what happens when a legal or illegal move was played).
 
-We first check for an illegal move in [72f6738](https://github.com/BillionthMonkey/NoughtsAndCrosses/commit/72f673853e17d6bd99546dad7bbf93c8af0aeafd) We then add 9 at the top of the range in [62b4302](https://github.com/BillionthMonkey/NoughtsAndCrosses/commit/62b4302e876a65f8dfab203f90307f3cffbb4a66) and refactor to assume anything within the range is valid in [30322c5](https://github.com/BillionthMonkey/NoughtsAndCrosses/commit/30322c51d259f68e994cc93f12841a898726f60b).
+We first check for an illegal move.
 
-*We should say something about the removal of magic numbers, as in the refactor in [bfc5f16](https://github.com/BillionthMonkey/NoughtsAndCrosses/commit/bfc5f164eb556c3c74b1e741dc4f5a8da1f6d668) to make the number of board cells a clear concept within the code.*
+### RED check for illegal move - 2014-10-01 [12:39](https://github.com/BillionthMonkey/NoughtsAndCrosses/commit/72f673853e17d6bd99546dad7bbf93c8af0aeafd)
+{: style="color: red" }
 
-In [a152be3](https://github.com/BillionthMonkey/NoughtsAndCrosses/commit/a152be3a995cba44c52162c7cb7ac8231db4c5f6) we start a short story arc of tests that set up checking for moves that have already been played.  At the start we don't check (as no moves have been played), then we increase this to checking the last move in [d9f980d](https://github.com/BillionthMonkey/NoughtsAndCrosses/commit/d9f980dd22dc3b1ffa89f0a7bacbf16d9d6df1a6) and finally generalise it from [0626105](https://github.com/BillionthMonkey/NoughtsAndCrosses/commit/0626105ca12c781f10d14679c7caed683602b35c).
+```python
+def test_is_legal_returns_false_with_illegal_move(self):
+    model = NoughtsAndCrossesModel()
+    assert model.is_legal(-1) is False
+```
 
-The rest of the model follows the same pattern of filling in the
-functions we'd previously mocked, then writing tests that coax us into
-checking the input; simply at first and then extending the checks as far
-as is necessary to cover the possible cases within the game.
+### GREEN - 2014-10-01 [12:41](https://github.com/BillionthMonkey/NoughtsAndCrosses/commit/4b3c3ecb17061d5e949ba8b35c50ff22f0f69dcd)
+{: style="color: green;" }
+
+```python
+class NoughtsAndCrossesModel():
+    def is_legal(self, move):
+        if move == -1:
+            return False
+        return True
+```
+
+We then add 9 at the top of the range&mdash;which has to be justified by a further test, of course.
+
+### RED another illegal move - 2014-10-01 [12:45](https://github.com/BillionthMonkey/NoughtsAndCrosses/commit/62b4302e876a65f8dfab203f90307f3cffbb4a66)
+{: style="color: red;" }
+
+```python
+def test_is_legal_returns_false_with_another_illegal_move(self):
+    assert self.model.is_legal(9) is False
+```
+
+### GREEN - 2014-10-01 [12:46](https://github.com/BillionthMonkey/NoughtsAndCrosses/commit/3d0d8fe2728732aa54349b456b3493e49a8a360e)
+{: style="color: green" }
+
+```python
+class NoughtsAndCrossesModel():
+    def is_legal(self, move):
+        if move == -1 or move == 9:
+            return False
+        return True
+```
+
+and, a little later, refactor to assume anything within the range is valid.
+
+### REFACTOR simplify is_legal - 2014-10-01 [12:47](https://github.com/BillionthMonkey/NoughtsAndCrosses/commit/30322c51d259f68e994cc93f12841a898726f60b)
+{: style="color: blue" }
+
+```python
+class NoughtsAndCrossesModel():
+    def is_legal(self, move):
+        return move in range(9)
+```
+
+There is a further refactoring step immediately after this: the extraction of the 'magic number' 9 in the code above. Magic numbers are constants that appear in the code without any inherent or explicit explanation. They are often important facets of the problem domain (the size of the board, in this case), therefore they can also crop up quite often. This can become a maintenance headache, as if any of the assumptions are changed (such as if we were to enlarge the board), we have a big ["Don't Repeat Yourself (DRY)"](https://en.wikipedia.org/wiki/Don't_repeat_yourself) violation to sort out.
+
+Therefore, magic numbers should be extracted as variables. This improves the clarity of the code, and helps us avoid DRY problems in future.
+
+### REFACTOR remove magic number - 2014-10-01 [12:48](https://github.com/BillionthMonkey/NoughtsAndCrosses/commit/bfc5f164eb556c3c74b1e741dc4f5a8da1f6d668)
+{: style="color: blue" }
+
+```python
+class NoughtsAndCrossesModel():
+    def is_legal(self, move):
+        number_of_cells = 9
+        return move in range(number_of_cells)
+```
+
+We then start a short story arc of tests that set up checking for moves that have already been played. At the start we don't check (as no moves have been played),
+
+### RED cannot play move already played - 2014-10-01 [12:56](https://github.com/BillionthMonkey/NoughtsAndCrosses/commit/a152be3a995cba44c52162c7cb7ac8231db4c5f6)
+{: style="color: red;" }
+
+```python
+def test_is_legal_returns_false_if_move_already_played(self):
+    self.model.play_move(0)
+```
+
+then we increase this to checking the last move
+
+### RED detect move already played - 2014-10-01 [12:57](https://github.com/BillionthMonkey/NoughtsAndCrosses/commit/d9f980dd22dc3b1ffa89f0a7bacbf16d9d6df1a6)
+{: style="color: red;" }
+
+```python
+def test_is_legal_returns_false_if_move_already_played(self):
+    self.model.play_move(0)
+    assert self.model.is_legal(0) is False
+```
+
+and finally generalise it
+
+### RED check for historical moves - 2014-10-01 [13:01](https://github.com/BillionthMonkey/NoughtsAndCrosses/commit/0626105ca12c781f10d14679c7caed683602b35c)
+{: style="color: red;" }
+
+```python
+def test_is_legal_returns_false_if_move_historically_played(self):
+    self.model.play_move(0)
+    self.model.play_move(1)
+    assert self.model.is_legal(0) is False
+```
+
+The rest of the model follows the same pattern of filling in the functions we'd previously mocked, then writing tests that coax us into checking the input; simply at first and then extending the checks as far as is necessary to cover the possible cases within the game.
 
 The View API
 ------------
