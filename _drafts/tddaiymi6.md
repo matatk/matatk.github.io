@@ -22,10 +22,10 @@ Having completed the initial development of the controller, we now have a we def
 AUTHOR NOTES
 ------------
 
-The comments from the Google Doc are not included here.
-
-Stuff in the document ***highlighted thusly*** is TBD.
-
+-   Stuff in the document ***highlighted thusly*** is TBD.
+-   The comments from the Google Doc are not included here.
+-   We should probably note that not all commits are being discussed here; some are skipped over. At the start, I made this a bit more explicit (by linking to them) but we could mention it?
+-   Should we mention Refined GitHub, as a means to move back/forward through the commits on the web? If so, should we add it to part 1?
 -   [GitHub branch for this line of development](https://github.com/BillionthMonkey/NoughtsAndCrosses/tree/attempt_005_normal_tdd_separate_board_renderer) (we should link this into the text somewhere?)
 -   Transitions between C and M, M and V
 -   [Model](https://github.com/BillionthMonkey/NoughtsAndCrosses/commit/ea5d659b14c124bbc037e3e38c34a9d06e3db526)
@@ -38,9 +38,6 @@ Stuff in the document ***highlighted thusly*** is TBD.
     the API that is used by the controller.
 -   Backtracking ("Normal" TDD is not a substitute for good
     design)
-
-**Template for RGR HTML:**
-We'll start off in this part by looking, step-by-step, at each of the initial commits of the <span style="color: red;">RED</span>-<span style="color: green;">GREEN</span>-<span style="color: blue;">REFACTOR</span> cycle.
 
 The Model API
 -------------
@@ -73,7 +70,7 @@ class NoughtsAndCrossesModel():
         return True
 ```
 
-We then add 9 at the top of the range&mdash;which has to be justified by a further test, of course.
+After some [fettling of the test infrastructure](https://github.com/BillionthMonkey/NoughtsAndCrosses/commit/7b180d6aa7a618f1784257b598d963e0f1ec3ff3) we add 9 at the top of the range&mdash;which has to be justified by a further test, of course.
 
 ### RED another illegal move - 2014-10-01 [12:45](https://github.com/BillionthMonkey/NoughtsAndCrosses/commit/62b4302e876a65f8dfab203f90307f3cffbb4a66)
 {: style="color: red;" }
