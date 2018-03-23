@@ -249,20 +249,56 @@ class BoardRenderer():
 The Naughty Bit
 ---------------
 
-[creating an app runner that has slightly too much functionality, without TDDing it!]
+***[creating an app runner that has slightly too much functionality, without TDDing it!]***
 
 After writing all the gubbins of the code, we needed something to wire it all together so that it would actually *do something*. This took the form of a launcher script. Ideally these sorts of scripts would be so simple that they don't need TDDing themselves; they simply initialise the required bits (in our case things like `ResultChecker` and `BoardRenderer`, wire them up and kick off a loop through which the user can direct what happens.
 
-However, we rather overshot what is reasonable to include in such a script without testing. Whilst the variable set-up and dependency injection bit <https://github.com/BillionthMonkey/NoughtsAndCrosses/blob/a82bb4c533e13c7050a7207f0a5d4a2568f9d043/nac.py\#L16-L24> is fine, we really should have tested the following:
+However, we rather overshot what is reasonable to include in such a script without testing. Whilst the [variable set-up and dependency injection bit](https://github.com/BillionthMonkey/NoughtsAndCrosses/blob/a82bb4c533e13c7050a7207f0a5d4a2568f9d043/nac.py\#L16-L24)
 
-The loop that takes input from the user and calls the appropriate action in the library code <https://github.com/BillionthMonkey/NoughtsAndCrosses/blob/a82bb4c533e13c7050a7207f0a5d4a2568f9d043/nac.py\#L26-L39>
+```python
+result_checker = ResultChecker(winning_moves, number_of_cells)
+model = NoughtsAndCrossesModel(result_checker, number_of_cells)
 
-One area where we *don't* feel that we did too much without testing was the patterns that represent winning moves <https://github.com/BillionthMonkey/NoughtsAndCrosses/blob/a82bb4c533e13c7050a7207f0a5d4a2568f9d043/nac.py\#L10-L14>. This is because, within the way that the Noughts and Crosses library code is designed, this is configuration data rather than code itself. Configuration data ought to be tested, of course, but this would usually be done at a higher level than unit tests, which is the focus of TDD. **NOTE COMMENTS (AND IN OTHER AREAS TOO)**
+board_renderer = BoardRenderer()
+view = NoughtsAndCrossesView(board_renderer)
 
-If we were to create this script again, then we ought to have developed
-the main loop in TDD fashion.
+controller = NoughtsAndCrossesController(model, view)
 
-<https://github.com/BillionthMonkey/NoughtsAndCrosses/commit/a82bb4c533e13c7050a7207f0a5d4a2568f9d043>
+controller.reset()
+```
+
+is fine ***[EXPLAIN WHY?]***, we really should have tested the [loop that takes input from the user and calls the appropriate action in the library code](https://github.com/BillionthMonkey/NoughtsAndCrosses/blob/a82bb4c533e13c7050a7207f0a5d4a2568f9d043/nac.py\#L26-L39):
+
+```python
+while True:
+    try:
+        thing = raw_input('> ')
+        if thing.isdigit():
+            controller.play_move(int(thing))
+        elif thing == 'reset':
+            controller.reset()
+        elif thing == 'quit':
+            controller.quit()
+            break
+    except KeyboardInterrupt:
+        print
+        controller.quit()
+        break
+```
+
+One area where we *don't* feel that we did too much without testing was the [patterns that represent winning moves](https://github.com/BillionthMonkey/NoughtsAndCrosses/blob/a82bb4c533e13c7050a7207f0a5d4a2568f9d043/nac.py\#L10-L14).
+
+```python
+winning_moves = [
+    [ 0, 1, 2 ], [ 3, 4, 5 ], [ 6, 7, 8 ],
+    [ 0, 3, 6 ], [ 1, 4, 7 ], [ 2, 5, 8 ],
+    [ 0, 4, 8 ], [ 2, 4, 6 ]
+]
+```
+
+This is because, within the way that the Noughts and Crosses library code is designed, this is configuration data rather than code itself. Configuration data ought to be tested, of course, but this would usually be done at a higher level than unit tests, which is the focus of TDD. ***NOTE COMMENTS (AND IN OTHER AREAS TOO)***
+
+If we were to create [the main script](https://github.com/BillionthMonkey/NoughtsAndCrosses/commit/a82bb4c533e13c7050a7207f0a5d4a2568f9d043) again, then we ought to have developed the main loop in TDD fashion.
 
 Next Time
 ---------
