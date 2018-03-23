@@ -157,20 +157,94 @@ The rest of the model follows the same pattern of filling in the functions we'd 
 The View API
 ------------
 
-[as defined by TDDing the controller]
+***[as defined by TDDing the controller]***
 
-Start: [8eeb737](https://github.com/BillionthMonkey/NoughtsAndCrosses/commit/8eeb7373dc4fba7b694b23ef24c071a4b8a9083d)
+***Start: [8eeb737](https://github.com/BillionthMonkey/NoughtsAndCrosses/commit/8eeb7373dc4fba7b694b23ef24c071a4b8a9083d)***
 
-There are multiple options for the type of view that we want to create.  For simplicity, we decided to go with a simple console application. We start the view by filling in the `win()` method. In this case, winning results in printing a nice message to the screen - 'Congratulations; you won!'. An added wrinkle here is that we need to mock stand output, so that we can see what is written to it. Fortunately, Python makes this straightforward to achieve [70d9455](https://github.com/BillionthMonkey/NoughtsAndCrosses/commit/70d9455fb9484b9435165bad006a775509d8a4ba).
+There are multiple options for the type of view that we want to create.  For simplicity, we decided to go with a simple console application. We start the view by filling in the `win()` method. In this case, winning results in printing a nice message to the screen - 'Congratulations; you won!'. An added wrinkle here is that we need to mock stand output, so that we can see what is written to it. Fortunately, Python makes this straightforward to achieve.
 
-After dealing with winning, and adding drawing, we move on to the main part of rendering the board. We make the design decision to delegate the actual drawing to a board renderer class: [cef65f9](https://github.com/BillionthMonkey/NoughtsAndCrosses/commit/cef65f97d19604b2fe72b2b44ebf14073ac43200) [this allows us to develop two sets of simpler tests, rather than one more complicated set.]
+### RED 'win' method should emit congratulatory message - 2014-10-23 [13:21](https://github.com/BillionthMonkey/NoughtsAndCrosses/commit/70d9455fb9484b9435165bad006a775509d8a4ba)
+{: style="color: red;" }
+
+```python
+import sys
+import mock
+from nac.view import NoughtsAndCrossesView
+
+class TestNoughtsAndCrossesView():
+    def test_win(self):
+        fake_stdout = mock.Mock()
+        sys.stdout = fake_stdout
+        view = NoughtsAndCrossesView()
+        view.win()
+        fake_stdout.write.assert_any_call('Congratulations; you won!')
+```
+
+After dealing with winning, and adding drawing, we move on to the main part of rendering the board. We make the design decision to delegate the actual drawing to a board renderer class.
+
+### RED need a board renderer - 2014-11-13 [13:14](https://github.com/BillionthMonkey/NoughtsAndCrosses/commit/cef65f97d19604b2fe72b2b44ebf14073ac43200)
+{: style="color: red;" }
+
+```python
+def test_reset(self):
+    self.view.reset()
+    self.fake_board_renderer.render.assert_called_with([])
+```
+
+This allows us to develop two sets of simpler tests, rather than one more complicated set.
 
 We then move on to the main part of the development of the view,
-creating the board renderer itself: [21a531f](https://github.com/BillionthMonkey/NoughtsAndCrosses/commit/21a531fee9368b95b2b4c175f618577e605a27ec).
+creating the board renderer itself (alas we gave this one a very similar name to the previous one, partly because there were several tests in-between and we didn't go back to check the name of the one shown above; oops).
 
-We start this by developing the rendering on an empty board as an ASCII display: [91270f5](https://github.com/BillionthMonkey/NoughtsAndCrosses/commit/91270f5d105e33de3f243b371a267205b27009c9).
+### RED need board renderer - 2014-11-18 [13:15](https://github.com/BillionthMonkey/NoughtsAndCrosses/commit/21a531fee9368b95b2b4c175f618577e605a27ec)
+{: style="color: red;" }
 
-We take an interesting refactoring step after this first sequence, [dd880ce](https://github.com/BillionthMonkey/NoughtsAndCrosses/commit/dd880cef93070927f659120774937a4813a7bda8), were we remove the duplication in printing the board. There is a risk that this refactoring is premature, as further tests to develop the board printing might show the refactoring to be wrong.
+```python
+class TestBoardRenderer():
+    def test_empty_board(self, capsys):
+        board_renderer = BoardRenderer()
+```
+
+After some [further set-up style tests using pytest's standard output capture](https://docs.pytest.org/en/2.8.7/capture.html), we have a test that requires the rendering on an empty board as an ASCII display.
+
+### RED need a board! - 2014-11-18 [13:24](https://github.com/BillionthMonkey/NoughtsAndCrosses/commit/91270f5d105e33de3f243b371a267205b27009c9)
+{: style="color: red;" }
+
+```python
+def test_empty_board(self, capsys):
+    board_renderer = BoardRenderer()
+    board_renderer.render([])
+    assert_stdout_is('+---+---+---+\n' \
+                     '|   |   |   |\n' \
+                     '+---+---+---+\n' \
+                     '|   |   |   |\n' \
+                     '+---+---+---+\n' \
+                     '|   |   |   |\n' \
+                     '+---+---+---+\n',
+                     capsys)
+```
+
+We take an interesting refactoring step after this first sequence, were we remove the duplication in printing the board. There is a risk that this refactoring is premature, as further tests to develop the board printing might show the refactoring to be wrong.
+
+### REFACTOR DRY the board printing - 2014-11-18 [13:28](https://github.com/BillionthMonkey/NoughtsAndCrosses/commit/dd880cef93070927f659120774937a4813a7bda8)
+{: style="color: blue;" }
+
+```python
+class BoardRenderer():
+    def render(self, moves):
+        for i in range(3):
+            self._print_border()
+            self._print_row()
+        self._print_border()
+
+    def _print_row(self):
+        print '|   |   |   |'
+
+    def _print_border(self):
+        print '+---+---+---+'
+```
+
+***What happened? What about magic numbers, as mentioned above?***
 
 The Naughty Bit
 ---------------
