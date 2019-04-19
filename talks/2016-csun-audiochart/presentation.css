@@ -70,7 +70,7 @@ body {
 	-o-transition:      opacity 1s,      -o-transform 0.5s 1s;
 	transition:         opacity 1s,         transform 0.5s 1s;
 }
-.step-home + .hint {
+.impress-on-start .hint {
 	opacity: 1;
 
 	-webkit-transition: opacity 1s 5s, -webkit-transform 0.5s;
@@ -90,7 +90,7 @@ body {
 #overview {
 	display: none;
 }
-.step-overview .step {
+.impress-on-overview .step {
 	opacity: 1;
 	outline: 15px solid #333;
 	cursor: pointer;
@@ -159,14 +159,6 @@ body {
 	text-align: center;
 }
 
-/* the parents of nested steps have to have opacity 1, or the opacity
- * of the child steps will be limited to whatever the opacity of the
- * parent step is.
- * adapted from http://stackoverflow.com/a/13328976 */
-.step.nested-active {
-	opacity: 1;
-}
-
 /* title slides and other centred stuff */
 /* (bit of a hack ATM; should centre anything within itself) */
 /* Note: they're explicit direct child selectors because of nested slides */
@@ -186,8 +178,8 @@ h1, h2, h3 {
 	padding-top: 0;
 }
 /* ...except the real header one */
-#header h1 {
-	margin-top: 1em;
+header h1 {
+	margin-top: 3em;
 }
 
 /* Lists */
@@ -213,11 +205,14 @@ input[type="button"], button {  /* safari */
 	height: 80%;
 }
 
-.step-long-way-down .step {
+#long-way-down {
+	display: none;
+}
+.impress-on-long-way-down .step {
 	opacity: 1;
 }
 
-#long-way-down {
+#bigtable.future {
 	display: none;
 }
 
@@ -231,7 +226,8 @@ th {
 }
 th, td {
 	border: 1px solid #333;
-	padding: 0.5rem;
+	padding: 1.5rem;
+	line-height: 1.5rem;
 	margin: 0;
 }
 
@@ -240,7 +236,7 @@ th, td {
 }
 
 #sonification img {
-	max-height: 55%;
+	max-width: 25%;
 }
 
 header img {
@@ -254,22 +250,28 @@ header img {
 	outline: none;
 }
 
-.step-web-audio-api #web-audio-api {  /* black border for qwerty hancock */
-	outline: 200px solid black;
+.impress-on-web-audio-api #web-audio-api {  /* black border for qwerty hancock */
+	outline: 500px solid black;
 }
 
-#audio-table th, #audio-table td {
-	padding: 1.5rem;
-	line-height: 1.5rem;
-}
 .current-datum {
 	background-color: yellow;
 }
 
-/* DEBUGGING */
-/*.step {
-border: 2px solid green;
+/* SUBSTEPS */
+.substep { opacity: 0; }
+.substep.substep-visible { opacity: 1; transition: opacity 1s; }
+
+/* PROGRESS */
+.impress-progressbar {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
 }
-.step.active {
-border: 2px solid red;
-}*/
+.impress-progressbar div {
+  width: 0;
+  height: 4px;
+  background: #959595;
+  transition: width 1s linear;
+}

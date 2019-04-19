@@ -2,6 +2,9 @@ permalink: /articles/:title/
 exclude:
  - Gemfile
  - Gemfile.lock
+ - talks/2016-csun-audiochart/vendor/get-vendor-libs.sh
+ - talks/2016-csun-audiochart/vendor/impress.js-repo/
+ - talks/2016-csun-audiochart/vendor/qwerty-hancock/
 include:
  - _AudioChart.spec.js
 plugins:

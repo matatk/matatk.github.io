@@ -1,0 +1,6 @@
+[submodule "talks/2016-audiochart/vendor/impress.js-repo"]
+	path = talks/2016-audiochart/vendor/impress.js-repo
+	url = https://github.com/impress/impress.js
+[submodule "talks/2016-audiochart/vendor/qwerty-hancock-repo"]
+	path = talks/2016-audiochart/vendor/qwerty-hancock-repo
+	url = https://github.com/stuartmemo/qwerty-hancock

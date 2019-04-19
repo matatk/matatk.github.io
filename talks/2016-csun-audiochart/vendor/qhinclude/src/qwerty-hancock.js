@@ -1,7 +1,7 @@
 /*
- * Qwerty Hancock keyboard library v0.5.1
+ * Qwerty Hancock keyboard library v0.6.0
  * The web keyboard for now people.
- * Copyright 2012-15, Stuart Memo
+ * Copyright 2012-18, Stuart Memo
  *
  * Licensed under the MIT License
  * http://opensource.org/licenses/mit-license.php
@@ -15,7 +15,7 @@
      * In node context (browserify), `this` is the node global.
      */
     var globalWindow = typeof global === 'undefined' ? root : root.window;
-    var version = '0.5.1',
+    var version = '0.6.0',
         settings = {},
         mouse_is_down = false,
         keysDown = {},
@@ -87,6 +87,31 @@
         }
 
         settings.startOctave = parseInt(settings.startNote.charAt(1), 10);
+        settings.keyOctave = user_settings.keyOctave || settings.startOctave;
+
+        // Add getters and setters
+        this.setKeyOctave = function(octave){
+            settings.keyOctave = octave;
+            return settings.keyOctave;
+        }
+        this.getKeyOctave = function(){
+            return settings.keyOctave;
+        }
+        this.keyOctaveUp = function(){
+            settings.keyOctave++;
+            return settings.keyOctave;
+        }
+        this.keyOctaveDown = function(){
+            settings.keyOctave--;
+            return settings.keyOctave;
+        }
+        this.getKeyMap = function(){
+            return key_map;
+        }
+        this.setKeyMap = function(newKeyMap){
+            key_map = newKeyMap;
+            return key_map;
+        }
 
         createKeyboard();
         addListeners.call(this, container);
@@ -388,8 +413,8 @@
 
     var getKeyPressed = function (keyCode) {
         return key_map[keyCode]
-                .replace('l', parseInt(settings.startOctave, 10) + settings.keyPressOffset)
-                .replace('u', (parseInt(settings.startOctave, 10) + settings.keyPressOffset + 1)
+                .replace('l', parseInt(settings.keyOctave, 10) + settings.keyPressOffset)
+                .replace('u', (parseInt(settings.keyOctave, 10) + settings.keyPressOffset + 1)
                 .toString());
     };
 
@@ -397,12 +422,13 @@
      * Handle a keyboard key being pressed.
      * @param {object} key The keyboard event of the currently pressed key.
      * @param {callback} callback The user's noteDown function.
+     * @return {boolean} true if it was a key (combo) used by qwerty-hancock
      */
     var keyboardDown = function (key, callback) {
         var key_pressed;
 
         if (key.keyCode in keysDown) {
-           return;
+           return false;
         }
 
        keysDown[key.keyCode] = true;
@@ -413,13 +439,16 @@
             // Call user's noteDown function.
             callback(key_pressed, getFrequencyOfNote(key_pressed));
             lightenUp(document.getElementById(key_pressed));
+            return true;
        }
+       return false;
     };
 
     /**
      * Handle a keyboard key being released.
      * @param {element} key The DOM element of the key that was released.
      * @param {callback} callback The user's noteDown function.
+     * @return {boolean} true if it was a key (combo) used by qwerty-hancock
      */
     var keyboardUp = function (key, callback) {
         var key_pressed;
@@ -431,7 +460,17 @@
             // Call user's noteDown function.
             callback(key_pressed, getFrequencyOfNote(key_pressed));
             darkenDown(document.getElementById(key_pressed));
+            return true;
         }
+        return false;
+    };
+
+    /**
+     * Determine whether pressed key is a modifier key or not.
+     * @param {KeyboardEvent} The keydown event of a pressed key
+     */
+    var isModifierKey = function (key) {
+        return key.ctrlKey ||  key.metaKey || key.altKey;
     };
 
     /**
@@ -443,12 +482,22 @@
 
         // Key is pressed down on keyboard.
         globalWindow.addEventListener('keydown', function (key) {
-            keyboardDown(key, that.keyDown);
+            if (isModifierKey(key)) {
+              return;
+            }
+            if (keyboardDown(key, that.keyDown)) {
+                key.preventDefault();
+            }
         });
 
         // Key is released on keyboard.
         globalWindow.addEventListener('keyup', function (key) {
-            keyboardUp(key, that.keyUp);
+            if (isModifierKey(key)) {
+              return;
+            }
+            if (keyboardUp(key, that.keyUp)) {
+                key.preventDefault();
+            }
         });
 
         // Mouse is clicked down on keyboard element.
@@ -505,6 +554,17 @@
         this.keyUp = function () {
             // Placeholder function.
         };
+
+        this.setKeyOctave = function(octave){
+            // Placeholder function.
+        };
+
+        this.getKeyOctave = function(){};
+        this.keyOctaveUp = function(){};
+        this.keyOctaveDown = function(){};
+
+        this.getKeyMap = function(){};
+        this.setKeyMap = function(newKeyMap){};
 
         init.call(this, settings);
     };
