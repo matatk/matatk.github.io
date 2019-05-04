@@ -1,0 +1,157 @@
+@media screen {
+	/* Define the padding that's applied around the slides */
+	:root {
+		--vertical-gutter: 0.25rem;
+		--horizontal-gutter: 1rem;
+	}
+
+	/* This just makes everything make sense */
+	* { box-sizing: border-box; }
+
+	/* Scale the root em size as requested by the user */
+	html {
+		font-size: var(--root-font-size);
+		margin: 0;
+		padding: 0;
+	}
+
+	body {
+		margin: 0;
+		padding: 0;
+	}
+
+	/* Non-current slides shouldn't be shown */
+	.slide { display: none; }
+
+	/* TODO: doc */
+	/* The current slide should be shown, as large as it can be height-wise,
+	 * and as wide as it needs to be for the desired aspect ratio.
+	 *
+	 * The script puts each slide's content into a single nested <div> and sets
+	 * the slide's layout to flex. This allows the entire slide's contents to
+	 * expand to fill the slide, which allows effects such as positioning
+	 * content vertically at the bottom of the slide (or the middle).
+	 *
+	 * It's assumed that most slides will be simple text/lists/images and will
+	 * want some padding (as defined above) by default. */
+	.slide.active {
+		display: flex;
+		flex-direction: column;
+		position: absolute;
+		top: 0;
+		right: 0;
+		left: 0;
+		bottom: 0;
+		max-width: calc(var(--ratio) * 100vh);
+		margin: auto;
+		padding: var(--vertical-gutter) var(--horizontal-gutter);
+		/* overflow: hidden; */  /* Not needed if sizing things correctly */
+	}
+
+	/* TODO: doc */
+	.slide.active [data-split] {  /* doesn't match slide but that's above */
+		display: flex;
+		flex-direction: column;
+	}
+
+	/* TODO: doc */
+	/* FIXME: horizontal + bottom on the slide doesn't work */
+	.slide.horizontal { flex-direction: row; }
+	/* TODO: doc */
+	.slide.active.top:not(.horizontal),
+	.slide.active .top {
+		display: flex;
+		flex-direction: column;
+		justify-content: flex-start;
+		height: 100%;
+		width: 100%;
+	}
+	.slide.active.bottom:not(.horizontal),
+	.slide.active .bottom {
+		display: flex;
+		flex-direction: column;
+		justify-content: flex-end;
+		height: 100%;
+		width: 100%;
+	}
+	.slide.active.middle:not(.horizontal),
+	.slide.active .middle {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		height: 100%;
+		width: 100%;
+	}
+
+	/* Some slides will want to take up the full space, with no padding. This
+	 * can be used to achieve some effects, such as full-height/-width
+	 * backgrounds. */
+	.slide.active.full { padding: 0; }
+
+	/* TODO test, doc */
+	/* If a slide asked to use the full-size layout /only/ so that it could
+	 * have full-height/-width background colours - and actually /does/ want
+	 * the normal padding around its text content - then the class "padded" can
+	 * be added to insert the padding back in inside each top-level slide
+	 * content child element. */
+	.slide.active.full.padded > :first-child {
+		padding-top: var(--vertical-gutter);
+		padding-left: var(--horizontal-gutter);
+		padding-right: var(--horizontal-gutter);
+	}
+	.slide.active.full.padded > * {
+		padding-left: var(--horizontal-gutter);
+		padding-right: var(--horizontal-gutter);
+	}
+	.slide.active.full.padded > :last-child {
+		padding-left: var(--horizontal-gutter);
+		padding-right: var(--horizontal-gutter);
+		padding-bottom: var(--vertical-gutter);
+	}
+
+	/* If the "centre" (or "center") class was added to a slide, the user wants
+	 * the text centred horizontally. This needs to be passed on to the
+	 * script-created <div>. */
+	.slide.active.centre,
+	.slide.active.center { text-align: center; }
+
+	/* Likewise if the user wanted right-aligned content. */
+	.slide.active.right { text-align: right; }
+
+	/* TODO: doc */
+	/* Does the user want the slide's contents to grow to fit the slide? The
+	 * main reason they may want to do this would be if they opted to suppress
+	 * the default behaviour of putting the all of the slide's content into one
+	 * <div>, in order to achieve layouts like a 50/50 vertical split. */
+	[data-split] > * { flex-basis: 100%; }
+
+	/* The progress bar is a container with nested <div> that adjusts its
+	 * width. Got this neat trick from impress.js; thanks :-). */
+	#progress {
+		display: block;
+		position: absolute;
+		right: 0;
+		left: 0;
+		bottom: 0;
+	}
+	#progress > div { width: 0; }
+
+
+	/* Image stuff */
+
+	div.image-container {
+		max-height: 100vh;
+		max-width: calc(var(--ratio) * 100vh);
+	}
+
+	div.stretch-image-container {
+		height: 100%;
+		width: 100%;
+	}
+
+	img {
+		display: block;
+		height: 100%;
+		margin: auto;
+	}
+}

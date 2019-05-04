@@ -5,13 +5,13 @@ title: Creations
 
 ## Software
 
+[Landmarks](http://matatk.agrip.org.uk/landmarks/)
+: A web browser extension to help people navigate pages via the keyboard (using ARIA landmark regions).
+
 [AGRIP AudioQuake and Level Description Language](http://agrip.org.uk)
 : Making Quake playable, modifiable **and editable** by blind and vision-impaired gamers.
 
 ### Small Software
-
-[landmarks](http://github.com/matatk/landmarks/)
-: A Firefox extension to help people [navigate pages via the keyboard, using ARIA landmarks](http://matatk.agrip.org.uk/articles/keyboard-landmark-navigation-firefox/).
 
 [tinker apps](http://matatk.github.com/tinker/)
 : A collection of single-page tools to scratch itches and help me learn development techniques.

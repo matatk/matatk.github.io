@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>Landmarks Presentation</title>
+		<style>
+:root {
+	--root-font-size: 8vh;
+	--ratio: calc( 4 / 3);
+	--ratio: calc(16 / 9);
+}
+		</style>
+		<link href="slideshow.css" rel="stylesheet">
+		<link href="type-spacing.css" rel="stylesheet">
+		<link href="theme.css" rel="stylesheet">
+	</head>
+	<body>
+		<div class="slide full padded bottom title">
+			<h1>Landmarks</h1>
+			<p id="author">
+			<span>Matthew Tylee Atkinson</span><span> @matatk</span>
+			</p>
+		</div>
+
+		<h2 class="full slide middle centre title" data-pause>
+			<span>What's on the page?</span>
+			<span>How can I get there?</span>
+		</h2>
+
+		<h2 class="full slide middle centre title">Headings</h2>
+
+		<div class="slide full middle centre">
+			<div class="image-container">
+				<img src="eros-os.png" alt="The EROS OS home page">
+			</div>
+		</div>
+
+		<div class="slide middle centre" data-pause>
+			<!-- FIXME provide alt text -->
+			<p class="key">&uarr;</p>
+			<p class="key">&darr;</p>
+			<p class="key wide">Tab</p>
+		</div>
+
+		<div class="slide full middle centre">
+			<div class="stretch-image-container">
+				<img src="eros-os-headings.png" alt="Screen-reader dialog lising headings on the EROS OS home page">
+			</div>
+		</div>
+
+		<h2 class="full slide middle centre title">Sites evolved</h2>
+
+		<div class="slide full middle centre">
+			<div class="image-container">
+				<img src="tpg.png" alt="The Paciello Group home page">
+			</div>
+		</div>
+
+		<div class="slide full middle centre">
+			<div class="image-container">
+				<img src="wikipedia-article.png" alt="Wikipedia article called 'Color blindness'">
+			</div>
+		</div>
+
+		<div class="slide full middle centre">
+			<div class="stretch-image-container">
+				<img src="wikipedia-article-headings.png" alt="FIXME">
+			</div>
+		</div>
+
+		<div class="slide full middle centre">
+			<div class="image-container">
+				<img src="wikipedia-article-cropped.png" alt="FIXME">
+			</div>
+		</div>
+
+		<div class="slide full middle centre">
+			<div class="image-container">
+				<img src="wikipedia-article-cropped-highlights.png" alt="FIXME">
+			</div>
+		</div>
+
+		<div class="slide full middle centre">
+			<div class="image-container">
+				<img src="shopping.png" alt="FIXME">
+			</div>
+		</div>
+
+		<div class="slide full middle centre">
+			<div class="stretch-image-container">
+				<img src="google-wave.webp" alt="Google Wave communications web-app">
+			</div>
+		</div>
+
+		<h2 class="full slide middle centre title">Skip links</h2>
+
+		<div class="slide full middle centre">
+			<div class="image-container">
+				<img src="bbc-marathon-1.png" alt="FIXME">
+			</div>
+		</div>
+
+		<div class="slide full middle centre">
+			<div class="image-container">
+				<img src="bbc-marathon-2.png" alt="FIXME">
+			</div>
+		</div>
+
+		<div class="slide full middle centre">
+			<div class="image-container">
+				<img src="bbc-marathon-3.png" alt="FIXME">
+			</div>
+		</div>
+
+		<!-- FIXME nested data-pause doesn't work -->
+		<div class="slide centre middle">
+			<h2>Skip links are awesome</h2>
+			<div data-pause>
+				<p>Easily discoverable</p>
+				<p>Avoid repeated content</p>
+				<p><strong><a href="https://www.bbc.co.uk/sport/get-inspired/47977024">Save your visitors' time</a></strong></p>
+			</div>
+		</div>
+
+		<!-- FIXME: central, not centred -->
+		<div class="slide centre middle">
+			<h2>But&hellip;</h2>
+			<div data-pause>
+				<p>Only at the top (where the author put them)</p>
+				<p>Only a partial overview</p>
+				<p>Not quite so useful in app-like settings</p>
+			</div>
+		</div>
+
+		<h2 class="full slide middle centre title">
+			Landmark regions
+		</h2>
+
+		<div class="slide centre middle" data-pause>
+			<p>Signposts to broad areas of the page</p>
+			<p><strong>Non-visual</strong> complement to visual design</p>
+			<p><strong>Random access</strong></p>
+			<p>Part of the W3C's Accessible Rich Internet Application (ARIA) standards</p>
+		</div>
+
+		<div class="slide full centre middle">
+			<img src="tpg-signposts.png" alt="The Paciello Group home page with visually-apparent page areas (navigation, main bit, contact details and other stuff) called out in speech bubbles">
+		</div>
+
+		<div class="slide full centre middle">
+			<img src="tpg-landmarks-sr.png" alt="Landmark regions reported by a screen-reader on The Paciello Group home page">
+		</div>
+
+		<h2 class="full slide middle centre title">
+			How do I provide landmarks?
+		</h2>
+
+		<div class="slide">
+			<h2>Search box</h2>
+			<div data-pause>
+				<div data-markdown><!--
+				```html
+				<div>
+					<input type="text" ...>
+					<button>Search</button>
+				</div>
+				```
+				--></div>
+			</div>
+		</div>
+
+		<div class="slide">
+			<h2>Search box</h2>
+			<div data-markdown><!--
+			```html
+			<div role="search">
+				<input type="text" ...>
+				<button>Search</button>
+			</div>
+			```
+			--></div>
+		</div>
+
+		<div class="slide">
+			<h2>Main content</h2>
+			<div data-pause>
+				<div data-markdown><!--
+				```html
+				<div id="content">
+					.
+					.
+					.
+				</div>
+				```
+				--></div>
+			</div>
+		</div>
+
+		<div class="slide">
+			<h2>Main content</h2>
+				<div data-markdown><!--
+				```html
+				<div id="main">
+					.
+					.
+					.
+				</div>
+				```
+				--></div>
+		</div>
+
+		<div class="slide" data-markdown><!--
+		## Main content
+
+		```html
+		<div id="main" role="main">
+			.
+			.
+			.
+		</div>
+		```
+		--></div>
+
+		<div class="slide full centre middle">
+			<div class="image-container">
+				<img src="there-can-be-only-one.jpg" alt="FIXME">
+			</div>
+		</div>
+
+		<div class="slide" data-markdown><!--
+		## Main content
+
+		```html
+		<div role="main">
+			.
+			.
+			.
+		</div>
+		```
+		--></div>
+
+		<img class="slide" style="background-color: white;" src="HTML5_Logo.svg" alt="HTML 5">
+
+		<div class="slide" data-markdown><!--
+		## Main content
+
+		```html
+		<main>
+			.
+			.
+			.
+		</main>
+		```
+		--></div>
+
+		<div class="slide middle centre">
+			<p><strong>*</strong> <a href="https://www.w3.org/TR/html52/grouping-content.html#the-main-element">actually there can be more than one,<br><span data-pause><span>if the others are hidden.<span></span></a></p>
+		</div>
+
+		<div class="slide">
+			<h2>Main content</h2>
+			<div data-pause>
+				<div data-markdown><!--
+				`<div role="main">`
+				--></div>
+				<p>is the same, semantically, as</p>
+				<div data-markdown><!--
+				`<main>`
+				--></div>
+			</div>
+		</div>
+
+		<div class="slide">
+			<h2>Footer</h2>
+			<div data-pause>
+				<div data-markdown><!--
+				`<div class="footer">`
+				--></div>
+				<p>could become</p>
+				<div data-markdown><!--
+				`<div role="contentinfo">`
+				--></div>
+				<p>or</p>
+				<div data-markdown><!--
+				`<footer>`
+				--></div>
+			</div>
+		</div>
+
+		<h2 class="slide middle centre">HTML5 Automagicalness</h2>
+
+		<div class="slide middle" style="font-size: 0.7rem;">
+			<table>
+				<tr><th>Element</th><th>Landmark region role</th></tr>
+				<tr><td><code>&lt;header&gt;</code></td><td><code>banner</code><strong><sup>1</sup></strong></td></tr>
+				<tr><td><code>&lt;nav&gt;</code></td><td><code>navigation</code></td></tr>
+				<tr><td><code>&lt;main&gt;</code></td><td><code>main</code></td></tr>
+				<tr><td><code>&lt;section&gt;</code></td><td><code>region</code><strong><sup>2</sup></strong></td></tr>
+				<tr><td><code>&lt;form&gt;</code></td><td><code>form</code><strong><sup>2</sup></strong></td></tr>
+				<tr><td><code>&lt;aside&gt;</code></td><td><code>complementary</code></td></tr>
+				<tr><td><code>&lt;footer&gt;</code></td><td><code>contentinfo</code><strong><sup>1</sup></strong></td></tr>
+			</table>
+			<div data-pause>
+				<ol style="text-align: right;">
+					<li>if page-global</li>
+					<li>if labelled</li>
+				</ol>
+			</div>
+		</div>
+
+		<div class="slide" style="font-size: 0.69rem;">
+			<h2>Labelling landmarks</h2>
+			<div data-pause>
+				<div data-markdown><!--
+				```html
+				<section>
+					<p>blah</p>
+				</section>
+				```
+				--></div>
+				<p>isn't a landmark, but this is:</p>
+				<div data-markdown><!--
+				```html
+				<section aria-labelledby="penguins-header">
+					<h2 id="penguins-header">Penguins</h2>
+					<p>blah</p>
+				</section>
+				```
+				--></div>
+			</div>
+		</div>
+
+		<h2 class="full slide middle centre" data-split>
+			<span class="bottom">Golden</span>
+			<span class="top">Rules</span>
+		</h2>
+
+		<div class="slide middle centre" data-pause>
+			<p><strong>Landmarks:</strong> overview</p>
+			<p><strong>Headings:</strong> fine-grained navigation</p>
+		</div>
+
+		<div class="slide full middle centre">
+			<div class="image-container">
+				<img src="wikipedia-article-callouts.png" alt="FIXME">
+			</div>
+		</div>
+
+		<div class="slide full middle centre">
+			<div class="stretch-image-container">
+				<img src="wikipedia-article-headings.png" alt="FIXME">
+			</div>
+		</div>
+
+		<div class="slide middle centre" data-pause>
+			<p>Use relatively <strong>few</strong> landmarks&hellip;</p>
+			<p>&hellip;but cover <strong>all</strong> of the content on the page.</p>
+		</div>
+
+		<div class="slide middle centre">
+			<p data-pause><span>If you've got <strong>more than one</strong> of the same type of landmark on a page,</span><span> use labels to <strong>differentiate</strong> them.</span></p>
+		</div>
+
+		<div class="slide middle hack20" style="font-size: 0.8rem;" data-markdown><!--
+		```html
+		<nav>
+			. . .
+		</nav>
+
+		<nav>
+			. . .
+		</nav>
+		```--></div>
+
+		<div class="slide middle hack20" style="font-size: 0.8rem;" data-markdown><!--
+		```html
+		<nav aria-label="Site">
+			. . .
+		</nav>
+
+		<nav aria-label="Page">
+			. . .
+		</nav>
+		```--></div>
+
+		<div class="slide middle centre">
+			<p>But, better&hellip;</p>
+		</div>
+
+		<div class="slide middle" style="font-size: 0.8rem;" data-markdown><!--
+		```html
+		<nav aria-labelledby="nav-global-header">
+			<h2 id="nav-global-header">Site</h2>
+			. . .
+		</nav>
+
+		<nav aria-labelledby="nav-local-header">
+			<h2 id="nav-local-header">Page</h2>
+			. . .
+		</nav>
+		```--></div>
+
+		<div class="slide middle centre" data-pause>
+			<p>There's <strong>no need to include the type</strong> of landmark in its label.</p>
+		</div>
+
+		<div class="slide middle centre hack20">
+			<div data-markdown><!--
+			```html
+			<nav aria-label="Site">
+				. . .
+			</nav>
+			```--></div>
+			<div data-pause>
+				<div>
+					<p>Screen-readers may say</p>
+					<strong>"Site, navigation"</strong>
+				</div>
+			</div>
+		</div>
+
+		<div class="slide middle centre ten">
+			<div data-markdown><!--
+			```html
+			<nav aria-label="Site Navigation">
+				. . .
+			</nav>
+			```--></div>
+			<div data-pause>
+				<div>
+					<p>Screen-readers may say</p>
+					<strong>"Site Navigation, navigation"</strong>
+				</div>
+			</div>
+		</div>
+
+		<div class="slide full middle centre" data-pause>
+			<div class="stretch-image-container">
+				<img src="piano-keyboard.jpg" alt="A piano keyboard">
+			</div>
+		</div>
+
+		<div class="slide full middle centre">
+			<div class="stretch-image-container">
+				<img src="mouse.jpg" alt="A mouse (cute rodent)">
+			</div>
+		</div>
+
+		<h2 class="full slide middle centre title">
+			Landmarks extension demo
+		</h2>
+
+		<div class="slide">
+			<h2>Examples</h2>
+			<ul data-pause>
+				<li><a href="https://www.paciellogroup.com/">The Paciello Group</a></li>
+				<li><a href="wow.html">World of Wombats (live demo version, not fully labelled)</a></li>
+				<li><a href="wow-full.html">World of Wombats (fully labelled)</a></li>
+			</ul>
+		</div>
+
+		<div class="slide">
+			<h2>Resources</h2>
+			<ul data-pause>
+				<li><a href="https://www.w3.org/TR/2017/NOTE-wai-aria-practices-1.1-20171214/examples/landmarks/index.html">W3C ARIA Landmarks Example</a></li>
+				<li><a href="https://developer.paciellogroup.com/blog/2015/09/easy-content-organisation-with-html5/">Easy content organisation with HTML5</a></li>
+				<li><a href="http://matatk.agrip.org.uk/landmarks">Landmarks browser extension</a></li>
+				<li><a href="https://chrispederick.com/work/web-developer/">Web Developer extension</a> (headings etc.)</li>
+				<li><a href="https://addons.mozilla.org/en-GB/firefox/addon/a11y-outline/">a11y-outline extension</a> (also shows headings)</li>
+			</ul>
+		</div>
+
+		<div class="slide" style="font-size: 0.739rem;">
+			<h3>Thanks to&hellip;</h3>
+			<ul>
+				<li><strong>David Todd:</strong> original Firefox Landmarks extension author</li>
+				<li><strong>Steve Faulkner:</strong> inspiration, and the <code>&lt;main&gt;</code> element
+				<li><strong>The Paciello Group:</strong> HTML5 support development time
+				<li><strong>Mark Withall:</strong> test-driven development advice</li>
+				<li><strong>Carolyn MacLeod:</strong> much constructive feedback</li>
+				<li><strong>Dan Nye, Jeff Home:</strong> web development advice</li>
+				<li>Everyone who filed <strong>issues</strong>, gave <strong>feedback</strong> or wrote <strong>posts</strong></li>
+				<li>The Stack Overflow and Mozilla BugZilla communities</li>
+			</ul>
+		</div>
+
+		<div class="slide">
+			<h3>Image acknowledgements</h3>
+			<ul>
+				<li><a href="https://www.pinterest.co.uk/pin/444730531939162938">Highlander promotional photo</a></li>
+				<li><a href="https://www.flickr.com/photos/45350291@N05/4169884234">Piano keyboard</a></li>
+				<li><a href="https://www.flickr.com/photos/munch999/126242454">Mouse</a></li>
+				<li><a href="https://commons.wikimedia.org/wiki/File:Vombatus_ursinus_-Maria_Island_National_Park.jpg">Wombat</a></li>
+			</ul>
+		</div>
+
+		<div class="slide full centre title" data-split="75% 25%">
+			<h2 class="bottom">Thanks for listening</h2>
+			<p>Any questions?</p>
+		</div>
+
+		<div class="slide">
+			<h2>How much do you shrink?</h2>
+			<p>The <a href="https://www.bbc.co.uk/sport/get-inspired/47977024">BBC Sport article</a> referenced earlier mentioned this: the average runner shrinks 1.25cm during a marathon, due to spine compression. We all get shorter throughout the day, too, but the amount varies.</p>
+		</div>
+
+		<div id="progress"><div></div></div>
+
+		<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+		<script src="slideshow.js"></script>
+	</body>
+</html>
