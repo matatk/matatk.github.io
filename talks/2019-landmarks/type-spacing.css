@@ -1,5 +1,5 @@
 @media screen {
-	body { line-height: 1.4; }  /* was 1.5 */
+	body { line-height: 1.4; }  /* was 1.5 but 1.4 goes better with 8vh text */
 
 	h1, h2, h3, h4, h5, h6, p { margin: 0; }
 

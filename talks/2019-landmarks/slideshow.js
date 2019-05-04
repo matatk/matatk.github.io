@@ -59,9 +59,9 @@
 	// otherwise.
 	function revealStepsOrNextSlide() {
 		const slide = slides[current]
-		if (slide.dataset.steps) {
-			const totalSteps = Number(slide.dataset.steps)
-			const currentStep = Number(slide.dataset.step)
+		if (slide.dataset.pauseSteps) {
+			const totalSteps = Number(slide.dataset.pauseSteps)
+			const currentStep = Number(slide.dataset.pauseCurrentStep)
 			if (currentStep === totalSteps) {
 				return true
 			}
@@ -69,10 +69,20 @@
 			const nextStepElement =
 				slide.querySelector(`[data-pause-step="${nextStep}"]`)
 			nextStepElement.style.visibility = 'visible'
-			slide.dataset.step = nextStep
+			slide.dataset.pauseCurrentStep = nextStep
 			return false
 		}
 		return true
+	}
+
+	function moveToPreviousSlide() {
+		setActiveSlide(previousSlideNumber())
+	}
+
+	function moveToNextRevealOrSlide() {
+		if (revealStepsOrNextSlide()) {
+			setActiveSlide(nextSlideNumber())
+		}
 	}
 
 	doc.addEventListener('keydown', function(event) {
@@ -82,7 +92,7 @@
 			case 'ArrowLeft':
 			case 'ArrowUp':
 			case 'PageUp':
-				setActiveSlide(previousSlideNumber())
+				moveToPreviousSlide()
 				break
 			case 'ArrowRight':
 			case 'ArrowDown':
@@ -90,9 +100,7 @@
 			case 'Space':  // FIXME doesn't work!
 			case 'Enter':
 			case 'Return':
-				if (revealStepsOrNextSlide()) {
-					setActiveSlide(nextSlideNumber())
-				}
+				moveToNextRevealOrSlide()
 				break
 			case 'f':
 				if (!doc.fullscreenElement) {
@@ -105,6 +113,9 @@
 				toggleStyles()
 		}
 	})
+
+	doc.getElementById('previous').onclick = moveToPreviousSlide
+	doc.getElementById('next').onclick = moveToNextRevealOrSlide
 
 
 	//
@@ -245,8 +256,8 @@
 				}
 			}
 			if (steps > 0) {
-				slide.dataset.steps = steps
-				slide.dataset.step = 0
+				slide.dataset.pauseSteps = steps
+				slide.dataset.pauseCurrentStep = 0
 			}
 		}
 	}
@@ -260,8 +271,47 @@
 	doSplits()
 	preparePauses()
 
+	// Thanks https://davidwalsh.name/css-variables-javascript :-)
+	function viewSizing() {
+		const viewWidth = doc.documentElement.clientWidth
+		const viewHeight = doc.documentElement.clientHeight
+		const viewAspect = viewWidth / viewHeight
+		const slideAspectRaw = win.getComputedStyle(doc.documentElement)
+			.getPropertyValue('--author-aspect-ratio')
+		const matches = slideAspectRaw.match(/calc\(\s*(\d+)\s*\/\s*(\d+)\s*\)/)
+		const slideAspect = matches[1] / matches[2]
+
+		let slideHeight = null
+		let slideWidth = null
+
+		if (viewAspect >= slideAspect) {
+			// View is wider than slide
+			// Slide height should be 100vh
+			slideHeight = viewHeight
+			slideWidth = viewHeight * slideAspect
+		} else {
+			// View is narrower than slide
+			// slide width should be 100vw
+			slideWidth = viewWidth
+			slideHeight = viewWidth / slideAspect
+		}
+
+		doc.documentElement.style
+			.setProperty('--computed-slide-height', slideHeight + 'px')
+		doc.documentElement.style
+			.setProperty('--computed-slide-width', slideWidth + 'px')
+
+		const rootFontSizePercent = win.getComputedStyle(doc.documentElement)
+			.getPropertyValue('--author-font-height-percent-of-slide')
+		const realRootFontSize = slideHeight * (rootFontSizePercent / 100)
+		doc.documentElement.style
+			.setProperty('--computed-base-font-size', realRootFontSize + 'px')
+	}
 
 	if (!reflectLocation()) {
 		setActiveSlide(0)
 	}
+
+	viewSizing()
+	win.onresize = viewSizing
 })(window, document)

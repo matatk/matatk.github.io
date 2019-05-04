@@ -5,9 +5,9 @@
 		<title>Landmarks Presentation</title>
 		<style>
 :root {
-	--root-font-size: 8vh;
-	--ratio: calc( 4 / 3);
-	--ratio: calc(16 / 9);
+	--author-font-height-percent-of-slide: 8;
+	--author-aspect-ratio: calc( 4 / 3);
+	--author-aspect-ratio: calc(16 / 9);
 }
 		</style>
 		<link href="slideshow.css" rel="stylesheet">
@@ -15,11 +15,16 @@
 		<link href="theme.css" rel="stylesheet">
 	</head>
 	<body>
+		<button id="previous" aria-label="Previous slide"></button>
+
 		<div class="slide full padded bottom title">
 			<h1>Landmarks</h1>
 			<p id="author">
 			<span>Matthew Tylee Atkinson</span><span> @matatk</span>
 			</p>
+			<div style="margin: 0.5rem; padding: 0; background-color: white; border-radius: 0.5rem; font-size: 0.5rem; position: absolute; top: 0; left: 0;">
+				<p style="padding-left: 0.5rem; padding-right: 0.5rem;">Use the arrow keys to move between slides and F for full-screen.</p>
+			</div>
 		</div>
 
 		<h2 class="full slide middle centre title" data-pause>
@@ -30,9 +35,7 @@
 		<h2 class="full slide middle centre title">Headings</h2>
 
 		<div class="slide full middle centre">
-			<div class="image-container">
-				<img src="eros-os.png" alt="The EROS OS home page">
-			</div>
+			<img src="eros-os.png" alt="The EROS OS home page">
 		</div>
 
 		<div class="slide middle centre" data-pause>
@@ -43,73 +46,51 @@
 		</div>
 
 		<div class="slide full middle centre">
-			<div class="stretch-image-container">
-				<img src="eros-os-headings.png" alt="Screen-reader dialog lising headings on the EROS OS home page">
-			</div>
+			<img src="eros-os-headings.png" alt="Screen-reader dialog lising headings on the EROS OS home page">
 		</div>
 
 		<h2 class="full slide middle centre title">Sites evolved</h2>
 
 		<div class="slide full middle centre">
-			<div class="image-container">
-				<img src="tpg.png" alt="The Paciello Group home page">
-			</div>
+			<img src="tpg.png" alt="The Paciello Group home page">
 		</div>
 
 		<div class="slide full middle centre">
-			<div class="image-container">
-				<img src="wikipedia-article.png" alt="Wikipedia article called 'Color blindness'">
-			</div>
+			<img src="wikipedia-article.png" alt="Wikipedia article called 'Color blindness'">
 		</div>
 
 		<div class="slide full middle centre">
-			<div class="stretch-image-container">
-				<img src="wikipedia-article-headings.png" alt="FIXME">
-			</div>
+			<img src="wikipedia-article-headings.png" alt="FIXME">
 		</div>
 
 		<div class="slide full middle centre">
-			<div class="image-container">
-				<img src="wikipedia-article-cropped.png" alt="FIXME">
-			</div>
+			<img src="wikipedia-article-cropped.png" alt="FIXME">
 		</div>
 
 		<div class="slide full middle centre">
-			<div class="image-container">
-				<img src="wikipedia-article-cropped-highlights.png" alt="FIXME">
-			</div>
+			<img src="wikipedia-article-cropped-highlights.png" alt="FIXME">
 		</div>
 
 		<div class="slide full middle centre">
-			<div class="image-container">
-				<img src="shopping.png" alt="FIXME">
-			</div>
+			<img src="shopping.png" alt="FIXME">
 		</div>
 
 		<div class="slide full middle centre">
-			<div class="stretch-image-container">
-				<img src="google-wave.webp" alt="Google Wave communications web-app">
-			</div>
+			<img src="google-wave.webp" alt="Google Wave communications web-app">
 		</div>
 
 		<h2 class="full slide middle centre title">Skip links</h2>
 
 		<div class="slide full middle centre">
-			<div class="image-container">
-				<img src="bbc-marathon-1.png" alt="FIXME">
-			</div>
+			<img src="bbc-marathon-1.png" alt="FIXME">
 		</div>
 
 		<div class="slide full middle centre">
-			<div class="image-container">
-				<img src="bbc-marathon-2.png" alt="FIXME">
-			</div>
+			<img src="bbc-marathon-2.png" alt="FIXME">
 		</div>
 
 		<div class="slide full middle centre">
-			<div class="image-container">
-				<img src="bbc-marathon-3.png" alt="FIXME">
-			</div>
+			<img src="bbc-marathon-3.png" alt="FIXME">
 		</div>
 
 		<!-- FIXME nested data-pause doesn't work -->
@@ -222,9 +203,7 @@
 		--></div>
 
 		<div class="slide full centre middle">
-			<div class="image-container">
-				<img src="there-can-be-only-one.jpg" alt="FIXME">
-			</div>
+			<img src="there-can-be-only-one.jpg" alt="FIXME">
 		</div>
 
 		<div class="slide" data-markdown><!--
@@ -341,15 +320,11 @@
 		</div>
 
 		<div class="slide full middle centre">
-			<div class="image-container">
-				<img src="wikipedia-article-callouts.png" alt="FIXME">
-			</div>
+			<img src="wikipedia-article-callouts.png" alt="FIXME">
 		</div>
 
 		<div class="slide full middle centre">
-			<div class="stretch-image-container">
-				<img src="wikipedia-article-headings.png" alt="FIXME">
-			</div>
+			<img src="wikipedia-article-headings.png" alt="FIXME">
 		</div>
 
 		<div class="slide middle centre" data-pause>
@@ -435,15 +410,11 @@
 		</div>
 
 		<div class="slide full middle centre" data-pause>
-			<div class="stretch-image-container">
-				<img src="piano-keyboard.jpg" alt="A piano keyboard">
-			</div>
+			<img src="piano-keyboard.jpg" alt="A piano keyboard">
 		</div>
 
 		<div class="slide full middle centre">
-			<div class="stretch-image-container">
-				<img src="mouse.jpg" alt="A mouse (cute rodent)">
-			</div>
+			<img src="mouse.jpg" alt="A mouse (cute rodent)">
 		</div>
 
 		<h2 class="full slide middle centre title">
@@ -503,6 +474,8 @@
 			<h2>How much do you shrink?</h2>
 			<p>The <a href="https://www.bbc.co.uk/sport/get-inspired/47977024">BBC Sport article</a> referenced earlier mentioned this: the average runner shrinks 1.25cm during a marathon, due to spine compression. We all get shorter throughout the day, too, but the amount varies.</p>
 		</div>
+
+		<button id="next" aria-label="Next slide"></button>
 
 		<div id="progress"><div></div></div>
 

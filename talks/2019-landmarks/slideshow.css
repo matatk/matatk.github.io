@@ -1,8 +1,8 @@
 @media screen {
 	/* Define the padding that's applied around the slides */
 	:root {
-		--vertical-gutter: 0.25rem;
-		--horizontal-gutter: 1rem;
+		--gutter-vertical: 0.25rem;
+		--gutter-horizontal: 1rem;
 	}
 
 	/* This just makes everything make sense */
@@ -10,7 +10,7 @@
 
 	/* Scale the root em size as requested by the user */
 	html {
-		font-size: var(--root-font-size);
+		font-size: var(--computed-base-font-size);
 		margin: 0;
 		padding: 0;
 	}
@@ -23,41 +23,52 @@
 	/* Non-current slides shouldn't be shown */
 	.slide { display: none; }
 
-	/* TODO: doc */
-	/* The current slide should be shown, as large as it can be height-wise,
-	 * and as wide as it needs to be for the desired aspect ratio.
+	/* The current slide should be as large as it can be to fit within the
+	 * screen. The author-desired aspect ratio of the slides is a CSS variable.
+	 * The script works out the dimensions of the slides in pixels and stores
+	 * them in other CSS variables.
 	 *
-	 * The script puts each slide's content into a single nested <div> and sets
-	 * the slide's layout to flex. This allows the entire slide's contents to
-	 * expand to fill the slide, which allows effects such as positioning
-	 * content vertically at the bottom of the slide (or the middle).
+	 * The base font size is specified by the author as a percentage of the
+	 * slide height, so that things are nicely scaleable. Again, the script
+	 * works out what this font size is in pixels.
+	 *
+	 * The script sets the slide's layout to flex. This allows the entire
+	 * slide's contents to expand to fill the slide, which allows effects such
+	 * as positioning content vertically at the bottom of the slide (or the
+	 * middle).
 	 *
 	 * It's assumed that most slides will be simple text/lists/images and will
 	 * want some padding (as defined above) by default. */
 	.slide.active {
+		position: absolute;
+		width: var(--computed-slide-width);
+		height: var(--computed-slide-height);
+		max-width: var(--computed-slide-width);
+		max-height: var(--computed-slide-height);
+		margin-top: calc((100vh - var(--computed-slide-height)) / 2);
+		margin-bottom: calc((100vh - var(--computed-slide-height)) / 2);
+		margin-left: calc((100vw - var(--computed-slide-width)) / 2);
+		margin-right: calc((100vw - var(--computed-slide-width)) / 2);
+		padding: var(--gutter-vertical) var(--gutter-horizontal);
+		/* overflow: hidden; */  /* Not needed if sizing things correctly */
 		display: flex;
 		flex-direction: column;
-		position: absolute;
-		top: 0;
-		right: 0;
-		left: 0;
-		bottom: 0;
-		max-width: calc(var(--ratio) * 100vh);
-		margin: auto;
-		padding: var(--vertical-gutter) var(--horizontal-gutter);
-		/* overflow: hidden; */  /* Not needed if sizing things correctly */
 	}
 
 	/* TODO: doc */
+	/* TODO: unused? */
 	.slide.active [data-split] {  /* doesn't match slide but that's above */
 		display: flex;
 		flex-direction: column;
 	}
 
-	/* TODO: doc */
 	/* FIXME: horizontal + bottom on the slide doesn't work */
 	.slide.horizontal { flex-direction: row; }
-	/* TODO: doc */
+
+	/* Slides that have the class of (top|middle|bottom) or elements within
+	 * slides that have one of those classes should align their content
+	 * vertically accordingly. To do this, they are rendred as flexboxes (the
+	 * slides themselves already are). */
 	.slide.active.top:not(.horizontal),
 	.slide.active .top {
 		display: flex;
@@ -88,25 +99,24 @@
 	 * backgrounds. */
 	.slide.active.full { padding: 0; }
 
-	/* TODO test, doc */
 	/* If a slide asked to use the full-size layout /only/ so that it could
 	 * have full-height/-width background colours - and actually /does/ want
 	 * the normal padding around its text content - then the class "padded" can
 	 * be added to insert the padding back in inside each top-level slide
 	 * content child element. */
 	.slide.active.full.padded > :first-child {
-		padding-top: var(--vertical-gutter);
-		padding-left: var(--horizontal-gutter);
-		padding-right: var(--horizontal-gutter);
+		padding-top: var(--gutter-vertical);
+		padding-left: var(--gutter-horizontal);
+		padding-right: var(--gutter-horizontal);
 	}
 	.slide.active.full.padded > * {
-		padding-left: var(--horizontal-gutter);
-		padding-right: var(--horizontal-gutter);
+		padding-left: var(--gutter-horizontal);
+		padding-right: var(--gutter-horizontal);
 	}
 	.slide.active.full.padded > :last-child {
-		padding-left: var(--horizontal-gutter);
-		padding-right: var(--horizontal-gutter);
-		padding-bottom: var(--vertical-gutter);
+		padding-left: var(--gutter-horizontal);
+		padding-right: var(--gutter-horizontal);
+		padding-bottom: var(--gutter-vertical);
 	}
 
 	/* If the "centre" (or "center") class was added to a slide, the user wants
@@ -118,11 +128,11 @@
 	/* Likewise if the user wanted right-aligned content. */
 	.slide.active.right { text-align: right; }
 
-	/* TODO: doc */
-	/* Does the user want the slide's contents to grow to fit the slide? The
-	 * main reason they may want to do this would be if they opted to suppress
-	 * the default behaviour of putting the all of the slide's content into one
-	 * <div>, in order to achieve layouts like a 50/50 vertical split. */
+	/* Slides can be split into different vertical (or TODO horizontal) parts.
+	 * The author can specify the allocation of space to each of these parts,
+	 * but if they don't we need a sensible default. By making each part
+	 * equally greedy for the whole space, we arrive at each part being
+	 * allocated (1/n)th of the space. */
 	[data-split] > * { flex-basis: 100%; }
 
 	/* The progress bar is a container with nested <div> that adjusts its
@@ -136,22 +146,27 @@
 	}
 	#progress > div { width: 0; }
 
-
-	/* Image stuff */
-
-	div.image-container {
-		max-height: 100vh;
-		max-width: calc(var(--ratio) * 100vh);
+	/* Previous and next invisible buttons are used to move between slides on
+	 * mobile devices - this avoided the need for custom gesture detection
+	 * (e.g. swipe between slides), which would've blocked pinch-to-zoom
+	 * gestures. */
+	#previous, #next {
+		background: none;
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		width: 33vw;
+		z-index: 42;
+		border: 0;
 	}
+	#previous { left: 0; }
+	#next { right: 0; }
 
-	div.stretch-image-container {
-		height: 100%;
-		width: 100%;
-	}
-
+	/* By default, assume that images want to be as big as they can be to fill
+	 * the slide. */
 	img {
-		display: block;
+		width: 100%;
 		height: 100%;
-		margin: auto;
+		object-fit: contain;
 	}
 }
