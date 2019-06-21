@@ -55,13 +55,14 @@
 		flex-direction: column;
 	}
 
-	/* TODO: doc */
-	/* TODO: unused? */
+	/* Support vertical splitting of content within part of a slide. */
+	/* TODO: unused currently - but could be useful? */
 	.slide.active [data-split] {  /* doesn't match slide but that's above */
 		display: flex;
 		flex-direction: column;
 	}
 
+	/* TODO: don't think horizontal styles are working or being used ATM */
 	/* FIXME: horizontal + bottom on the slide doesn't work */
 	.slide.horizontal { flex-direction: row; }
 
@@ -135,6 +136,14 @@
 	 * allocated (1/n)th of the space. */
 	[data-split] > * { flex-basis: 100%; }
 
+	/* By default, assume that images want to be as big as they can be to fill
+	 * the slide. */
+	img {
+		width: 100%;
+		height: 100%;
+		object-fit: contain;
+	}
+
 	/* The progress bar is a container with nested <div> that adjusts its
 	 * width. Got this neat trick from impress.js; thanks :-). */
 	#progress {
@@ -146,10 +155,10 @@
 	}
 	#progress > div { width: 0; }
 
-	/* Previous and next invisible buttons are used to move between slides on
-	 * mobile devices - this avoided the need for custom gesture detection
-	 * (e.g. swipe between slides), which would've blocked pinch-to-zoom
-	 * gestures. */
+	/* Previous slide and next slide invisible buttons are used to move between
+	 * slides on mobile devices - this avoided the need for custom gesture
+	 * detection (e.g. swipe between slides), which would've blocked
+	 * pinch-to-zoom gestures. */
 	#previous, #next {
 		background: none;
 		position: absolute;
@@ -157,16 +166,66 @@
 		bottom: 0;
 		width: 33vw;
 		z-index: 42;
-		border: 0;
+		border: none;
 	}
 	#previous { left: 0; }
 	#next { right: 0; }
 
-	/* By default, assume that images want to be as big as they can be to fill
-	 * the slide. */
-	img {
-		width: 100%;
-		height: 100%;
-		object-fit: contain;
+	/* When the previous/next buttons get focus, show large back/forward arrows
+	 * within them, to indicate their purpose. Drop-shadows are used to improve
+	 * contrast. */
+	#previous > span, #next > span {
+		display: none;
 	}
+	#previous:focus > span, #next:focus > span {
+		display: inline;
+		color: white;
+		font-size: 30vw;
+		visibility: visible;
+		filter: drop-shadow(0 0 0.05em black);
+	}
+
+	/* A button is added at the top of the page to move to story mode. This is
+	 * the same as pressing the 's' key, but is more easily discoverable by
+	 * screen-reader and mobile users.
+	 *
+	 * The same technique is used in general to hide stuff visually but not
+	 * from assistive technologies such as screen-readers. */
+	/* FIXME: Something about this is making iOS Safari think that the page is
+	 * taller than a slide, and the story mode button triggers editing the
+	 * address bar. */
+	#mode-button, .visually-hidden {
+		position: absolute;
+		clip: rect(1px, 1px, 1px, 1px);
+		padding: 0;
+		border: 0;
+		height: 1px;
+		width: 1px;
+		overflow: hidden;
+		white-space: nowrap;
+	}
+	#mode-button:focus {
+		/* Requiredeties */
+		overflow: visible;
+		height: auto;
+		width: auto;
+		clip: auto;
+		/* Niceties */
+		top: calc((100vh - var(--computed-slide-height)) / 2);
+		left: calc((100vw - var(--computed-slide-width)) / 2);
+		font-size: inherit;
+		padding: 0.5em;
+		border: 0.1em solid white;
+		border-radius: 0.5em;
+		background-color: black;
+		color: white;
+	}
+
+	/* Story mode content should not be available to anyone when we are in
+	 * slides mode, which we are if this stylesheet is loaded. */
+	.story { display: none; }
+
+	/* The story mode button needs to be 'on top' of the previous slide button,
+	 * too :-). */
+	#mode-button { z-index: 43; }
 }

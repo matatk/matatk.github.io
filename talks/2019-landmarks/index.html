@@ -14,90 +14,132 @@
 		<link href="type-spacing.css" rel="stylesheet">
 		<link href="theme.css" rel="stylesheet">
 	</head>
-	<body>
-		<button id="previous" aria-label="Previous slide"></button>
+	<body> <!-- script adds help info and keyboard handling in slides mode -->
+		<p id="browser-support-note"><strong>This presentation's slide view does not support Internet Explorer, sorry. However, you can view all of the content&mdash;including notes on each slide&mdash;in &quot;story mode&quot; by disabling styles (press <kbd>Alt</kbd>, then on the &quot;View&quot; menu, select &quot;Style&quot; and then &quot;No style&quot;).</strong></p>
+
+		<button id="mode-button">
+			<!-- label and description managed by script -->
+		</button>
+		<button id="previous" aria-label="Previous slide"><span>&larr;</span></button>
+		<button id="next" aria-label="Next slide"><span>&rarr;</span></button>
+
+		<div aria-live="polite"> <!-- slide container -->
 
 		<div class="slide full padded bottom title">
 			<h1>Landmarks</h1>
 			<p id="author">
-			<span>Matthew Tylee Atkinson</span><span> @matatk</span>
+			<span>Matthew Tylee Atkinson</span><span class="story"><br/></span><span> @matatk</span><span class="story"> on Twitter</span>
 			</p>
 			<div style="margin: 0.5rem; padding: 0; background-color: white; border-radius: 0.5rem; font-size: 0.5rem; position: absolute; top: 0; left: 0;">
-				<p style="padding-left: 0.5rem; padding-right: 0.5rem;">Use the arrow keys to move between slides and F for full-screen.</p>
+				<p id="visible-keyboard-help" style="padding-left: 0.5rem; padding-right: 0.5rem;">Use the arrow keys to move between slides, F for full-screen and S for story mode, which gives background info on the content.</p>
 			</div>
 		</div>
+
+		<p class="story">This is a talk about landmark regions, a technique that can make your web pages much easier to navigate. You may've heard of landmarks before, but I wanted to step back and tell the story of how they came about, as this helps us to understand what they're for and how much they rock.</p>
+
+		<p class="story">When navigating about the web, we often have two important questions in mind&hellip;</p>
 
 		<h2 class="full slide middle centre title" data-pause>
 			<span>What's on the page?</span>
 			<span>How can I get there?</span>
 		</h2>
 
+		<p class="story">Several different ways to address this have been created over the years, probably the most fundamental and well-recognised being&hellip;</p>
+
 		<h2 class="full slide middle centre title">Headings</h2>
 
 		<div class="slide full middle centre">
-			<img src="eros-os.png" alt="The EROS OS home page">
+			<p class="story">In the beginning, websites had simple headings, lists and links to give them structure.</p>
+			<img src="eros-os.png" alt="The EROS OS home page has a simple layout with headings, lists and links for navigation">
+			<p class="story"><em>(Incidentally, if you're interested in Operating System design, <a href="https://en.wikipedia.org/wiki/EROS_(microkernel)">EROS</a> has several novel features, including the lack of a filesystem (it uses a persistent system image, partly for improved security) and "capability-based" security, and part of that security model has been formally verified.)</em></p>
 		</div>
 
 		<div class="slide middle centre" data-pause>
-			<!-- FIXME provide alt text -->
-			<p class="key">&uarr;</p>
-			<p class="key">&darr;</p>
-			<p class="key wide">Tab</p>
+			<p class="story">In simple sites, people using a keyboard or screen-reader could use a few keys to navigate.</p>
+			<p class="key">&uarr;<span class="story"> key to srcoll up, or announce the previous element.</span></p>
+			<p class="key">&darr;<span class="story"> key to scroll down, or announce the next element.</span></p>
+			<p class="key wide">Tab<span class="story"> key to move between interactive elements (links, buttons, form controls).</span></p>
+			<p class="story">Screen-readers also provide shortcuts such as H to move to the next heading.</p>
 		</div>
 
 		<div class="slide full middle centre">
-			<img src="eros-os-headings.png" alt="Screen-reader dialog lising headings on the EROS OS home page">
+			<p class="story">Screen-reader users can bring up a dialog listing the headings found on a page, and navigate between them this way, too.</p>
+			<img src="eros-os-headings.png" alt="Screen reader dialog listing headings on the EROS OS home page">
 		</div>
 
 		<h2 class="full slide middle centre title">Sites evolved</h2>
 
+		<p class="story">The web is more sophisticated now and has evolved in different ways&hellip;</p>
+
 		<div class="slide full middle centre">
+			<p class="story">One way in which sites have evolved is in terms of visual design.</p>
+			<p class="story">The Paciello Group home page has simple content, but a more sophisticated visual design that immediately communicates the structure of the page; it's clear that there's a main central section, which draws the visitor's attention, and some ancilliary information down at the bottom.</p>
 			<img src="tpg.png" alt="The Paciello Group home page">
 		</div>
 
 		<div class="slide full middle centre">
-			<img src="wikipedia-article.png" alt="Wikipedia article called 'Color blindness'">
+			<p class="story">Pages may have a large volume of information on them&hellip;</p>
+			<img src="wikipedia-article.png" alt="Overview of the Wikipedia article on colour perception deficit.">
+			<p class="story">The article is long, detailed and has many headings.</p>
 		</div>
 
 		<div class="slide full middle centre">
-			<img src="wikipedia-article-headings.png" alt="FIXME">
+			<p class="story">There are a lot of headings here, but they match the structure of the article, so are helpful for fine-grained navigation about the article.</p>
+			<img src="wikipedia-article-headings.png" alt="Screen reader dialog showing some of the heading hierarchy for the Wikipedia article">
 		</div>
 
 		<div class="slide full middle centre">
-			<img src="wikipedia-article-cropped.png" alt="FIXME">
+			<p class="story">If we zoom into the top of the page, though, the visual design indicates that there are some actions that can be accomplished that are not just about reading the article&hellip;</p>
+			<img src="wikipedia-article-cropped.png" alt="Zoomed view of the top of the Wikipedia article on colour perception deficit">
 		</div>
 
 		<div class="slide full middle centre">
-			<img src="wikipedia-article-cropped-highlights.png" alt="FIXME">
+			<p class="story">Actions that can be performed include&hellip;</p>
+			<ul class="story">
+				<li>Searching Wikipedia.</li>
+				<li>Viewing the history or metadata around the article.</li>
+				<li>Navigating about Wikipedia as a whole.</li>
+			</ul>
+			<img src="wikipedia-article-cropped-highlights.png" alt="">
 		</div>
 
 		<div class="slide full middle centre">
-			<img src="shopping.png" alt="FIXME">
+			<p class="story">We also use the web for different things, including tasks such as online shopping.</p>
+			<img src="shopping.png" alt="Online shopping site, showing a selection of apples">
+			<p class="story">Headings can help us navigate here, but what if we wanted to move easily between the product search results and our shopping basket, for example?</p>
 		</div>
 
 		<div class="slide full middle centre">
-			<img src="google-wave.webp" alt="Google Wave communications web-app">
+			<p class="story">We also have full-featured web-apps, such as communications suites whose interfaces may include several different panes for folder navigation, contacts, message lists and content.</p>
+			<img src="google-wave.webp" alt="Google Wave communications web-app. I miss Google Wave!">
 		</div>
+
+		<p class="story">The next major development for navigation helped alleviate several of these problems&hellip;</p>
 
 		<h2 class="full slide middle centre title">Skip links</h2>
 
+		<p class="story">Skip links are web-author-provided links that are found by convention at the top of the page. Their purpose is to take you directly to the main content. Whilst you might want to explore any navigational content towards the start of the page on your first few visits, if you are familiar with the site, it can save a great deal of time to skip the navigation when it's not needed.</p>
+
 		<div class="slide full middle centre">
-			<img src="bbc-marathon-1.png" alt="FIXME">
+			<p class="story">Here's a run-down of a skip link in use on <a href="https://www.bbc.co.uk/sport/get-inspired/47977024">a BBC Sports news story</a>&hellip;</p>
+			<img src="bbc-marathon-1.png" alt="Stage 1, a BBC sport news article, which happens to be about fun facts relating to the London marathon.">
 		</div>
 
 		<div class="slide full middle centre">
-			<img src="bbc-marathon-2.png" alt="FIXME">
+			<p class="story">Upon the first press of the <kbd>Tab</kbd> key, the skip link becomes visible.</p>
+			<img src="bbc-marathon-2.png" alt="Stage 2, on the first press of the Tab key, the skip to content link is focused and made visible.">
 		</div>
 
 		<div class="slide full middle centre">
-			<img src="bbc-marathon-3.png" alt="FIXME">
+			<p class="story">Following the link moves the focus to the start of the article, missing out all the navigational links.</p>
+			<img src="bbc-marathon-3.png" alt="Stage 3, activating the link takes the focus to the start of the article content, skipping over the navigational structures.">
 		</div>
 
 		<!-- FIXME nested data-pause doesn't work -->
 		<div class="slide centre middle">
 			<h2>Skip links are awesome</h2>
 			<div data-pause>
-				<p>Easily discoverable</p>
+				<p>Easily discoverable<span class="story">&mdash;by convention they're always at the top of the page.</span></p>
 				<p>Avoid repeated content</p>
 				<p><strong><a href="https://www.bbc.co.uk/sport/get-inspired/47977024">Save your visitors' time</a></strong></p>
 			</div>
@@ -106,38 +148,56 @@
 		<!-- FIXME: central, not centred -->
 		<div class="slide centre middle">
 			<h2>But&hellip;</h2>
+			<p class="story">Skip links do have some limitations; they're&hellip;</p>
 			<div data-pause>
-				<p>Only at the top (where the author put them)</p>
-				<p>Only a partial overview</p>
+				<p>Only at the top (where the author put them)<span class="story">&mdash;you can't access them from anywhere.</span></p>
+				<p>Only a partial overview<span class="story">&mdash;they only let you skip over/to what the page author prescribed.</span></p>
 				<p>Not quite so useful in app-like settings</p>
 			</div>
 		</div>
+
+		<p class="story">There is a solution to these problems, though, and that is of course&hellip;</p>
 
 		<h2 class="full slide middle centre title">
 			Landmark regions
 		</h2>
 
+		<p class="story">Landmarks are&hellip;</p>
+
 		<div class="slide centre middle" data-pause>
 			<p>Signposts to broad areas of the page</p>
-			<p><strong>Non-visual</strong> complement to visual design</p>
-			<p><strong>Random access</strong></p>
-			<p>Part of the W3C's Accessible Rich Internet Application (ARIA) standards</p>
+			<p><strong>Non-visual</strong> complement to visual design<span class="story">&mdash;they don't change the appearance of a page; they let you impart the same structural information that the visual design does to people who may not be able to perceive it.</span></p>
+			<p><strong>Random access</strong><span class="story">&mdash;you can move between landmarks wherever you are on the page.</span></p>
+			<p>Part of the W3C's Accessible Rich Internet Application (ARIA) standards<span class="story">&mdash;and support for them across browsers and assistive technologies is mature.</span></p>
 		</div>
 
 		<div class="slide full centre middle">
-			<img src="tpg-signposts.png" alt="The Paciello Group home page with visually-apparent page areas (navigation, main bit, contact details and other stuff) called out in speech bubbles">
+			<p class="story">We can use landmarks to call out the areas of a page, for example The Paciello Group home page we considered before.</p>
+			<img src="tpg-signposts.png" alt="The Paciello Group home page with visually-apparent page areas called out in speech bubbles">
+			<p class="story">The main areas are:</p>
+			<ul class="story">
+				<li>Navigation.</li>
+				<li>The &quot;main bit&quot;.</li>
+				<li>An area that's probably contact information and other stuff.</li>
+			</ul>
 		</div>
 
 		<div class="slide full centre middle">
 			<img src="tpg-landmarks-sr.png" alt="Landmark regions reported by a screen-reader on The Paciello Group home page">
+			<p class="story">As it happens, the landmark structure on TPG's home page includes a &quot;banner&quot; area that contains the logo as well as the &quot;navigation&quot; region with links. Also of note is that landmarks, like headings, can have a tree-like structure, as they can be nested.</p>
 		</div>
+
+		<p class="story">As a page author, you may be asking&hellip;</p>
 
 		<h2 class="full slide middle centre title">
 			How do I provide landmarks?
 		</h2>
 
+		<p class="story">The following examples show how to provide a landmark region for search functionatlity, the main content, footer and then other content too.</p>
+
 		<div class="slide">
 			<h2>Search box</h2>
+			<p class="story">This is how you may be marking up a search box now&hellip;</p>
 			<div data-pause>
 				<div data-markdown><!--
 				```html
@@ -151,7 +211,8 @@
 		</div>
 
 		<div class="slide">
-			<h2>Search box</h2>
+			<h2>Search box<span class="story"> with landmark</span></h2>
+			<p class="story">A helpful "search" landmark region can be added simply, va the <code>role</code> attribute on the containing <code>div</code>.</p>
 			<div data-markdown><!--
 			```html
 			<div role="search">
@@ -164,6 +225,7 @@
 
 		<div class="slide">
 			<h2>Main content</h2>
+			<p class="story">Steve Faulkner did some research and found that there are some common ways people code up the container of the page's main content. They may use <code>id="content"</code>&hellip;</p>
 			<div data-pause>
 				<div data-markdown><!--
 				```html
@@ -178,66 +240,75 @@
 		</div>
 
 		<div class="slide">
-			<h2>Main content</h2>
-				<div data-markdown><!--
-				```html
-				<div id="main">
-					.
-					.
-					.
-				</div>
-				```
-				--></div>
-		</div>
-
-		<div class="slide" data-markdown><!--
-		## Main content
-
-		```html
-		<div id="main" role="main">
-			.
-			.
-			.
-		</div>
-		```
-		--></div>
-
-		<div class="slide full centre middle">
-			<img src="there-can-be-only-one.jpg" alt="FIXME">
-		</div>
-
-		<div class="slide" data-markdown><!--
-		## Main content
-
-		```html
-		<div role="main">
-			.
-			.
-			.
-		</div>
-		```
-		--></div>
-
-		<img class="slide" style="background-color: white;" src="HTML5_Logo.svg" alt="HTML 5">
-
-		<div class="slide" data-markdown><!--
-		## Main content
-
-		```html
-		<main>
-			.
-			.
-			.
-		</main>
-		```
-		--></div>
-
-		<div class="slide middle centre">
-			<p><strong>*</strong> <a href="https://www.w3.org/TR/html52/grouping-content.html#the-main-element">actually there can be more than one,<br><span data-pause><span>if the others are hidden.<span></span></a></p>
+			<h2>Main content<span class="story">: popular <code>id</code> value</span></h2>
+			<p class="story">However, using an <code>id</code> of "main" is even more popular.</p>
+			<div data-markdown><!--
+			```html
+			<div id="main">
+				.
+				.
+				.
+			</div>
+			```
+			--></div>
 		</div>
 
 		<div class="slide">
-			<h2>Main content</h2>
+			<h2>Main content<span class="story"> with landmark</span></h2>
+			<p class="story">To have this container recognised as the &quot;main&quot; landmark, simply add <code>role="main"</code>.</p>
+			<div data-markdown><!--
+			```html
+			<div id="main" role="main">
+				.
+				.
+				.
+			</div>
+			```
+			--></div>
+		</div>
+
+		<div class="slide full centre middle">
+			<img src="there-can-be-only-one.jpg" alt="Sean Connery and Christopher Lambert smiling on location whilst filiming Highlander. Sean is holding a prop sword.">
+			<p class="story">But, as with immortals from Highlander, there can only be one <code>main</code> element per page, so the code could be simplified&hellip;</p>
+		</div>
+
+		<div class="slide">
+			<h2>Main content<span class="story"> identified by landmark role</span></h2>
+			<p class="story">You could just use the <code>role</code> attribute instead of the <code>id</code> value to identify the main content, and key your CSS off this instead.</p>
+			<div data-markdown><!--
+			```html
+			<div role="main">
+				.
+				.
+				.
+			</div>
+			```
+			--></div>
+		</div>
+
+		<p class="story">However, HTML 5 allows us to use even simpler and clearer markup&hellip;</p>
+		<img class="slide" style="background-color: white;" src="HTML5_Logo.svg" alt="">
+
+		<div class="slide">
+			<h2>Main content<span class="story">: HTML 5 version</span></h2>
+			<p class="story">HTML 5 introduced the <code>main</code> element, which brings with it an automatic "main" landmark.</p>
+			<div data-markdown><!--
+			```html
+			<main>
+				.
+				.
+				.
+			</div>
+			```
+			--></div>
+		</div>
+
+		<div class="slide middle centre">
+			<p><strong>*</strong> <a href="https://www.w3.org/TR/html52/grouping-content.html#the-main-element">actually there can be more than one,<br><span data-pause><span>if the others are hidden.</span></span></a></p>
+		</div>
+
+		<div class="slide">
+			<h2>Main content<span class="story">: Summary</span></h2>
 			<div data-pause>
 				<div data-markdown><!--
 				`<div role="main">`
@@ -251,6 +322,7 @@
 
 		<div class="slide">
 			<h2>Footer</h2>
+			<p class="story">A similar story applies to the <code>footer</code> element.</p>
 			<div data-pause>
 				<div data-markdown><!--
 				`<div class="footer">`
@@ -268,6 +340,9 @@
 
 		<h2 class="slide middle centre">HTML5 Automagicalness</h2>
 
+		<p class="story">HTML 5 provides a number of elements that may be consdiered as landmarks automatically.</p>
+
+		<!-- TODO: not that accessible when in slide (live-region) mode? -->
 		<div class="slide middle" style="font-size: 0.7rem;">
 			<table>
 				<tr><th>Element</th><th>Landmark region role</th></tr>
@@ -297,7 +372,7 @@
 				</section>
 				```
 				--></div>
-				<p>isn't a landmark, but this is:</p>
+				<p><span class="story">The above code </span>isn't a landmark, but this is:</p>
 				<div data-markdown><!--
 				```html
 				<section aria-labelledby="penguins-header">
@@ -314,28 +389,45 @@
 			<span class="top">Rules</span>
 		</h2>
 
+		<h3 class="story">Golden Rule 1</h3>
+
 		<div class="slide middle centre" data-pause>
-			<p><strong>Landmarks:</strong> overview</p>
-			<p><strong>Headings:</strong> fine-grained navigation</p>
+			<p><strong>Landmarks:</strong> <span class="story">should be used to provide an </span>overview<span class="story"> of the content.</span></p>
+			<p><strong>Headings:</strong> <span class="story">provide the </span>fine-grained navigation</p>
 		</div>
 
 		<div class="slide full middle centre">
-			<img src="wikipedia-article-callouts.png" alt="FIXME">
+			<img src="wikipedia-article-callouts.png" alt="Wikipedia article on colour perception deficit with three main landmark regions called out">
+			<p class="story">The regions are&hellip;</p>
+			<ul class="story">
+				<li>Search</li>
+				<li>The article</li>
+				<li>Navigation</li>
+			</ul>
 		</div>
 
 		<div class="slide full middle centre">
-			<img src="wikipedia-article-headings.png" alt="FIXME">
+			<img src="wikipedia-article-headings.png" alt="Repeat of the image of part of the heading tree for the Wikipedia article">
+			<p class="story">The complexity of the headings contrasts with the relatively simpler landmarks. This is good, because landmarks are there to give an overview of what's on the page, and headings are for the fine-grained navigation around the content, and must reflect its strucutre.</p>
 		</div>
+
+		<h3 class="story">Golden Rule 2</h3>
 
 		<div class="slide middle centre" data-pause>
 			<p>Use relatively <strong>few</strong> landmarks&hellip;</p>
 			<p>&hellip;but cover <strong>all</strong> of the content on the page.</p>
+			<p class="story">This ensures that all content has a home, but the overview is as concise as can be.</p>
 		</div>
+
+		<h3 class="story">Golden Rule 3</h3>
 
 		<div class="slide middle centre">
 			<p data-pause><span>If you've got <strong>more than one</strong> of the same type of landmark on a page,</span><span> use labels to <strong>differentiate</strong> them.</span></p>
 		</div>
 
+		<p class="story">The following code shows two navigation landmarks on a page. Without delving into their content, it's not clear what the purpose of each of them is, though it may be obvious from the visual design of the page.</p>
+
+		<!-- TODO: hack20 style is in theme.css, and is an alignment hack -->
 		<div class="slide middle hack20" style="font-size: 0.8rem;" data-markdown><!--
 		```html
 		<nav>
@@ -346,6 +438,8 @@
 			. . .
 		</nav>
 		```--></div>
+
+		<p class="story">Labels can be provided to make the different purposes of the navigation regions clear&hellip;</p>
 
 		<div class="slide middle hack20" style="font-size: 0.8rem;" data-markdown><!--
 		```html
@@ -359,7 +453,7 @@
 		```--></div>
 
 		<div class="slide middle centre">
-			<p>But, better&hellip;</p>
+			<p>But, <span class="story">the following technique for labelling the regions is </span>better<span class="story">, becuase visually-apparent headings are used to provide the labels, which are apparent and can be helpful to more users, particularly anyone who finds reading difficult or has a cognitive impairment.</span>&hellip;</p>
 		</div>
 
 		<div class="slide middle" style="font-size: 0.8rem;" data-markdown><!--
@@ -375,11 +469,14 @@
 		</nav>
 		```--></div>
 
+		<h3 class="story">Golden Rule 4</h3>
+
 		<div class="slide middle centre" data-pause>
 			<p>There's <strong>no need to include the type</strong> of landmark in its label.</p>
 		</div>
 
 		<div class="slide middle centre hack20">
+			<p class="story">Given the following code&hellip;</p>
 			<div data-markdown><!--
 			```html
 			<nav aria-label="Site">
@@ -395,6 +492,7 @@
 		</div>
 
 		<div class="slide middle centre ten">
+			<p class="story">However, if the type of the region is included in the label&hellip;</p>
 			<div data-markdown><!--
 			```html
 			<nav aria-label="Site Navigation">
@@ -406,26 +504,35 @@
 					<p>Screen-readers may say</p>
 					<strong>"Site Navigation, navigation"</strong>
 				</div>
+				<p class="story">&hellip;which is not what you want :-).</p>
 			</div>
 		</div>
 
 		<div class="slide full middle centre" data-pause>
-			<img src="piano-keyboard.jpg" alt="A piano keyboard">
+			<!-- FIXME "I said" - oh and make sure I did "say" it above! -->
+			<p class="story">But I said landmarks could be helpful for everyone, so what about keyboard users?</p>
+			<img src="piano-keyboard.jpg" alt="A piano keyboard (I couldn't find a nice picture of a computer keyboard)">
 		</div>
 
 		<div class="slide full middle centre">
-			<img src="mouse.jpg" alt="A mouse (cute rodent)">
+			<p class="story">&hellip;and what about mouse users?</p>
+			<img src="mouse.jpg" alt="A cute fluffy mouse">
 		</div>
 
 		<h2 class="full slide middle centre title">
 			Landmarks extension demo
 		</h2>
 
+		<p class="story"><em>(At this point, the <a href="http://matatk.agrip.org.uk/landmarks/">Landmarks browser extension</a> would be demonstrated. The demo shows how to use it to navigate pages, and also, for developers, how to use the DevTools part of the extension to check how landmark regions are marked up, and add/edit them with updates reflected by the extension in real-time.)</em></p>
+
 		<div class="slide">
 			<h2>Examples</h2>
 			<ul data-pause>
 				<li><a href="https://www.paciellogroup.com/">The Paciello Group</a></li>
-				<li><a href="wow.html">World of Wombats (live demo version, not fully labelled)</a></li>
+				<li>
+					<a href="wow.html">World of Wombats (live demo version, not fully labelled)</a>
+					<p class="story">This version of the page lacks some of the landmarks/labels that the &quot;full&quot; version below has, and is used to demonstrate the Landmarks browser extension.</p>
+				</li>
 				<li><a href="wow-full.html">World of Wombats (fully labelled)</a></li>
 			</ul>
 		</div>
@@ -468,6 +575,7 @@
 		<div class="slide full centre title" data-split="75% 25%">
 			<h2 class="bottom">Thanks for listening</h2>
 			<p>Any questions?</p>
+			<p class="story">If so, <a href="https://twitter.com/matatk">contact me on Twitter</a>.</p>
 		</div>
 
 		<div class="slide">
@@ -475,9 +583,16 @@
 			<p>The <a href="https://www.bbc.co.uk/sport/get-inspired/47977024">BBC Sport article</a> referenced earlier mentioned this: the average runner shrinks 1.25cm during a marathon, due to spine compression. We all get shorter throughout the day, too, but the amount varies.</p>
 		</div>
 
-		<button id="next" aria-label="Next slide"></button>
+		</div> <!-- end of slide container -->
 
+		<!-- TODO: announce ever? keyboard shortcut to announce it? -->
 		<div id="progress"><div></div></div>
+
+		<!-- FIXME TODO: add the following via script? -->
+		<!-- FIXME TODO: what happens when they're hidden visually too? -->
+		<p id="screen-reader-intro" class="visually-hidden">The slideshow is in slides mode. Arrow keys will move between slides. To use story mode, which includes extra background information on the content, and lets you browse using a screen reader's virtual cursor, press S, or use the Tab key to reach the story mode button.</p>
+		<p id="story-mode-explainer" class="visually-hidden">Story mode allows you to read the presentation as a document, rather than a collection of separate slides, and includes extra background information on the content. It turns off keyboard shortcuts used for navigating between slides and is recommended if you're using a screen reader.</p>
+		<p id="slides-mode-explainer" class="visually-hidden">Slides mode displays each slide one at a time, as they would be projected for the audience. The extra information present in story mode is not displayed. Keyboard shortcuts are used to move between slides.</p>
 
 		<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 		<script src="slideshow.js"></script>

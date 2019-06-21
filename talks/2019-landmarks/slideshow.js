@@ -1,17 +1,42 @@
 'use strict';
 /* global window document marked */
+// TODO: Story mode is for everyone because it includes the things that would
+//       be said for each slide, so this needs to be made more discoverable.
+// TODO: Unify visible and accessible keyboard help info in a pop-up dialog.
+// TODO: Make the aria-descriptions of slide and story mode visible when
+//       active, to help people who are using a screen-reader for reasons other
+//       than vision impairment.
+// TODO: How to announce progress? Provide a keyboard shortcut?
+// TODO: Check out redirection (not sure it's working always)
+// TODO: Support the ability to start in story mode?
+// TODO: Support focusing a particular 'slide' in story mode, as in slides mode?
+// TODO: Support returning to story mode after folloiwng a link? How?
 (function(win, doc) {
 	const slides = doc.getElementsByClassName('slide')
-	const progress = doc.querySelector('#progress > div')
 	let current = null
+	let storyMode = false  // default is slides mode
 
-	function hasBoolean(element, attrName) {
+
+	//
+	// Utilities
+	//
+
+	function hasStrictDataBoolean(element, attrName) {
 		return element.dataset[attrName] === ''
+	}
+
+	// Called to remove inline style properties that were added when gradually
+	// revealing slide content, or switching display modes.
+	function cleanProperty(element, propertyName) {
+		element.style.removeProperty(propertyName)
+		if (element.getAttribute('style') === '') {
+			element.removeAttribute('style')
+		}
 	}
 
 
 	//
-	// Moving between slides; fullscreen; toggle styles
+	// Moving between slides
 	//
 
 	function previousSlideNumber() {
@@ -23,9 +48,11 @@
 	}
 
 	function updateProgressBar() {
+		// The author could've removed the progress section for giving the talk
+		const progress = doc.querySelector('#progress > div')
 		if (progress) {
 			const percent = ((current + 1) / slides.length) * 100
-			progress.style.width = percent + '%'
+			progress.style.width = `${Math.round(percent)}%`
 		}
 	}
 
@@ -47,12 +74,6 @@
 		updateLocation()
 	}
 
-	function toggleStyles() {
-		for (const sheet of doc.styleSheets) {
-			sheet.disabled = !sheet.disabled
-		}
-	}
-
 	// If there are steps on the slide that are to be gradually revealed (more
 	// info on this at the bottom) then go through those steps before advancing
 	// to the next slide. Returns true to say "go to next slide" or false
@@ -68,7 +89,7 @@
 			const nextStep = currentStep + 1
 			const nextStepElement =
 				slide.querySelector(`[data-pause-step="${nextStep}"]`)
-			nextStepElement.style.visibility = 'visible'
+			cleanProperty(nextStepElement, 'visibility')
 			slide.dataset.pauseCurrentStep = nextStep
 			return false
 		}
@@ -85,7 +106,160 @@
 		}
 	}
 
-	doc.addEventListener('keydown', function(event) {
+
+	//
+	// Slides mode and story mode
+	//
+
+	function slideModeStartUp() {
+		doc.addEventListener('keydown', keyHandler)
+
+		doc.getElementById('mode-button').innerText = 'Switch to story mode'
+		doc.getElementById('mode-button')
+			.setAttribute('aria-describedby', 'story-mode-explainer')
+
+		doc.body.setAttribute('role', 'application')
+		// Note: no aria-label as screen-readers announce this on each slide
+		doc.body.setAttribute('aria-describedby', 'screen-reader-intro')
+		doc.body.setAttribute('tabindex', 0)
+
+		viewSizing()
+
+		win.addEventListener('resize', viewSizing)
+	}
+
+	function toggleDisplayMode() {
+		if (storyMode) {
+			storyModeOff()
+		} else {
+			if (doc.fullscreenElement) {
+				doc.exitFullscreen()  // prevents aberrations (tested on Fx)
+			}
+			storyModeOn()
+		}
+	}
+
+	function storyModeOn() {
+		toggleStyleSheets()
+		makePauseStepsVisible()
+		disableInlineStyles()
+		constrainImageSizesToViewport()
+		toggleHelpInfo()
+
+		doc.getElementById('previous').style.display = 'none'
+		doc.getElementById('next').style.display = 'none'
+		doc.getElementById('visible-keyboard-help').style.display = 'none'
+
+		doc.removeEventListener('keydown', keyHandler)
+
+		doc.getElementById('mode-button').innerText = 'Switch to slides mode'
+		doc.getElementById('mode-button')
+			.setAttribute('aria-describedby', 'slides-mode-explainer')
+
+		doc.body.removeAttribute('role')
+		doc.body.removeAttribute('aria-describedby')
+		doc.body.removeAttribute('tabindex')
+
+		win.removeEventListener('resize', viewSizing)
+
+		storyMode = true
+	}
+
+	function storyModeOff() {
+		toggleStyleSheets()
+		restorePauseStepVisibilityState()
+		restoreInlineStyles()
+		unfetterImageSizes()
+		toggleHelpInfo()
+
+		cleanProperty(doc.getElementById('previous'), 'display')
+		cleanProperty(doc.getElementById('next'), 'display')
+		cleanProperty(doc.getElementById('visible-keyboard-help'), 'display')
+
+		slideModeStartUp()
+
+		storyMode = false
+	}
+
+	function toggleStyleSheets() {
+		for (const sheet of doc.styleSheets) {
+			sheet.disabled = !sheet.disabled
+		}
+	}
+
+	// When moving to story mode, all pause steps should be visible, even if
+	// they haven't yet been revealed in slides mode
+	function makePauseStepsVisible() {
+		for (const thing of doc.querySelectorAll('[data-pause-step]')) {
+			if (thing.style.visibility === 'hidden') {
+				cleanProperty(thing, 'visibility')
+				thing.dataset.slidesModeHide = true
+			}
+		}
+	}
+
+	// When moving back to slides mode, the state of the pause steps'
+	// visibility needs to be restored, so that steps that hadn't yet been made
+	// visible are returned to being hidden.
+	function restorePauseStepVisibilityState() {
+		for (const thing of doc.querySelectorAll('[data-slides-mode-hide]')) {
+			thing.style.visibility = 'hidden'
+			thing.removeAttribute('data-slides-mode-hide')
+		}
+	}
+
+	function disableInlineStyles() {
+		for (const element of doc.querySelectorAll('[style]')) {
+			element.dataset.originalStyle = element.getAttribute('style')
+			element.removeAttribute('style')
+		}
+	}
+
+	function restoreInlineStyles() {
+		for (const element of doc.querySelectorAll('[data-original-style]')) {
+			element.setAttribute('style', element.dataset.originalStyle)
+			element.removeAttribute('data-original-style')
+		}
+	}
+
+	function constrainImageSizesToViewport() {
+		for (const image of doc.querySelectorAll('img')) {
+			image.style.maxWidth = '100%'
+			image.style.maxHeight = '100%'
+		}
+	}
+
+	function unfetterImageSizes() {
+		for (const image of doc.querySelectorAll('img')) {
+			cleanProperty(image, 'max-width')
+			cleanProperty(image, 'max-height')
+		}
+	}
+
+	// The help info shouldn't appear in story mode
+	function toggleHelpInfo() {
+		const helpInfoIds = [
+			'screen-reader-intro',
+			'story-mode-explainer',
+			'slides-mode-explainer']
+
+		for (const id of helpInfoIds) {
+			const element = doc.getElementById(id)
+			const elementDisplayMode = element.style.display
+			if (elementDisplayMode === 'none') {
+				cleanProperty(element, 'display')
+			} else {
+				element.style.display = 'none'
+			}
+		}
+	}
+
+
+	//
+	// Shortcut dispatch
+	//
+
+	function keyHandler(event) {
 		if (event.isComposing || event.keyCode === 229) return
 
 		switch (event.key) {
@@ -97,10 +271,11 @@
 			case 'ArrowRight':
 			case 'ArrowDown':
 			case 'PageDown':
-			case 'Space':  // FIXME doesn't work!
 			case 'Enter':
 			case 'Return':
 				moveToNextRevealOrSlide()
+				// Note: not supporting the space key as it's echoed by
+				// screen-readers.
 				break
 			case 'f':
 				if (!doc.fullscreenElement) {
@@ -110,12 +285,9 @@
 				}
 				break
 			case 's':
-				toggleStyles()
+				toggleDisplayMode()
 		}
-	})
-
-	doc.getElementById('previous').onclick = moveToPreviousSlide
-	doc.getElementById('next').onclick = moveToNextRevealOrSlide
+	}
 
 
 	//
@@ -172,59 +344,95 @@
 	// Split slide layouts
 	//
 
-	// TODO doc
-	// If the user doesn't want the default behaviour of putting all the
-	// slide's content into one <div>, but instead wants to treat each element
-	// as a direct child of the flexbox, they can suppress it using the custom
-	// 'split' attribute.
+	// Each slide is a flexbox. The elements within can be shifted to the
+	// top/middle/bottom of of the slide using CSS classes on the slides.
 	//
-	// If the attribute has a value, it should be a space-separated list of
-	// percetntages (with percent sign) to apply to the flex children.
+	// If the author wants the vertical space in the slide split equally
+	// between all children, they can specify an empty 'data-split' attribute.
+	// If they want more control, they can give a list of percentages for the
+	// sizes of the vertical sections.
+	//
+	// Split sections are given the CSS classes part-<number> and also
+	// part-(even|odd) as appropriate.
+	//
+	// If the slide had a top/middle/bottom class, then the split parts will
+	// recieve this too.
+	//
+	// Splitting only some of the content of a slide is supported.
+	//
+	// The DOM order of story mode content is preserved, so that it makes sense
+	// when moving to story mode.
+	//
+	// Note: spliting of slides horizontally into columns is not supported yet.
 
 	function doSplits() {
-		const promolgate = ['top', 'middle', 'bottom']
 		const containers = doc.querySelectorAll('[data-split]')
 
 		for (const container of containers) {
 			const elements = Array.from(container.children)
-			const percentages = hasBoolean(container, 'split')
+			const numNonStoryElements = elements.filter(element => {
+				return !element.classList.contains('story')
+			}).length
+
+			const percentages = hasStrictDataBoolean(container, 'split')
 				? []
 				: container.dataset.split.split(' ')
-			let splitCounter = 1
 
 			if (percentages.length > 0) {
-				if (elements.length !== percentages.length) {
-					console.error('Mismatched percentages for split container', container)
-				}
-
-				const sum = percentages.reduce((accumulator, currentValue) => {
-					const number = Number(currentValue.slice(0, -1))
-					return accumulator += number
-				}, 0)
-
-				if (sum !== 100) {
-					console.error(`Percentages add up to ${sum} for split container`, container)
-				}
+				checkPercentages(percentages, numNonStoryElements, container)
 			}
 
-			for (let i = 0; i < elements.length; i++) {
-				const child = elements[i]
+			processSplitContainer(container, percentages, elements)
+		}
+	}
+
+	function processSplitContainer(container, percentages, elements) {
+		const promolgate = ['top', 'middle', 'bottom']
+		let counter = 0
+
+		for (const child of elements) {  // don't iterate over live collection
+			if (!child.classList.contains('story')) {
+				// Create a flexbox with author-requested height
+				const splitCounter = counter + 1  // the first split part is odd
 				const box = doc.createElement('div')
 				box.classList.add(`part-${splitCounter}`)
 				const parity = splitCounter % 2 ? 'odd' : 'even'
 				box.classList.add('part-' + parity)
-				splitCounter += 1
 				box.appendChild(child)
+
 				if (percentages.length > 0) {
-					box.style.flexBasis = percentages[i]
+					box.style.flexBasis = percentages[counter]
 				}
+
 				for (const property of promolgate) {
 					if (container.classList.contains(property)) {
 						box.classList.add(property)
 					}
 				}
+
 				container.appendChild(box)
+				counter++
+			} else {
+				// Story mode content is invisible in slides mode and mustn't
+				// affect the layout, but the DOM order does need to be
+				// preserved, so it makes sense in story mode.
+				container.appendChild(child)
 			}
+		}
+	}
+
+	function checkPercentages(percentages, expectedLength, container) {
+		if (percentages.length !== expectedLength) {
+			win.console.error('Mismatched percentages for split container', container)
+		}
+
+		const sum = percentages.reduce((accumulator, currentValue) => {
+			const number = Number(currentValue.slice(0, -1))
+			return accumulator += number
+		}, 0)
+
+		if (sum !== 100) {
+			win.console.error(`Percentages add up to ${sum} for split container`, container)
 		}
 	}
 
@@ -235,28 +443,34 @@
 
 	// When the user wants things to be revealed gradually, they set the
 	// 'data-pause' attribute on the parent of the things. This function goes
-	// through and assigns each one a step number, tots up the total number of
-	// steps for the slide and renders each step hidden.
+	// through and assigns each thing a step number, tots up the total number
+	// of steps for the slide and renders each step hidden.
 	//
-	// When the user presses the right arrow key, the steps are gradually
+	// When the user presses the 'next' key/button, the steps are gradually
 	// revealed before moving to the next slide (handled above).
+	//
+	// We don't create a pause step for anything with a class of 'story'
+	// becuase that is only visible in story mode.
 
 	function preparePauses() {
 		for (const slide of slides) {
-			const pauseyThings = hasBoolean(slide, 'pause')
+			const pauseyThings = hasStrictDataBoolean(slide, 'pause')
 				? [slide]  // if the slide itself has the attribute
 				: slide.querySelectorAll('[data-pause]')
-			let steps = 0
+			let pauseStepCounter = 0
+
 			for (const thing of pauseyThings) {
-				steps += thing.children.length
-				for (let i = 0; i < thing.children.length; i++) {
-					const step = thing.children[i]
-					step.dataset.pauseStep = i + 1
-					step.style.visibility = 'hidden'
+				for (const step of thing.children) {
+					if (!step.classList.contains('story')) {
+						pauseStepCounter++
+						step.dataset.pauseStep = pauseStepCounter
+						step.style.visibility = 'hidden'
+					}
 				}
 			}
-			if (steps > 0) {
-				slide.dataset.pauseSteps = steps
+
+			if (pauseStepCounter > 0) {
+				slide.dataset.pauseSteps = pauseStepCounter
 				slide.dataset.pauseCurrentStep = 0
 			}
 		}
@@ -264,12 +478,20 @@
 
 
 	//
-	// Start-up
+	// Respoinding to viewport size changes
 	//
 
-	renderMarkdown()
-	doSplits()
-	preparePauses()
+	// The author sets two CSS custom properties under the :root pseudo-class
+	// to specify slide aspect ratio and font size, such as in the following
+	// examples.
+	//
+	// --author-font-height-percent-of-slide: 8;
+	// --author-aspect-ratio: calc(16 / 9);
+	//
+	// It is not possible to use CSS custom properties in media queries, so we
+	// need to run some code to work out the dimensions of the slides.
+	//
+	// Based on those dimentions, the base font size is set accordingly too.
 
 	// Thanks https://davidwalsh.name/css-variables-javascript :-)
 	function viewSizing() {
@@ -308,10 +530,22 @@
 			.setProperty('--computed-base-font-size', realRootFontSize + 'px')
 	}
 
+
+	//
+	// Start-up
+	//
+
+	doc.getElementById('browser-support-note').remove()
+
+	renderMarkdown()
+	doSplits()
+	preparePauses()
 	if (!reflectLocation()) {
 		setActiveSlide(0)
 	}
+	slideModeStartUp()  // make body focusable, application; handle keys, resize
 
-	viewSizing()
-	win.onresize = viewSizing
+	doc.getElementById('previous').onclick = moveToPreviousSlide
+	doc.getElementById('next').onclick = moveToNextRevealOrSlide
+	doc.getElementById('mode-button').onclick = toggleDisplayMode
 })(window, document)
