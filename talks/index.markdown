@@ -5,11 +5,15 @@ title: Talks
 
 ## Landmarks
 
-[Slides for "Landmarks"](2019/landmarks/) (screen-reader and mobile optimisation in-progress)
+[Slides for "Landmarks"](2019/landmarks/) (mobile optimisation in-progress)
 
-Presented at [London Accessibility Meet-up #26, May 2019 (video)](https://www.youtube.com/watch?v=urgZm-k8KMk&t=1h23m27s).
+Presented at...
 
-**Please note:** Dragon doesn't support landmark regions, as I thought it did during the Q&A (oops!); it supports ARIA roles for custom form controls, but not landmark roles.
+ * [London Accessibility Meet-up #26, May 2019 (video)](https://www.youtube.com/watch?v=urgZm-k8KMk&t=1h23m27s).
+
+   **Please note:** Dragon doesn't support landmark regions, as I thought it did during the Q&A (oops!); it supports ARIA roles for custom form controls, but not landmark roles.
+
+ * [role=drinks, June 2019](https://www.roledrinks.com/in/amsterdam/2019-06-15.html)
 
 ## Exploring the Use of the Web Audio API to Improve Chart Accessibility
 
