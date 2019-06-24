@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>W3C Workshop on Web Games: Adaptive Accessibility</title>
+		<style>
+:root {
+	--author-font-height-percent-of-slide: 8;
+	--author-aspect-ratio: calc( 4 / 3);
+	--author-aspect-ratio: calc(16 / 9);
+}
+		</style>
+		<link href="slideshow.css" rel="stylesheet">
+		<link href="type-spacing.css" rel="stylesheet">
+		<link href="theme.css" rel="stylesheet">
+	</head>
+	<body> <!-- script adds help info and keyboard handling in slides mode -->
+		<p id="browser-support-note"><strong>This presentation's slide view does not support Internet Explorer, sorry. However, you can view all of the content&mdash;including notes on each slide&mdash;in &quot;story mode&quot; by disabling styles (press <kbd>Alt</kbd>, then on the &quot;View&quot; menu, select &quot;Style&quot; and then &quot;No style&quot;).</strong></p>
+
+		<button id="mode-button">
+			<!-- label and description managed by script -->
+		</button>
+		<button id="previous" aria-label="Previous slide"><span>&larr;</span></button>
+		<button id="next" aria-label="Next slide"><span>&rarr;</span></button>
+
+		<div aria-live="polite"> <!-- slide container -->
+
+			<div class="slide full padded bottom title">
+				<h1>Adaptive Accessibility</h1>
+				<p id="author">
+				<span>Matthew Tylee Atkinson et. al.</span><span class="story"><br/></span><span> @matatk</span><span class="story"> on Twitter</span>
+				</p>
+				<div id="visible-keyboard-help" style="margin: 0.5rem; padding: 0; background-color: white; border-radius: 0.5rem; font-size: 0.5rem; position: absolute; top: 0; left: 0; width: 80%;">
+					<p style="padding-left: 0.5rem; padding-right: 0.5rem;">Use the arrow keys to move between slides, press <kbd>F</kbd> for full-screen<!-- and <kbd>S</kbd> to switch to story mode, which gives you all of the background information behind the slides-->.</p>
+				</div>
+			</div>
+
+			<h2 class="full slide middle centre title">Challenge</h2>
+
+			<div class="slide middle centre" data-pause>
+				<p>Complex controls</p>
+				<p>Precise timing</p>
+				<p>Signal processing</p>
+				<p>Planning</p>
+			</div>
+
+			<div class="slide middle centre" data-pause>
+				<p>Games <strong>have</strong> to be challenging</p>
+				<p>The challenge <strong>varies</strong> from game to game.</p>
+			</div>
+
+			<!-- .full doesn't make any difference -->
+			<h2 class="slide middle centre title">Content Accessibility</h2>
+
+			<div class="slide full middle centre" data-pause>
+				<p>Game Accessibility Guidelines</p>
+				<p>Framework for Accessible Specification of Technology (FAST)</p>
+				<p>Media Accessibility User Requirements</p>
+				<p>Accessible Player Experiences</p>
+			</div>
+
+			<img src="rh1.png" class="slide" alt="FIXME">
+
+			<img src="rh2.png" class="slide" alt="FIXME">
+
+			<h2 class="slide middle centre title">What's missing?</h2>
+
+			<div class="slide full middle centre" data-pause>
+				<p>Record audio for every UI element</p>
+				<p>&hellip;in several languages</p>
+				<p>&hellip;at several speeds</p>
+				<p>Make sure it's navigable with a keyboard</p>
+				<p>&hellip;and a mouse</p>
+				<p>&hellip;and works with a controller</p>
+				<p>&hellip;and with a single switch</p>
+			</div>
+
+			<div class="slide full middle centre" data-pause>
+				<p>Users need to be able to perceive the content,</p>
+				<p>&hellip;access the user interface,</p>
+				<p>and use the input devices they need.</p>
+			</div>
+
+			<h2 class="full slide middle centre title">Integrating with existing assistive technologies</h2>
+
+			<div class="slide middle centre" data-pause>
+				<p>Screen readers, screen magnifiers, &hellip;</p>
+				<p>Text transcription services.</p>
+				<p>A larger screen, custom controller.</p>
+				<p>Personalisations such as contrast, font size or caption presentation.</p>
+				<p>Variable game parameters.</p>
+			</div>
+
+			<h3 class="full slide middle centre title">Example: UI Accessibility</h3>
+
+			<!-- FIXME centre doesn't do anything? -->
+			<div class="slide middle centre">
+				<p>We already have solutions for user interface accessibility on the web&hellip;</p>
+			</div>
+
+			<img src="google-wave.webp" class="slide" alt="Google Wave communications web-app. I miss Google Wave!">
+
+			<p class="slide middle centre">We could use the intended HTML elements for the job&hellip;</p>
+
+			<div class="slide middle centre">
+				<div data-markdown><!--
+				```html
+				<button>OK</button>
+
+				<a href="...">Sazerac recipe</a>
+
+				<main>
+				This is important.
+				</main>
+				``` -->
+				</div>
+			</div>
+
+			<p class="slide middle centre">But we can also use standards such as ARIA to provide the semantics as an alternative&hellip;</p>
+
+			<div class="slide middle centre">
+				<div data-markdown><!--
+				```html
+				<div role="button" tabindex="0">
+				OK</div>
+
+				<div role="link" data-href="...">
+				Sazerac recipe</div>
+
+				<div role="main">Important</div>
+				``` -->
+				</div>
+			</div>
+
+			<!-- TODO provide a way to do pausing but show the first one right away -->
+			<!-- TODO nested pausing doesn't work -->
+			<div class="slide middle centre">
+				<p data-pause><span>Assistive technologies (e.g. screen-readers) can pick up on these cues;</span><span> we need a way to provide them in the context of web games.</span></p>
+			</div>
+
+			<h2 class="slide"></h2>
+
+			<h2 class="full slide middle centre title">Questions for discussion</h2>
+
+			<p class="slide middle centre">Can existing accessibility semantics and standards help us meet CVAA requirements?</p>
+			<p class="slide middle centre">How can we bridge the gap to existing assistive technologies to realise this support?</p>
+			<p class="slide middle centre">What info do we need to be able to express to make games accessible that current assistive technologies can't accept? What types of games are there?</p>
+			<p class="slide middle centre">Does it make sense to expose that info via the accessibility layer, or by content/rendering in-keeping with the game world? Which issues are better solved at the design/content/rendering level, with the help of the Game Accessibility Guidelines?</p>
+			<p class="slide middle centre">Could research into abstract games be of help to us?</p>
+			<p class="slide middle centre">What adaptations for specific engines might be produced that could start assisting people quickly?</p>
+			<p class="slide middle centre">How can we make authoring and modding tools accessible?</p>
+
+			<h2 class="full slide middle centre title">Suggested outputs</h2>
+
+			<div class="slide middle" style="font-size: 0.8rem;">
+				<ul>
+					<li>Map out how we build a bridge between rendered game UI and the semantic info assistive technologies need.</li>
+					<li>Find, identify or plan to create some reference adaptations at different levels (system, engine, game).</li>
+					<li>Extend the Game Accessibility Guidelines (or other related standards) to include WCAG-style "Techniques" for using established adaptations.</li>
+				</ul>
+			</div>
+
+			<!-- <h2 class="full slide middle centre title">Acknowledgements</h2> -->
+
+		</div> <!-- end of slide container -->
+
+		<!-- TODO: announce ever? keyboard shortcut to announce it? -->
+		<div id="progress"><div></div></div>
+
+		<!-- FIXME TODO: add the following via script? -->
+		<!-- FIXME TODO: what happens when they're hidden visually too? -->
+		<p id="screen-reader-intro" class="visually-hidden">The slideshow is in slides mode. Arrow keys will move between slides. To use story mode, which includes extra background information on the content, and lets you browse using a screen reader's virtual cursor, press S, or use the Tab key to reach the story mode button.</p>
+		<p id="story-mode-explainer" class="visually-hidden">Story mode allows you to read the presentation as a document, rather than a collection of separate slides, and includes extra background information on the content. It turns off keyboard shortcuts used for navigating between slides and is recommended if you're using a screen reader.</p>
+		<p id="slides-mode-explainer" class="visually-hidden">Slides mode displays each slide one at a time, as they would be projected for the audience. The extra information present in story mode is not displayed. Keyboard shortcuts are used to move between slides.</p>
+
+		<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+		<script src="slideshow.js"></script>
+	</body>
+</html>
