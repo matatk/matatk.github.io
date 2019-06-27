@@ -333,6 +333,7 @@
 	}
 
 	function renderMarkdown() {
+		if (!win.marked) return  // TODO error indication?
 		for (const container of doc.querySelectorAll('[data-markdown]')) {
 			const markdown = filterMarkdown(getMarkdownFromComment(container))
 			container.innerHTML = marked(markdown)

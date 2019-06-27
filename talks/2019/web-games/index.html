@@ -30,45 +30,83 @@
 				<p id="author">
 				<span>Matthew Tylee Atkinson et. al.</span><span class="story"><br/></span><span> @matatk</span><span class="story"> on Twitter</span>
 				</p>
+				<!--
 				<div id="visible-keyboard-help" style="margin: 0.5rem; padding: 0; background-color: white; border-radius: 0.5rem; font-size: 0.5rem; position: absolute; top: 0; left: 0; width: 80%;">
-					<p style="padding-left: 0.5rem; padding-right: 0.5rem;">Use the arrow keys to move between slides, press <kbd>F</kbd> for full-screen<!-- and <kbd>S</kbd> to switch to story mode, which gives you all of the background information behind the slides-->.</p>
+					<p style="color: black; padding-left: 0.5rem; padding-right: 0.5rem;">Use the arrow keys to move between slides, press <kbd>F</kbd> for full-screen and <kbd>S</kbd> to switch to story mode, which gives you all of the background information behind the slides.</p>
 				</div>
+				-->
 			</div>
 
-			<h2 class="full slide middle centre title">Challenge</h2>
+			<div class="slide full middle centre light" data-pause>
+				<p>Active Game Accessibility</p>
+				<p>Ian Hamilton</p>
+				<p>W3C's Accessible Platform Architectures (APA) group and Research Questions sub-group</p>
+				<img src="tpg.svg" style="height: 1.5rem; margin-top: 0.75rem;" alt="The Paciello Group">
+			</div>
 
+			<!--
+			<h2 class="full slide middle centre title">Challenge</h2>
+			-->
+
+			<div class="slide middle centre">
+				<p data-pause><span>Accessibility natters for the human benefits it brings:</span><span> access to <strong>culture</strong>, <strong>recreation</strong>, <strong>socialising</strong> and <strong>education</strong>.</span>
+			</div>
+
+			<!--
 			<div class="slide middle centre" data-pause>
 				<p>Complex controls</p>
 				<p>Precise timing</p>
 				<p>Signal processing</p>
 				<p>Planning</p>
 			</div>
+			-->
 
 			<div class="slide middle centre" data-pause>
-				<p>Games <strong>have</strong> to be challenging</p>
+				<p>Games <strong>have</strong> to be challenging.</p>
 				<p>The challenge <strong>varies</strong> from game to game.</p>
 			</div>
 
 			<!-- .full doesn't make any difference -->
 			<h2 class="slide middle centre title">Content Accessibility</h2>
 
-			<div class="slide full middle centre" data-pause>
-				<p>Game Accessibility Guidelines</p>
-				<p>Framework for Accessible Specification of Technology (FAST)</p>
-				<p>Media Accessibility User Requirements</p>
-				<p>Accessible Player Experiences</p>
+			<div class="slide middle centre">
+				<p style="font-size: 25vw;">
+				<span style="color: yellow;">&#x25c6;</span>
+				<span style="color: magenta;">&#9679;</span>
+				</p>
 			</div>
 
-			<img src="rh1.png" class="slide" alt="FIXME">
+			<div class="slide middle centre" data-pause>
+				<p><strong>95%</strong> of Assassin's Creed Odyseey players left subtitles on.</p>
+				<p><strong>75%</strong> of The Division 2 players have turned them on; <strong>50%</strong> have them on at the moment.</p>
+				<p><em><a href="https://www.rockpapershotgun.com/2019/06/26/ubisofts-numbers-say-subtitles-are-really-jolly-popular/">source</a></em></p>
+			</div>
 
-			<img src="rh2.png" class="slide" alt="FIXME">
+			<img class="slide full" src="raptureaudio.jpg" alt="FIXME">
 
+			<img class="slide full" src="visual-audio-best-practice.png" alt="FIXME">
+
+			<div class="slide full middle centre" data-pause>
+				<p>Game Accessibility Guidelines</p>
+				<p>Accessible Player Experiences</p>
+				<p>W3C Framework for Accessible Specification of Technology (FAST)</p>
+				<p>W3C Media Accessibility User Requirements (MAUR)</p>
+			</div>
+
+			<img src="rh2.png" class="slide full" alt="FIXME">
+			<img src="rh1.png" class="slide full" alt="FIXME">
+
+			<!--
 			<h2 class="slide middle centre title">What's missing?</h2>
+			-->
 
 			<div class="slide full middle centre" data-pause>
 				<p>Record audio for every UI element</p>
 				<p>&hellip;in several languages</p>
 				<p>&hellip;at several speeds</p>
+			</div>
+
+			<div class="slide full middle centre" data-pause>
 				<p>Make sure it's navigable with a keyboard</p>
 				<p>&hellip;and a mouse</p>
 				<p>&hellip;and works with a controller</p>
@@ -77,30 +115,54 @@
 
 			<div class="slide full middle centre" data-pause>
 				<p>Users need to be able to perceive the content,</p>
-				<p>&hellip;access the user interface,</p>
+				<p>access the user interface,</p>
 				<p>and use the input devices they need.</p>
 			</div>
 
 			<h2 class="full slide middle centre title">Integrating with existing assistive technologies</h2>
 
 			<div class="slide middle centre" data-pause>
-				<p>Screen readers, screen magnifiers, &hellip;</p>
+				<p>Screen readers/magnifiers, mobile zoom.</p>
 				<p>Text transcription services.</p>
-				<p>A larger screen, custom controller.</p>
+				<p>A larger screen, or custom controller.</p>
 				<p>Personalisations such as contrast, font size or caption presentation.</p>
 				<p>Variable game parameters.</p>
 			</div>
 
+			<img class="slide full" alt="FIXME" src="xac.webp">
+
 			<h3 class="full slide middle centre title">Example: UI Accessibility</h3>
 
+			<div class="slide middle centre full" data-split>
+				<p>App/Game</p>
+				<div></div>
+				<p>Operating System</p>
+			</div>
+
+			<div class="slide middle centre full" data-split>
+			    <p>App/Game</p>
+				<p>Accessibility layer &rarr; Assistive technology</p>
+				<p>Operating System</p>
+			</div>
+
+			<div class="slide middle centre full" data-split>
+			    <p>Web App/Game</p>
+				<p>Accessibility tree &rarr; Assistive technology</p>
+				<p>Browser</p>
+			</div>
+
 			<!-- FIXME centre doesn't do anything? -->
+			<!--
 			<div class="slide middle centre">
 				<p>We already have solutions for user interface accessibility on the web&hellip;</p>
 			</div>
+			-->
 
-			<img src="google-wave.webp" class="slide" alt="Google Wave communications web-app. I miss Google Wave!">
+			<img src="google-wave.jpg" class="slide light" alt="Google Wave communications web-app. I miss Google Wave!">
 
+			<!--
 			<p class="slide middle centre">We could use the intended HTML elements for the job&hellip;</p>
+			-->
 
 			<div class="slide middle centre">
 				<div data-markdown><!--
@@ -110,13 +172,15 @@
 				<a href="...">Sazerac recipe</a>
 
 				<main>
-				This is important.
+				    This is important.
 				</main>
 				``` -->
 				</div>
 			</div>
 
+			<!--
 			<p class="slide middle centre">But we can also use standards such as ARIA to provide the semantics as an alternative&hellip;</p>
+			-->
 
 			<div class="slide middle centre">
 				<div data-markdown><!--
@@ -135,11 +199,41 @@
 			<!-- TODO provide a way to do pausing but show the first one right away -->
 			<!-- TODO nested pausing doesn't work -->
 			<div class="slide middle centre">
-				<p data-pause><span>Assistive technologies (e.g. screen-readers) can pick up on these cues;</span><span> we need a way to provide them in the context of web games.</span></p>
+				<p data-pause><span>Assistive technologies (e.g. screen-readers) can pick up on these cues;</span><span> we need a way for web games to provide them.</span></p>
 			</div>
 
-			<h2 class="slide"></h2>
+			<h3 class="full slide middle centre title">Example: Authoring Tools</h3>
 
+			<img class="slide full" src="t3dl-e.png" alt="FIXME">
+
+			<div class="slide middle centre" style="font-size: 0.76rem;">
+				<div data-markdown><!--
+				```xml
+				<map name=’Stair connection' style=’medieval’>
+				  <room id=’start’>
+				  <item pos=’c’ type=’info_player_start’ />
+				  <con type=’door’ target=’other’ wall=’n’
+				       pos=’t’ elevtype=’stairs’ />
+				  </room>
+				  <room id=’other’ />
+				</map>
+				``` -->
+				</div>
+			</div>
+
+			<img class="slide full" src="t3dl-g.png" alt="FIXME">
+
+			<h2 class="full slide middle centre title">Suggested outputs</h2>
+
+			<div class="slide middle" style="font-size: 0.8rem;">
+				<ol data-pause>
+					<li>Map out how to bridge between rendered UI and the semantics assistive technologies need.</li>
+					<li>Find, identify or plan to create some reference adaptations at different levels (OS, engine, game).</li>
+					<li>Requirements for/identify a framework to bring in adaptations/recognise user personalisations.</li>
+					<li>Input for specs such as W3C's FAST and MAUR to see how they may be improved to support games.</li>
+					<li>Identify or consider how to make some accessible authroing tools.</li>
+				</ol>
+			</div>
 			<h2 class="full slide middle centre title">Questions for discussion</h2>
 
 			<p class="slide middle centre">Can existing accessibility semantics and standards help us meet CVAA requirements?</p>
@@ -150,17 +244,15 @@
 			<p class="slide middle centre">What adaptations for specific engines might be produced that could start assisting people quickly?</p>
 			<p class="slide middle centre">How can we make authoring and modding tools accessible?</p>
 
-			<h2 class="full slide middle centre title">Suggested outputs</h2>
+			<h2 class="slide title"></h2>
 
-			<div class="slide middle" style="font-size: 0.8rem;">
+			<div class="slide middle">
+				<h2>Image Acknowledgements</h2>
 				<ul>
-					<li>Map out how we build a bridge between rendered game UI and the semantic info assistive technologies need.</li>
-					<li>Find, identify or plan to create some reference adaptations at different levels (system, engine, game).</li>
-					<li>Extend the Game Accessibility Guidelines (or other related standards) to include WCAG-style "Techniques" for using established adaptations.</li>
+					<li><a href="https://www.theverge.com/2019/4/30/18523449/microsoft-xbox-adaptive-controller-military-veterans-partnership">Xbox Adaptive Controller&mdash;The Verge</a></li>
+					<li><a href="https://www.pcworld.com/article/165779/Google_Wave_What_It_Is_And_How_It_Works.html">Google Wave&mdash;PC World</a></li>
 				</ul>
 			</div>
-
-			<!-- <h2 class="full slide middle centre title">Acknowledgements</h2> -->
 
 		</div> <!-- end of slide container -->
 

@@ -16,33 +16,39 @@
 
 	/* Completely new stuff */
 
-	:root { --accent-colour: yellow; }
-
-	.silver { --accent-colour: silver; }
+	:root { --accent-colour: #1b75bc; }  /* FIXME */
 
 	#author {
 		display: flex;
 		justify-content: space-between;
-		background-color: black;
+		background-color: white;
 		color: var(--accent-colour);
 	}
 
 	.title,
 	[data-split] .part-odd {
 		background-color: var(--accent-colour);
-		color: black;
+		color: white;
 	}
 
+	/* AT bit in stack */
 	[data-split] .part-even {
 		background-color: black;
-		color: var(--accent-colour);
+		/* color: var(--accent-colour); */
+		color: white;
 	}
 
 	h1, h2, h3, h4, h5, h6, strong { color: var(--accent-colour); }
 
-	.title h1, .title h2 { color: black; }
+	.title h1, .title h2 { color: white; }
 
+	/* FIXME do I use this in Landmarks on the HTML5 slide? */
 	.slide.light {
+		background-color: white;
+		color: black;
+	}
+
+	[data-split].light .part-even, [data-split].light .part-odd {
 		background-color: white;
 		color: black;
 	}
@@ -82,7 +88,7 @@
 	ol li:before {
 		content: counter(item) ". ";
 		counter-increment: item;
-		color: yellow;
+		color: #1b75bc;
 		font-weight: bold;
 	}
 
@@ -102,8 +108,13 @@
 
 	/* Debugging */
 
-	/*.slide.active {
+	/*
+	.slide.active {
 		outline: 0.05rem dashed orange;
 		border: 0.05rem dashed blue;
-	}*/
+	}
+	*/
+	/* Note...
+		overflow: hidden;
+	   is useful when e.g. the font is too big */
 }
