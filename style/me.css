@@ -16,29 +16,12 @@ body {
 	hyphens: auto;
 }
 
-blockquote {
-	margin: 0;
-	padding-left: 1em;
-	padding-right: 1em;
-	border-left: 0.25em solid #888; /* same as syntax-highlighted code */
-	color: #6c6c6c;
-	/* Colours chosen because:
-		- Contrast of text to background is OK by WCAG 2 Level AA.
-		- The thick border looks (about) the same colour as the text and is
-		  WCAG 2.1-compliant.
-		- Contrast betwwen <blockquote> and <body> text is greater than 2:1,
-		  so some will be able to see the difference, but if not, the sidebar
-		  and incrased margin are there.
-	 */
-}
-
-ul ul { list-style-type: square; }  /* default: circle - which isn't clear */
-
-ol ol { list-style-type: lower-alpha; }
-ol ol ol { list-style-type: lower-roman; }
-
 /* HTML5 for IE */
 header, main, footer { display: block; }
+
+nav summary {
+	padding-bottom: 0.5em;
+}
 
 nav ul {
 	list-style-type: none;
@@ -49,6 +32,12 @@ nav a {
 	display: block;
 	padding: 0.5em;
 }
+
+#menu-vertical li:last-child { padding-bottom: 1em; }
+
+#menu-horizontal { display: none; }
+#menu-horizontal ul { display: flex; }
+#menu-horizontal li { flex-grow: 1; }
 
 main, footer { border-top: 0.1em solid #888; }
 
@@ -124,48 +113,60 @@ img {
 	box-shadow: 0.25em 0.25em #888;  /* same colour as blockquote, highlight */
 }
 
-/* Major breakpoint */
-/* Horizontal nav items */
-@media screen and (min-width: 35em) {
-	nav li { float: left; }
-	nav a { padding: 0.85em; }
-	main { clear: both; }
+blockquote {
+	margin: 0;
+	padding-left: 1em;
+	padding-right: 1em;
+	border-left: 0.25em solid #888; /* same as syntax-highlighted code */
+	color: #6c6c6c;
+	/* Colours chosen because:
+		- Contrast of text to background is OK by WCAG 2 Level AA.
+		- The thick border looks (about) the same colour as the text and is
+		  WCAG 2.1-compliant.
+		- Contrast betwwen <blockquote> and <body> text is greater than 2:1,
+		  so some will be able to see the difference, but if not, the sidebar
+		  and incrased margin are there.
+	 */
 }
 
-/* Minor breakpoints */
-/* Horizontal nav items with more padding -- grab more as space allows */
-/* Creep in a little body margin as the viewport size increases */
-@media screen and (min-width: 38em) {
-	nav a { padding: 1em; }
-}
-@media screen and (min-width: 40em) {
-	nav a { padding: 1.25em; }
+ul ul { list-style-type: square; }  /* default: circle - which isn't clear */
 
-	body {
-		margin-left: 0.5em;
-		margin-right: 0.5em;
-	}
-}
-@media screen and (min-width: 45em) {
-	nav a { padding: 1.5em; }
+ol ol { list-style-type: lower-alpha; }
+ol ol ol { list-style-type: lower-roman; }
 
+
+/* Switch to horizontal menu, with more padding, but not too much */
+@media screen and (min-width: 42em) {
+	#menu-vertical { display: none; }
+	#menu-horizontal { display: block; }
+
+	nav a { padding: 0.75em; }
 	body {
 		margin-left: 1em;
 		margin-right: 1em;
 	}
 }
 
-/* Major breakpoint */
+
+/* Increase padding on menu items */
+@media screen and (min-width: 45em) {
+	nav a { padding: 1em; }
+}
+
+
 /* Wide layout:
 + Capped body text width (45em in inherited size)
 + Give body at least 0.5em left+right margins.
 + Float home page picture.
++ Max padding for menu items.
 Viewport size in [r]ems: (45 + 1) * 1.2 = 55.2 */
 @media screen and (min-width: 55.2em) {
 	body {
 		margin: auto;
 		max-width: 45em;
 	}
+
+	nav a { padding: 1.5em; }
 
 	#home-content {
 		float: right;
@@ -175,6 +176,7 @@ Viewport size in [r]ems: (45 + 1) * 1.2 = 55.2 */
 
 	footer { clear: both; }
 }
+
 
 @media (prefers-color-scheme: dark) {
 	/* Thanks https://css-tricks.com/dark-modes-with-css/ */

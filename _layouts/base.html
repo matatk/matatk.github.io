@@ -16,14 +16,27 @@
 	</head>
 	<body>
 		<nav role="navigation">
-			<ul>
-				<li><a href="/">Home</a></li>
-				<li><a href="/research/">Research</a></li>
-				<li><a href="/creations/">Creations</a></li>
-				<li><a href="/articles/">Articles</a></li>
-				<li><a href="/talks/">Talks</a></li>
-				<li><a href="/contact/">Contact</a></li>
-			</ul>
+			<details id="menu-vertical">
+				<summary>Site navigation</summary>
+				<ul>
+					<li><a href="/">Home</a></li>
+					<li><a href="/research/">Research</a></li>
+					<li><a href="/creations/">Creations</a></li>
+					<li><a href="/articles/">Articles</a></li>
+					<li><a href="/talks/">Talks</a></li>
+					<li><a href="/contact/">Contact</a></li>
+				</ul>
+			</details>
+			<div id="menu-horizontal">
+				<ul>
+					<li><a href="/">Home</a></li>
+					<li><a href="/research/">Research</a></li>
+					<li><a href="/creations/">Creations</a></li>
+					<li><a href="/articles/">Articles</a></li>
+					<li><a href="/talks/">Talks</a></li>
+					<li><a href="/contact/">Contact</a></li>
+				</ul>
+			</div>
 		</nav>
 		<main role="main">
 {{ content }}
