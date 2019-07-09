@@ -9,11 +9,6 @@ body {
 	font-family: Verdana, sans-serif;
 	font-size: 1.2em;
 	line-height: 1.5em;
-	-webkit-hyphens: auto;
-	-moz-hyphens: auto;
-	-ms-hyphens: auto;
-	-o-hyphens: auto;
-	hyphens: auto;
 }
 
 /* HTML5 for IE */
@@ -44,11 +39,6 @@ main, footer { border-top: 0.1em solid #888; }
 h1 { font-size: 2em; }
 h1, h2, h3, h4, h5, h6 {
 	line-height: 1.2em;
-	-webkit-hyphens: none;
-	-moz-hyphens: none;
-	-ms-hyphens: none;
-	-o-hyphens: none;
-	hyphens: none;
 }
 
 a {
@@ -71,7 +61,6 @@ li p { margin-bottom: 0; }
 /* This causes some code samples to scroll horizontally; is that really good? */
 pre {
 	overflow: auto;
-	hyphens: none;
 	/* white-space: pre-wrap; */  /* not sure about this */
 }
 

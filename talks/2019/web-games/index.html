@@ -30,38 +30,34 @@
 				<p id="author">
 				<span>Matthew Tylee Atkinson et. al.</span><span class="story"><br/></span><span> @matatk</span><span class="story"> on Twitter</span>
 				</p>
-				<!--
 				<div id="visible-keyboard-help" style="margin: 0.5rem; padding: 0; background-color: white; border-radius: 0.5rem; font-size: 0.5rem; position: absolute; top: 0; left: 0; width: 80%;">
 					<p style="color: black; padding-left: 0.5rem; padding-right: 0.5rem;">Use the arrow keys to move between slides, press <kbd>F</kbd> for full-screen and <kbd>S</kbd> to switch to story mode, which gives you all of the background information behind the slides.</p>
 				</div>
-				-->
+			</div>
+
+			<div class="story">
+				<p>This talk was given at the <a href="https://www.w3.org/2018/12/games-workshop/">W3C Workshop on Web Games</a>. You may also be interested in reading <a href="https://www.w3.org/2018/12/games-workshop/papers/web-games-adaptive-accessibility.html">our position paper</a> and <a href="/articles/w3c-workshop-on-web-games/">my summary of what I learnt there from an accessibility perspective</a>.</p>
+				<p><strong>Note:</strong> the talks were kept short, to give maximal time for discussion, therefore it's recommended that you check out our position paper for all of the details behind the ideas presented here.</p>
 			</div>
 
 			<div class="slide full middle centre light" data-pause>
+				<h2 class="story">Acknowledgements</h2>
+				<p class="story">First, some acknowledgements. You can find more info on the following in <a href="https://www.w3.org/2018/12/games-workshop/papers/web-games-adaptive-accessibility.html">our position paper</a>. The following groups and people contributed to the paper.</p>
 				<p>Active Game Accessibility</p>
 				<p>Ian Hamilton</p>
 				<p>W3C's Accessible Platform Architectures (APA) group and Research Questions sub-group</p>
 				<img src="tpg.svg" style="height: 1.5rem; margin-top: 0.75rem;" alt="The Paciello Group">
+				<p class="story">Thanks also to The Paciello Group for sponsoring my trip.</p>
+				<p class="story">If you happen to need any accessibility audits, training, strategy advice, UX reviews or anything like that, please consider <a href="https://www.paciellogroup.com/">The Paciello Group</a>.</p>
 			</div>
 
-			<!--
-			<h2 class="full slide middle centre title">Challenge</h2>
-			-->
-
 			<div class="slide middle centre">
+				<h2 class="story">Why does game accessibility matter?</h2>
 				<p data-pause><span>Accessibility natters for the human benefits it brings:</span><span> access to <strong>culture</strong>, <strong>recreation</strong>, <strong>socialising</strong> and <strong>education</strong>.</span>
 			</div>
 
-			<!--
 			<div class="slide middle centre" data-pause>
-				<p>Complex controls</p>
-				<p>Precise timing</p>
-				<p>Signal processing</p>
-				<p>Planning</p>
-			</div>
-			-->
-
-			<div class="slide middle centre" data-pause>
+				<p class="story">However, game accessibility differs from "traditional" accessibility in some significant ways&hellip;</p>
 				<p>Games <strong>have</strong> to be challenging.</p>
 				<p>The challenge <strong>varies</strong> from game to game.</p>
 			</div>
@@ -69,6 +65,9 @@
 			<!-- .full doesn't make any difference -->
 			<h2 class="slide middle centre title">Content Accessibility</h2>
 
+			<p class="story">You can achieve a great deal with content accessibility. By designing the game with accessibility in mind, it can be made friendlier to all players. For example, the following two symbols differ in both shape and colour, thus providing two ways to tell them apart.</p>
+
+			<!-- TODO? Keep styles in story mode? -->
 			<div class="slide middle centre">
 				<p style="font-size: 25vw;">
 				<span style="color: yellow;">&#x25c6;</span>
@@ -76,29 +75,44 @@
 				</p>
 			</div>
 
+			<p class="story">On the audio side, you could use spatial audio with good special effects to indicate to the player the type of environment they're in, or where they should explore.</p>
+
 			<div class="slide middle centre" data-pause>
-				<p><strong>95%</strong> of Assassin's Creed Odyseey players left subtitles on.</p>
+				<p class="story">Some accessibility features are more common than you might think. In Assassin's Creed Origins, <a href="https://www.reddit.com/r/gamedev/comments/86drfv/over_60_of_assassins_creed_origins_players_play/"><strong>60%</strong> of players turned subtitles on</a>, so in the following game Ubisoft enabled them by default, and&hellip;</p>
+				<p><strong>95%</strong> of Assassin's Creed Odyssey players left subtitles on.</p>
 				<p><strong>75%</strong> of The Division 2 players have turned them on; <strong>50%</strong> have them on at the moment.</p>
-				<p><em><a href="https://www.rockpapershotgun.com/2019/06/26/ubisofts-numbers-say-subtitles-are-really-jolly-popular/">source</a></em></p>
+				<p><em><a href="https://www.rockpapershotgun.com/2019/06/26/ubisofts-numbers-say-subtitles-are-really-jolly-popular/">source</a><span class="story"> for the info on Assassin's Creed Odyssey and The Division 2</span></em></p>
 			</div>
 
-			<img class="slide full" src="raptureaudio.jpg" alt="FIXME">
+			<p class="story">Of course, using spatial audio is great for some people, but others (whether they be in a noisy environment, or perhaps have trouble hearing the game) may struggle to get the most out of this. In that case, you could provide visual cues to indicate the information that is coming through sound. Here's a great example of this in &quot;Everybody's gone to the rapture&quot;&hellip;</p>
 
-			<img class="slide full" src="visual-audio-best-practice.png" alt="FIXME">
+			<img class="slide full" src="raptureaudio.jpg" alt="In Everybody's gone to the rapture, visual cues that look like targets overlayed on relevant parts of the scene can direct the player to important areas, complementing the sound.">
+
+			<p class="story">That screen-grab comes from <a href="http://gameaccessibilityguidelines.com/everybodys-gone-to-the-rapture-audio-aid/">a best practice example from the Game Accessibility Guidelines</a>, which is a very helpful resource for making inclusive decisions when designing your games.</p>
+
+			<img class="slide full" src="visual-audio-best-practice.png" alt="Game Accessibility Guidelines page containing the best practice example from Everybody's gone to the rapture.">
+
+			<p class="story">There are several sets of guidelines to which you can refer (these are linked from <a href="https://www.w3.org/2018/12/games-workshop/papers/web-games-adaptive-accessibility.html">our position paper</a>)&hellip;</p>
 
 			<div class="slide full middle centre" data-pause>
-				<p>Game Accessibility Guidelines</p>
+				<p>Game Accessibility Guidelines<span class="story">, as above</span></p>
 				<p>Accessible Player Experiences</p>
 				<p>W3C Framework for Accessible Specification of Technology (FAST)</p>
 				<p>W3C Media Accessibility User Requirements (MAUR)</p>
 			</div>
 
-			<img src="rh2.png" class="slide full" alt="FIXME">
-			<img src="rh1.png" class="slide full" alt="FIXME">
+			<p class="story">Following guidelines like these helps you make design decisions that include as many people as possible, and there is a lot that can be achieved with content design alone.</p>
 
-			<!--
-			<h2 class="slide middle centre title">What's missing?</h2>
-			-->
+			<p class="story">The game Railway Hero, covered in more detail in our position paper, provides a self-voiced UI (sound is recorded for each element), separate sound and music tracks, alternative colour modes, closed captions, a switch for disabling timed play and variable font sizes.</p>
+
+			<img src="rh2.png" class="slide full" alt="Railway Hero game play - the game is a top-down 2D puzzle game in which players need to fill gaps in railway tracks in a futuristic setting">
+			<img src="rh1.png" class="slide full" alt="Railway Hero settings UI showing many accessibility and related options">
+
+			<p class="story">However, content design can only go so far&mdash;many users have existing assistive technologies and adaptations that they'd like to be able to use with games. Examples include a screen-reader to read and navigate the content/UI on the screen, and custom input devices.</p>
+
+			<h2 class="story">What's missing?</h2>
+
+			<p class="story">If we wanted to support all possible choices users might have for reading the UI and using their preferred input devices, then we'd have to &hellip;</p>
 
 			<div class="slide full middle centre" data-pause>
 				<p>Record audio for every UI element</p>
@@ -113,6 +127,8 @@
 				<p>&hellip;and with a single switch</p>
 			</div>
 
+			<p class="story">Content is hugely important, but it can only take us so far.</p>
+
 			<div class="slide full middle centre" data-pause>
 				<p>Users need to be able to perceive the content,</p>
 				<p>access the user interface,</p>
@@ -121,48 +137,67 @@
 
 			<h2 class="full slide middle centre title">Integrating with existing assistive technologies</h2>
 
+			<h3 class="story">Examples of assistive technologies</h3>
+
 			<div class="slide middle centre" data-pause>
-				<p>Screen readers/magnifiers, mobile zoom.</p>
-				<p>Text transcription services.</p>
-				<p>A larger screen, or custom controller.</p>
-				<p>Personalisations such as contrast, font size or caption presentation.</p>
-				<p>Variable game parameters.</p>
+				<p><span class="story"><strong>Large-scale "traditional" assistive technologies such as:</strong> </span>Screen readers/magnifiers, mobile zoom.</p>
+				<p><span class="story"><strong>More focused and possibly platform-specific facilities such as:</strong> </span>Text transcription services.</p>
+				<p><span class="story"><strong>Hardware choices such as:</strong> </span>A larger screen, or custom controller.</p>
+				<p><span class="story"><strong>System settings changes such as:</strong> </span>Personalisations such as: contrast, font size or caption presentation.</p>
+				<p><span class="story"><strong>Individual game settings such as:</strong> </span>Variable game parameters.</p>
 			</div>
 
-			<img class="slide full" alt="FIXME" src="xac.webp">
+			<p class="story">As we moved down the above list, the idea of what constitutes an assistive technology moved from more "traditional" large-scale software (and sometimes hardware) applications/devices to more focused services, or even individual settings within the platform or game.</p>
+
+			<p class="story">As well as differing in size, the technologies may differ in specificity&mdash;whether they're applied to the </p>
+
+			<img class="slide full" alt="Xbox Adaptive Controller, connected to several other switches and controllers that are also supported as alernative input sources" src="xac.webp">
 
 			<h3 class="full slide middle centre title">Example: UI Accessibility</h3>
 
+			<p class="story">When running an app or game on a computer (or console) the app/game process runs on top of the operating system; we could imagine two layers&hellip;</p>
+
 			<div class="slide middle centre full" data-split>
+				<hr class="story">
 				<p>App/Game</p>
 				<div></div>
 				<p>Operating System</p>
+				<hr class="story">
 			</div>
 
+			<p class="story">The traditional stack of running an assistive technology program such as a screen-reader involves an accessibility layer, provided by the OS, that sits between it and the app, as follows.</p>
+
 			<div class="slide middle centre full" data-split>
+				<hr class="story">
 			    <p>App/Game</p>
 				<p>Accessibility layer &rarr; Assistive technology</p>
 				<p>Operating System</p>
+				<hr class="story">
+			</div>
+
+			<div class="story">
+				<p>If the app uses standard system calls to create things like UI elements, these are intercepted by the accessibility layer, and the user's assistive technology can query the accessibility layer for information on them.</p>
+				<p>The assistive technology uses the information provided by the accessibility layer to present the app in a way the person using the machine can perceive&mdash;maybe by reading out the text of the buttons and controls in the UI; maybe by magnifying the screen and following the focus as it moves about the UI.</p>
+				<p>This works the same when the app is running in a browser; the browser provides an accessibility tree that exposes various properties of DOM elements (such as the types of controls they represent, or their text content), mirroring its structure.</p>
 			</div>
 
 			<div class="slide middle centre full" data-split>
+				<hr class="story">
 			    <p>Web App/Game</p>
 				<p>Accessibility tree &rarr; Assistive technology</p>
 				<p>Browser</p>
+				<hr class="story">
 			</div>
 
-			<!-- FIXME centre doesn't do anything? -->
-			<!--
-			<div class="slide middle centre">
-				<p>We already have solutions for user interface accessibility on the web&hellip;</p>
-			</div>
-			-->
+			<p class="story">We already have solutions for user interface accessibility on the web, based on this model&hellip;</p>
 
 			<img src="google-wave.jpg" class="slide light" alt="Google Wave communications web-app. I miss Google Wave!">
 
-			<!--
-			<p class="slide middle centre">We could use the intended HTML elements for the job&hellip;</p>
-			-->
+			<div class="story">
+				<p>The best (simplest) way to provide accessibility is to use the standard HTML elements for the job. Using the standard HTML elements automatically brings the needed accessibility information (the purpose of the element; its content; its label, state and value, if it's a form control).</p>
+				<p>The "native" HTML elements also provide accessible keyboard handling by default, such as <kbd>Space</kbd> to activate a button and <kbd>Enter</kbd> to follow a link.</p>
+				<p>The following code shows a standard button, link and "landmark region" demarcating where the primary content on the page (which makes it easy for screen-reader users to jump to).</p>
+			</div>
 
 			<div class="slide middle centre">
 				<div data-markdown><!--
@@ -178,9 +213,10 @@
 				</div>
 			</div>
 
-			<!--
-			<p class="slide middle centre">But we can also use standards such as ARIA to provide the semantics as an alternative&hellip;</p>
-			-->
+			<div class="story">
+				<p>However, if we'd used elements with no inherent meaning, we could add the semantics using special ARIA attributes. This fills in the details in the accessibility tree for assistive technologies. But that's all it does, so keyboard handling code would need to be added manually to fill in that which would've been provided by the native elements above.</p>
+				<p>The following code is semantically equivalent to the native HTML elements used above.</p>
+			</div>
 
 			<div class="slide middle centre">
 				<div data-markdown><!--
@@ -200,16 +236,26 @@
 			<!-- TODO nested pausing doesn't work -->
 			<div class="slide middle centre">
 				<p data-pause><span>Assistive technologies (e.g. screen-readers) can pick up on these cues;</span><span> we need a way for web games to provide them.</span></p>
+				<p class="story">If we had such a way to bridge between games and accessibility information, we may be able to start by addressing UI accessibility and then explore from there.</p>
 			</div>
+
+			<p class="story">Before we get to discussion questions, I wanted to cover one more example of how accessibility may be afforded.</p>
 
 			<h3 class="full slide middle centre title">Example: Authoring Tools</h3>
 
-			<img class="slide full" src="t3dl-e.png" alt="FIXME">
+			<p class="story">The traditional way to do level editing in games is to use a visual, CAD-like program to construct the level.</p>
+
+			<img class="slide full" src="t3dl-e.png" alt="A simple level being designed in a level-creation program called QuArK. Two rooms are adjacent, but one is slightly higher up than the ohter, so there's a set of stairs to get from one to the other, as well as a door.">
+
+			<div class="story">
+				<p>However, we could express this problem a different way: we could describe the relationships between the different rooms in the level, and how we might like the map textured and lit, and then have the computer create the actual layout for us.</p>
+				<p>The following XML description gives us the same information as the design in the CAD-like editor above.</p>
+			</div>
 
 			<div class="slide middle centre" style="font-size: 0.76rem;">
 				<div data-markdown><!--
 				```xml
-				<map name=’Stair connection' style=’medieval’>
+				<map name=’Stair connection' style=’base’>
 				  <room id=’start’>
 				  <item pos=’c’ type=’info_player_start’ />
 				  <con type=’door’ target=’other’ wall=’n’
@@ -221,9 +267,13 @@
 				</div>
 			</div>
 
-			<img class="slide full" src="t3dl-g.png" alt="FIXME">
+			<p class="story">This example comes from the <a href="https://github.com/matatk/agrip">AGRIP AudioQuake Level Description Language</a>, which has very simple geometry due to my poor maths, but has provided a means for blind people to make their own 3D levels. This one looks as follows when played&hellip;</p>
+
+			<img class="slide full" src="t3dl-g.png" alt="First-person view from the lower of the two rooms looking on at the stairs and door into the other room. Military base textures have been applied: corrugated steel walls and a tiled floor.">
 
 			<h2 class="full slide middle centre title">Suggested outputs</h2>
+
+			<p class="story">As mentioned in the paper&hellip;</p>
 
 			<div class="slide middle" style="font-size: 0.8rem;">
 				<ol data-pause>
@@ -231,10 +281,13 @@
 					<li>Find, identify or plan to create some reference adaptations at different levels (OS, engine, game).</li>
 					<li>Requirements for/identify a framework to bring in adaptations/recognise user personalisations.</li>
 					<li>Input for specs such as W3C's FAST and MAUR to see how they may be improved to support games.</li>
-					<li>Identify or consider how to make some accessible authroing tools.</li>
+					<li>Identify or consider how to make some accessible authoring tools.</li>
 				</ol>
 			</div>
+
 			<h2 class="full slide middle centre title">Questions for discussion</h2>
+
+			<p class="story">As covered in the paper&hellip;</p>
 
 			<p class="slide middle centre">Can existing accessibility semantics and standards help us meet CVAA requirements?</p>
 			<p class="slide middle centre">How can we bridge the gap to existing assistive technologies to realise this support?</p>

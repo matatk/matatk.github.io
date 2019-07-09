@@ -1,5 +1,8 @@
 'use strict';
 /* global window document marked */
+// TODO: Page doesn't seem to change when the back button is used.
+// TODO: If visible-keyboard-help (or progress bar, or...?) aren't there, don't
+//       bork :-).
 // TODO: Story mode is for everyone because it includes the things that would
 //       be said for each slide, so this needs to be made more discoverable.
 // TODO: Unify visible and accessible keyboard help info in a pop-up dialog.
@@ -10,7 +13,8 @@
 // TODO: Check out redirection (not sure it's working always)
 // TODO: Support the ability to start in story mode?
 // TODO: Support focusing a particular 'slide' in story mode, as in slides mode?
-// TODO: Support returning to story mode after folloiwng a link? How?
+// TODO: Support returning to story mode after folloiwng a link and going back
+//       to the slideshow page? How? LocalStorage or something?
 (function(win, doc) {
 	const slides = doc.getElementsByClassName('slide')
 	let current = null
