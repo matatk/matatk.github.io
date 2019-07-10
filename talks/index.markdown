@@ -5,10 +5,11 @@ title: Talks
 
 ## Adaptive accessibility
 
-[Slides for "Adaptive Accessibility"](2019/web-games/) (mobile optimisation in-progress) were presented at the [W3C Workshop on Web Games](https://www.w3.org/2018/12/games-workshop/). You may be interested in...
+[Slides for "Adaptive Accessibility"](2019/web-games/) (mobile optimisation in-progress) were presented at the [W3C Workshop on Web Games](https://www.w3.org/2018/12/games-workshop/). You may also be interested in...
 
- * [What I learnt at the W3C Web Games Workshop](/articles/w3c-workshop-on-web-games/) (hint: loads!)
- * [Our position paper for the workshop](https://www.w3.org/2018/12/games-workshop/papers/web-games-adaptive-accessibility.html)
+ * Overview of [Accessibility at the W3C Workshop on Web Games](https://developer.paciellogroup.com/blog/2019/07/accessibility-at-the-w3c-workshop-on-web-games/) on The Paciello Group 'blog.
+ * Our workshop [Position paper: Adaptive Accessibility](https://www.w3.org/2018/12/games-workshop/papers/web-games-adaptive-accessibility.html)
+ * [Technical details on what was covered at the workshop](/articles/w3c-workshop-on-web-games/) (post on this site).
 
 ## Landmarks
 

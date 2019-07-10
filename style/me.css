@@ -14,10 +14,7 @@ body {
 /* HTML5 for IE */
 header, main, footer { display: block; }
 
-nav summary {
-	padding-bottom: 0.5em;
-}
-
+nav summary { padding-bottom: 0.5em; }
 nav ul {
 	list-style-type: none;
 	margin: 0;
@@ -37,9 +34,7 @@ nav a {
 main, footer { border-top: 0.1em solid #888; }
 
 h1 { font-size: 2em; }
-h1, h2, h3, h4, h5, h6 {
-	line-height: 1.2em;
-}
+h1, h2, h3, h4, h5, h6 { line-height: 1.2em; }
 
 a {
 	color: purple;  /* #800080 */
@@ -57,12 +52,18 @@ a:focus, a:hover {
 /* Stop gap before nested lists */
 li p { margin-bottom: 0; }
 
-/* FIXME should this be in highlighting CSS only? */
+/* TODO should this be in highlighting CSS only? */
 /* This causes some code samples to scroll horizontally; is that really good? */
 pre {
 	overflow: auto;
 	/* white-space: pre-wrap; */  /* not sure about this */
 }
+
+/* TODO (needs more research): for some reason the monospace font has a bigger
+ * line-height than the surrounding text. This fixes it without making the font
+ * any smaller. Thanks to Dan Nye. */
+code.highlighter-rouge { line-height: 1; }
+/* Note: the <code> elements in <pre> blocks don't get this class. */
 
 /* Hide from visual users but not screen readers */
 .visually-hidden {
@@ -124,7 +125,6 @@ ol ol { list-style-type: lower-alpha; }
 ol ol ol { list-style-type: lower-roman; }
 
 
-/* Switch to horizontal menu, with more padding, but not too much */
 @media screen and (min-width: 42em) {
 	#menu-vertical { display: none; }
 	#menu-horizontal { display: block; }
@@ -137,18 +137,18 @@ ol ol ol { list-style-type: lower-roman; }
 }
 
 
-/* Increase padding on menu items */
 @media screen and (min-width: 45em) {
 	nav a { padding: 1em; }
 }
 
 
-/* Wide layout:
-+ Capped body text width (45em in inherited size)
-+ Give body at least 0.5em left+right margins.
-+ Float home page picture.
-+ Max padding for menu items.
-Viewport size in [r]ems: (45 + 1) * 1.2 = 55.2 */
+/* Widest layout:
+ + Capped body text width (45em in inherited size)
+ + Give body at least 0.5em left+right margins.
+ + Float home page picture.
+ + Max padding for menu items.
+ Viewport size in [r]ems: (45 + 1) * 1.2 = 55.2 */
+/* TODO: check if the above line is correct - isn't rems the body font size? */
 @media screen and (min-width: 55.2em) {
 	body {
 		margin: auto;
@@ -181,9 +181,7 @@ Viewport size in [r]ems: (45 + 1) * 1.2 = 55.2 */
 	 * #777 on #333 (the background colour) has insufficient contrast,
 	 * so we'll just keep #888. */
 
-	blockquote {
-		color: #939393;
-	}
+	blockquote { color: #939393; }
 
 	/* #7fff7f; - Bit-flip inverse looks quite nice */
 	/* #ff80ff; - Lightness inverse matches the theme */
