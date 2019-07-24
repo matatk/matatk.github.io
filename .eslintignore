@@ -1,1 +1,4 @@
-talks/audiochart
+_site
+*.min.js
+vendor/
+audiochart-test/

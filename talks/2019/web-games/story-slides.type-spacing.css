@@ -1,0 +1,30 @@
+@media screen {
+	body { line-height: 1.4; }  /* was 1.5 but 1.4 goes better with 8vh text */
+
+	/* FIXME: This should only be padding top/bottom,
+	and only if it's in the
+	 * middle of a run? */
+	h1,
+	h2,
+	h3,
+	h4,
+	h5,
+	h6,
+	p {
+		padding: 0.25rem;
+		margin: 0;
+	}
+
+	ul,
+	ol,
+	li,
+	dl {
+		margin-top: 0;
+		margin-bottom: 0;
+	}
+
+	/* FIXME: Check browser */
+	ul,
+	ol,
+	dl { padding-left: 1rem; }
+}

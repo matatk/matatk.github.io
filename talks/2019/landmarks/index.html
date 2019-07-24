@@ -5,48 +5,71 @@
 		<title>Landmarks Presentation</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="mobile-web-app-capable" content="yes">
 		<style>
 :root {
 	--author-font-height-percent-of-slide: 8;
-	--author-aspect-ratio: calc( 4 / 3);
 	--author-aspect-ratio: calc(16 / 9);
 }
 		</style>
-		<link href="slideshow.css" rel="stylesheet">
-		<link href="type-spacing.css" rel="stylesheet">
-		<link href="theme.css" rel="stylesheet">
+		<!-- Story Slides Standard CSS -->
+		<link href="story-slides.mode-slides.css" rel="stylesheet">
+		<link href="story-slides.mode-story.css" rel="stylesheet">
+		<link href="story-slides.type-spacing.css" rel="stylesheet">
+		<!-- Your themes -->
+		<link href="theme.mode-slides.css" rel="stylesheet">
 	</head>
-	<body> <!-- script adds help info and keyboard handling in slides mode -->
-		<p id="browser-support-note"><strong>This presentation's slide view does not support Internet Explorer, sorry. However, you can view all of the content&mdash;including notes on each slide&mdash;in &quot;story mode&quot; by disabling styles (press <kbd>Alt</kbd>, then on the &quot;View&quot; menu, select &quot;Style&quot; and then &quot;No style&quot;).</strong></p>
+	<body>
+		<div id="storyslides-main-content">
 
-		<button id="mode-button">
-			<!-- label and description managed by script -->
-		</button>
-		<button id="previous" aria-label="Previous slide"><span>&larr;</span></button>
-		<button id="next" aria-label="Next slide"><span>&rarr;</span></button>
+		<!-- FIXME can I move this to the end? -->
+		<p id="storyslides-browser-support-note"><strong>This presentation's slide view does not support Internet Explorer, sorry. However, you can view all of the content&mdash;including notes on each slide&mdash;in &quot;story mode&quot; by disabling styles (press <kbd>Alt</kbd>, then on the &quot;View&quot; menu, select &quot;Style&quot; and then &quot;No style&quot;).</strong></p>
 
-		<div aria-live="polite"> <!-- slide container -->
+		<div class="storyslides-ui">
+			<button id="storyslides-mobile-menu-toggle" class="slides mobile-only" aria-expanded="false">Menu</button>
+			<div id="storyslides-mobile-menu-content" class="mobile-none">
+				<button id="storyslides-button-mode-toggle"></button>
+
+				<div class="slides mobile-only">
+					<button id="storyslides-button-fullscreen">Full-screen</button>
+					<button id="storyslides-button-help-intro">Info</button>
+					<button id="storyslides-button-help-keys">Help</button>
+				</div>
+
+				<span class="story">or press <kbd>Escape</kbd></span>
+
+				<p id="storyslides-mode-story-explainer" class="slides storyslides-nice-border">Story mode allows you to read the presentation as a document, rather than a collection of separate slides, and includes extra background information on the content. It turns off keyboard shortcuts used for navigating between slides and is recommended if you're using a screen reader.</p>
+
+				<div id="storyslides-mode-slides-explainer-container" class="story">
+					<p id="storyslides-mode-slides-explainer">Slides mode displays each slide one at a time, as they would be projected for the audience. The extra information present in story mode is not displayed. Keyboard shortcuts or buttons can be used to move between slides.</p>
+					<button class="mobile-only close">Close</button>
+				</div>
+			</div>
+
+			<div class="slides">
+				<button id="storyslides-button-previous" aria-label="Previous"><span>&larr;</span></button>
+				<button id="storyslides-button-next" aria-label="Next"><span>&rarr;</span></button>
+			</div>
+		</div>
+
+		<div id="storyslides-slides-container">
 
 		<div class="slide full padded bottom title">
 			<h1>Landmarks</h1>
 			<p id="author">
 			<span>Matthew Tylee Atkinson</span><span class="story"><br/></span><span> @matatk</span><span class="story"> on Twitter</span>
 			</p>
-			<div id="visible-keyboard-help" style="margin: 0.5rem; padding: 0; background-color: white; border-radius: 0.5rem; font-size: 0.5rem; position: absolute; top: 0; left: 0; width: 80%;">
-				<p style="padding-left: 0.5rem; padding-right: 0.5rem;">Use the arrow keys to move between slides, press <kbd>F</kbd> for full-screen and <kbd>S</kbd> to switch to story mode, which gives you all of the background information behind the slides.</p>
-			</div>
+			<p class="story">This is a talk about landmark regions, a technique that can make your web pages much easier to navigate. You may've heard of landmarks before, but I wanted to step back and tell the story of how they came about, as this helps us to understand what they're for and how much they rock.</p>
 		</div>
 
-		<p class="story">This is a talk about landmark regions, a technique that can make your web pages much easier to navigate. You may've heard of landmarks before, but I wanted to step back and tell the story of how they came about, as this helps us to understand what they're for and how much they rock.</p>
-
-		<p class="story">When navigating about the web, we often have two important questions in mind&hellip;</p>
-
-		<h2 class="full slide middle centre title" data-pause>
-			<span>What's on the page?</span>
-			<span>How can I get there?</span>
-		</h2>
-
-		<p class="story">Several different ways to address this have been created over the years, probably the most fundamental and well-recognised being&hellip;</p>
+		<div class="full slide middle centre title">
+			<p class="story">When navigating about the web, we often have two important questions in mind&hellip;</p>
+			<h2 data-pause>
+				<span>What's on the page?<br></span>
+				<span>How can I get there?</span>
+			</h2>
+			<p class="story">Several different ways to address this have been created over the years, probably the most fundamental and well-recognised being&hellip;</p>
+		</div>
 
 		<h2 class="full slide middle centre title">Headings</h2>
 
@@ -58,7 +81,7 @@
 
 		<div class="slide middle centre" data-pause>
 			<p class="story">In simple sites, people using a keyboard or screen-reader could use a few keys to navigate.</p>
-			<p class="key">&uarr;<span class="story"> key to srcoll up, or announce the previous element.</span></p>
+			<p class="key">&uarr;<span class="story"> key to scroll up, or announce the previous element.</span></p>
 			<p class="key">&darr;<span class="story"> key to scroll down, or announce the next element.</span></p>
 			<p class="key wide">Tab<span class="story"> key to move between interactive elements (links, buttons, form controls).</span></p>
 			<p class="story">Screen-readers also provide shortcuts such as H to move to the next heading.</p>
@@ -69,9 +92,10 @@
 			<img src="eros-os-headings.png" alt="Screen reader dialog listing headings on the EROS OS home page">
 		</div>
 
-		<h2 class="full slide middle centre title">Sites evolved</h2>
-
-		<p class="story">The web is more sophisticated now and has evolved in different ways&hellip;</p>
+		<div class="full slide middle centre title">
+			<h2>Sites evolved</h2>
+			<p class="story">The web is more sophisticated now and has evolved in different ways&hellip;</p>
+		</div>
 
 		<div class="slide full middle centre">
 			<p class="story">One way in which sites have evolved is in terms of visual design.</p>
@@ -111,16 +135,16 @@
 			<p class="story">Headings can help us navigate here, but what if we wanted to move easily between the product search results and our shopping basket, for example?</p>
 		</div>
 
-		<div class="slide full middle centre">
+		<div class="slide full light">
 			<p class="story">We also have full-featured web-apps, such as communications suites whose interfaces may include several different panes for folder navigation, contacts, message lists and content.</p>
-			<img src="google-wave.webp" alt="Google Wave communications web-app. I miss Google Wave!">
+			<img src="google-wave.jpg" alt="Google Wave communications web-app. I miss Google Wave!">
 		</div>
 
-		<p class="story">The next major development for navigation helped alleviate several of these problems&hellip;</p>
-
-		<h2 class="full slide middle centre title">Skip links</h2>
-
-		<p class="story">Skip links are web-author-provided links that are found by convention at the top of the page. Their purpose is to take you directly to the main content. Whilst you might want to explore any navigational content towards the start of the page on your first few visits, if you are familiar with the site, it can save a great deal of time to skip the navigation when it's not needed.</p>
+		<div class="full slide middle centre title">
+			<h2>Skip links</h2>
+			<p class="story">The next major development for navigation helped alleviate several of these problems&hellip;</p>
+			<p class="story">Skip links are web-author-provided links that are found by convention at the top of the page. Their purpose is to take you directly to the main content. Whilst you might want to explore any navigational content towards the start of the page on your first few visits, if you are familiar with the site, it can save a great deal of time to skip the navigation when it's not needed.</p>
+		</div>
 
 		<div class="slide full middle centre">
 			<p class="story">Here's a run-down of a skip link in use on <a href="https://www.bbc.co.uk/sport/get-inspired/47977024">a BBC Sports news story</a>&hellip;</p>
@@ -158,15 +182,13 @@
 			</div>
 		</div>
 
-		<p class="story">There is a solution to these problems, though, and that is of course&hellip;</p>
-
-		<h2 class="full slide middle centre title">
-			Landmark regions
-		</h2>
-
-		<p class="story">Landmarks are&hellip;</p>
+		<div class="full slide middle centre title">
+			<p class="story">There is a solution to these problems, though, and that is of course&hellip;</p>
+			<h2>Landmark regions</h2>
+		</div>
 
 		<div class="slide centre middle" data-pause>
+			<p class="story">Landmarks are&hellip;</p>
 			<p>Signposts to broad areas of the page</p>
 			<p><strong>Non-visual</strong> complement to visual design<span class="story">&mdash;they don't change the appearance of a page; they let you impart the same structural information that the visual design does to people who may not be able to perceive it.</span></p>
 			<p><strong>Random access</strong><span class="story">&mdash;you can move between landmarks wherever you are on the page.</span></p>
@@ -189,13 +211,11 @@
 			<p class="story">As it happens, the landmark structure on TPG's home page includes a &quot;banner&quot; area that contains the logo as well as the &quot;navigation&quot; region with links. Also of note is that landmarks, like headings, can have a tree-like structure, as they can be nested.</p>
 		</div>
 
-		<p class="story">As a page author, you may be asking&hellip;</p>
-
-		<h2 class="full slide middle centre title">
-			How do I provide landmarks?
-		</h2>
-
-		<p class="story">The following examples show how to provide a landmark region for search functionatlity, the main content, footer and then other content too.</p>
+		<div class="full slide middle centre title">
+			<p class="story">As a page author, you may be asking&hellip;</p>
+			<h2>How do I provide landmarks?</h2>
+			<p class="story">The following examples show how to provide a landmark region for search functionatlity, the main content, footer and then other content too.</p>
+		</div>
 
 		<div class="slide">
 			<h2>Search box</h2>
@@ -269,8 +289,8 @@
 			--></div>
 		</div>
 
-		<div class="slide full centre middle">
-			<img src="there-can-be-only-one.jpg" alt="Sean Connery and Christopher Lambert smiling on location whilst filiming Highlander. Sean is holding a prop sword.">
+		<div class="slide full"> <!-- .centre and .middle not needed -->
+			<img src="there-can-be-only-one.jpg" alt="Sean Connery and Christopher Lambert smiling on location whilst filming Highlander. Sean is holding a prop sword.">
 			<p class="story">But, as with immortals from Highlander, there can only be one <code>main</code> element per page, so the code could be simplified&hellip;</p>
 		</div>
 
@@ -288,8 +308,10 @@
 			--></div>
 		</div>
 
-		<p class="story">However, HTML 5 allows us to use even simpler and clearer markup&hellip;</p>
-		<img class="slide" style="background-color: white;" src="HTML5_Logo.svg" alt="">
+		<div class="slide light">
+			<p class="story">However, HTML 5 allows us to use even simpler and clearer markup&hellip;</p>
+			<img src="HTML5_Logo.svg" alt="">
+		</div>
 
 		<div class="slide">
 			<h2>Main content<span class="story">: HTML 5 version</span></h2>
@@ -340,12 +362,13 @@
 			</div>
 		</div>
 
-		<h2 class="slide middle centre">HTML5 Automagicalness</h2>
-
-		<p class="story">HTML 5 provides a number of elements that may be consdiered as landmarks automatically.</p>
+		<div class="slide middle centre">
+			<h2>HTML5 Automagicalness</h2>
+			<p class="story">HTML 5 provides a number of elements that may be considered as landmarks automatically.</p>
+		</div>
 
 		<!-- TODO: not that accessible when in slide (live-region) mode? -->
-		<div class="slide middle" style="font-size: 0.7rem;">
+		<div class="slide middle" style="font-size: 0.681rem;">
 			<table>
 				<tr><th>Element</th><th>Landmark region role</th></tr>
 				<tr><td><code>&lt;header&gt;</code></td><td><code>banner</code><strong><sup>1</sup></strong></td></tr>
@@ -364,7 +387,7 @@
 			</div>
 		</div>
 
-		<div class="slide" style="font-size: 0.69rem;">
+		<div class="slide" style="font-size: 0.65rem;">
 			<h2>Labelling landmarks</h2>
 			<div data-pause>
 				<div data-markdown><!--
@@ -391,9 +414,8 @@
 			<span class="top">Rules</span>
 		</h2>
 
-		<h3 class="story">Golden Rule 1</h3>
-
 		<div class="slide middle centre" data-pause>
+			<h3 class="story">Golden Rule 1</h3>
 			<p><strong>Landmarks:</strong> <span class="story">should be used to provide an </span>overview<span class="story"> of the content.</span></p>
 			<p><strong>Headings:</strong> <span class="story">provide the </span>fine-grained navigation</p>
 		</div>
@@ -413,46 +435,46 @@
 			<p class="story">The complexity of the headings contrasts with the relatively simpler landmarks. This is good, because landmarks are there to give an overview of what's on the page, and headings are for the fine-grained navigation around the content, and must reflect its strucutre.</p>
 		</div>
 
-		<h3 class="story">Golden Rule 2</h3>
-
 		<div class="slide middle centre" data-pause>
+			<h3 class="story">Golden Rule 2</h3>
 			<p>Use relatively <strong>few</strong> landmarks&hellip;</p>
 			<p>&hellip;but cover <strong>all</strong> of the content on the page.</p>
 			<p class="story">This ensures that all content has a home, but the overview is as concise as can be.</p>
 		</div>
 
-		<h3 class="story">Golden Rule 3</h3>
-
 		<div class="slide middle centre">
+			<h3 class="story">Golden Rule 3</h3>
 			<p data-pause><span>If you've got <strong>more than one</strong> of the same type of landmark on a page,</span><span> use labels to <strong>differentiate</strong> them.</span></p>
 		</div>
 
-		<p class="story">The following code shows two navigation landmarks on a page. Without delving into their content, it's not clear what the purpose of each of them is, though it may be obvious from the visual design of the page.</p>
-
 		<!-- TODO: hack20 style is in theme.css, and is an alignment hack -->
-		<div class="slide middle hack20" style="font-size: 0.8rem;" data-markdown><!--
-		```html
-		<nav>
-			. . .
-		</nav>
+		<div class="slide middle hack20" style="font-size: 0.8rem;">
+			<p class="story">The following code shows two navigation landmarks on a page. Without delving into their content, it's not clear what the purpose of each of them is, though it may be obvious from the visual design of the page.</p>
+			<div data-markdown><!--
+			```html
+			<nav>
+				. . .
+			</nav>
 
-		<nav>
-			. . .
-		</nav>
-		```--></div>
+			<nav>
+				. . .
+			</nav>
+			```--></div>
+		</div>
 
-		<p class="story">Labels can be provided to make the different purposes of the navigation regions clear&hellip;</p>
+		<div class="slide middle hack20" style="font-size: 0.8rem;">
+			<p class="story">Labels can be provided to make the different purposes of the navigation regions clear&hellip;</p>
+			<div data-markdown><!--
+			```html
+			<nav aria-label="Site">
+				. . .
+			</nav>
 
-		<div class="slide middle hack20" style="font-size: 0.8rem;" data-markdown><!--
-		```html
-		<nav aria-label="Site">
-			. . .
-		</nav>
-
-		<nav aria-label="Page">
-			. . .
-		</nav>
-		```--></div>
+			<nav aria-label="Page">
+				. . .
+			</nav>
+			```--></div>
+		</div>
 
 		<div class="slide middle centre">
 			<p>But, <span class="story">the following technique for labelling the regions is </span>better<span class="story">, becuase visually-apparent headings are used to provide the labels, which are apparent and can be helpful to more users, particularly anyone who finds reading difficult or has a cognitive impairment.</span>&hellip;</p>
@@ -471,9 +493,8 @@
 		</nav>
 		```--></div>
 
-		<h3 class="story">Golden Rule 4</h3>
-
 		<div class="slide middle centre" data-pause>
+			<h3 class="story">Golden Rule 4</h3>
 			<p>There's <strong>no need to include the type</strong> of landmark in its label.</p>
 		</div>
 
@@ -510,22 +531,21 @@
 			</div>
 		</div>
 
-		<div class="slide full middle centre" data-pause>
+		<div class="slide full" data-pause>
 			<!-- FIXME "I said" - oh and make sure I did "say" it above! -->
 			<p class="story">But I said landmarks could be helpful for everyone, so what about keyboard users?</p>
 			<img src="piano-keyboard.jpg" alt="A piano keyboard (I couldn't find a nice picture of a computer keyboard)">
 		</div>
 
-		<div class="slide full middle centre">
+		<div class="slide full">
 			<p class="story">&hellip;and what about mouse users?</p>
 			<img src="mouse.jpg" alt="A cute fluffy mouse">
 		</div>
 
-		<h2 class="full slide middle centre title">
-			Landmarks extension demo
-		</h2>
-
-		<p class="story"><em>(At this point, the <a href="http://matatk.agrip.org.uk/landmarks/">Landmarks browser extension</a> would be demonstrated. The demo shows how to use it to navigate pages, and also, for developers, how to use the DevTools part of the extension to check how landmark regions are marked up, and add/edit them with updates reflected by the extension in real-time.)</em></p>
+		<div class="full slide middle centre title">
+			<h2>Landmarks extension demo</h2>
+			<p class="story"><em>(At this point, the <a href="http://matatk.agrip.org.uk/landmarks/">Landmarks browser extension</a> would be demonstrated. The demo shows how to use it to navigate pages, and also, for developers, how to use the DevTools part of the extension to check how landmark regions are marked up, and add/edit them with updates reflected by the extension in real-time.)</em></p>
+		</div>
 
 		<div class="slide">
 			<h2>Examples</h2>
@@ -585,18 +605,94 @@
 			<p>The <a href="https://www.bbc.co.uk/sport/get-inspired/47977024">BBC Sport article</a> referenced earlier mentioned this: the average runner shrinks 1.25cm during a marathon, due to spine compression. We all get shorter throughout the day, too, but the amount varies.</p>
 		</div>
 
-		</div> <!-- end of slide container -->
+		</div>  <!-- end of slide container -->
 
-		<!-- TODO: announce ever? keyboard shortcut to announce it? -->
-		<div id="progress"><div></div></div>
+		<!-- This comes down here for stacking order purposes -->
+		<div class="storyslides-ui slides">
+			<div id="storyslides-progress"><div></div></div>
 
-		<!-- FIXME TODO: add the following via script? -->
-		<!-- FIXME TODO: what happens when they're hidden visually too? -->
-		<p id="screen-reader-intro" class="visually-hidden">The slideshow is in slides mode. Arrow keys will move between slides. To use story mode, which includes extra background information on the content, and lets you browse using a screen reader's virtual cursor, press S, or use the Tab key to reach the story mode button.</p>
-		<p id="story-mode-explainer" class="visually-hidden">Story mode allows you to read the presentation as a document, rather than a collection of separate slides, and includes extra background information on the content. It turns off keyboard shortcuts used for navigating between slides and is recommended if you're using a screen reader.</p>
-		<p id="slides-mode-explainer" class="visually-hidden">Slides mode displays each slide one at a time, as they would be projected for the audience. The extra information present in story mode is not displayed. Keyboard shortcuts are used to move between slides.</p>
+			<p id="storyslides-help-info" class="storyslides-nice-border">Press <kbd>?</kbd> for help; <kbd>I</kbd> for info on story mode</p>
 
-		<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-		<script src="slideshow.js"></script>
+			<!-- This gets associated with <body> in slides mode by script -->
+			<!-- It's not shown visually for all users because <body> gets focus when clicked on. -->
+			<!-- FIXME this makes it different between visual and non-visual screen-reader users -->
+			<p id="storyslides-screenreader-intro" hidden>The slideshow is in slides mode. Arrow keys will move between slides. To use story mode, which includes extra background information on the content, and lets you browse using a screen reader's virtual cursor, press S, or use the Tab key to reach the story mode button.</p>
+		</div>
+
+		<!-- The lock indicator must be outside UI as UI is hidden when slide is locked -->
+		<!-- aria-relevant not picked up by JAWS/Chrome; try others -->
+		<p id="storyslides-lock-indicator" class="storyslides-nice-border" aria-live="assertive"><span>Slide locked&mdash;press <kbd>Escape</kbd> to unlock</span></p>
+
+		</div>  <!-- end of main content container -->
+
+		<div id="storyslides-dialog-intro" class="storyslides-dialog" role="dialog" tabindex="-1" aria-labelledby="storyslides-dialog-intro-title" style="display: none;">
+			<h1 id="storyslides-dialog-intro-title">For more info&hellip;</h1>
+			<p>The real content of a talk is often not in the slides, but in what's said around them. Story mode shows you not only what was projected, but the explanation behind it too.</p>
+			<p>The presentation is currently in slides mode.</p>
+			<div class="mobile-only">
+				<p>To access story mode, use the menu.</p>
+				<p>If you'd rather stay in slides mode&hellip;</p>
+				<h2>Navigation in slides mode</h2>
+				<p>Tap in the left part of the screen to go back, or the right part of the screen to go forward.</p>
+				<h2>Keyboard</h2>
+			</div>
+			<p>Press <kbd>S</kbd> to switch to story mode, <kbd>?</kbd> for help on keyboard shortcuts and navigation, or <kbd>Escape</kbd> to close this.</p>
+			<hr>
+			<button class="close">Close</button>
+		</div>
+
+		<div id="storyslides-dialog-keys" class="storyslides-dialog" role="dialog" tabindex="-1" aria-labelledby="storyslides-dialog-keys-title" style="display: none;">
+			<h1 id="storyslides-dialog-keys-title">Story Slides Help</h1>
+			<p class="mobile-only">Tap either the left or right third of the screen to move to the previous or next slide. If you have a keyboard attached, you can use the following shortcuts.</p>
+			<table>
+				<tr>
+					<th><p>Key(s)</p></th>
+					<th><p>Action</p></th>
+				</tr>
+				<tr>
+					<td><kbd>S</kbd></td>
+					<td><p>Switch to story mode</p></td>
+				</tr>
+				<tr>
+					<td><kbd>L</kbd></td>
+					<td><p>Lock a slide: disable all navigation keys, so if you're using a screen-reader in slides mode, you can explore the current slide with your virtual cursor.</p></td>
+				</tr>
+				<tr>
+					<td><kbd>F</kbd></td>
+					<td><p>Toggle full-screen slide view<span class="mobile-only"> (not supported on iPhone)</span></p></td>
+				</tr>
+				<tr>
+					<td><kbd>&rarr;</kbd> <kbd>&darr;</kbd> <kbd>Page&nbsp;Down</kbd></td>
+					<td><p>Next slide</p></td>
+				</tr>
+				<tr>
+					<td><kbd>&larr;</kbd> <kbd>&uarr;</kbd> <kbd>Page&nbsp;Up</kbd></td>
+					<td><p>Previous slide</p></td>
+				</tr>
+				<tr>
+					<td><kbd>Escape</kbd></td>
+					<td>
+						<ul>
+							<li><p><strong>In story mode:</strong> go to slides mode</p></li>
+							<li><p><strong>In slides mode:</strong> disable the current slide lock; no effect otherwise</p>
+						</ul>
+					</td>
+				</tr>
+				<tr>
+					<td><kbd>I</kbd></td>
+					<td><p>Show info on story mode and slides mode</p></td>
+				</tr>
+				<tr>
+					<td><p><kbd>?</kbd></p></td>
+					<td><p>Toggle this help dialog</p></td>
+				</tr>
+			</table>
+			<button class="close">Close</button>
+		</div>
+
+		<script src="vendor/marked-0.7.0.js"></script>
+		<script src="vendor/inert-2.1.1.js"></script>
+		<script src="vendor/screenfull-4.2.1.js"></script>
+		<script src="story-slides.js"></script>
 	</body>
 </html>

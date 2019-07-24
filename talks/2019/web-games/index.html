@@ -2,325 +2,431 @@
 <html lang="en">
 	<head>
 		<meta charset="UTF-8">
-		<title>W3C Workshop on Web Games: Adaptive Accessibility</title>
+		<title>W3C Workshop on Web Games Presentation: Adaptive Accessibility</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="mobile-web-app-capable" content="yes">
 		<style>
 :root {
 	--author-font-height-percent-of-slide: 8;
-	--author-aspect-ratio: calc( 4 / 3);
 	--author-aspect-ratio: calc(16 / 9);
 }
 		</style>
-		<link href="slideshow.css" rel="stylesheet">
-		<link href="type-spacing.css" rel="stylesheet">
-		<link href="theme.css" rel="stylesheet">
+		<!-- Story Slides Standard CSS -->
+		<link href="story-slides.mode-slides.css" rel="stylesheet">
+		<link href="story-slides.mode-story.css" rel="stylesheet">
+		<link href="story-slides.type-spacing.css" rel="stylesheet">
+		<!-- Your themes -->
+		<link href="theme.mode-slides.css" rel="stylesheet">
 	</head>
-	<body> <!-- script adds help info and keyboard handling in slides mode -->
-		<p id="browser-support-note"><strong>This presentation's slide view does not support Internet Explorer, sorry. However, you can view all of the content&mdash;including notes on each slide&mdash;in &quot;story mode&quot; by disabling styles (press <kbd>Alt</kbd>, then on the &quot;View&quot; menu, select &quot;Style&quot; and then &quot;No style&quot;).</strong></p>
+	<body>
+		<div id="storyslides-main-content">
 
-		<button id="mode-button">
-			<!-- label and description managed by script -->
-		</button>
-		<button id="previous" aria-label="Previous slide"><span>&larr;</span></button>
-		<button id="next" aria-label="Next slide"><span>&rarr;</span></button>
+		<!-- FIXME can I move this to the end? -->
+		<p id="storyslides-browser-support-note"><strong>This presentation's slide view does not support Internet Explorer, sorry. However, you can view all of the content&mdash;including notes on each slide&mdash;in &quot;story mode&quot; by disabling styles (press <kbd>Alt</kbd>, then on the &quot;View&quot; menu, select &quot;Style&quot; and then &quot;No style&quot;).</strong></p>
 
-		<div aria-live="polite"> <!-- slide container -->
+		<div class="storyslides-ui">
+			<button id="storyslides-mobile-menu-toggle" class="slides mobile-only" aria-expanded="false">Menu</button>
+			<div id="storyslides-mobile-menu-content" class="mobile-none">
+				<button id="storyslides-button-mode-toggle"></button>
 
-			<div class="slide full padded bottom title">
-				<h1>Adaptive Accessibility</h1>
-				<p id="author">
-				<span>Matthew Tylee Atkinson et. al.</span><span class="story"><br/></span><span> @matatk</span><span class="story"> on Twitter</span>
-				</p>
-				<div id="visible-keyboard-help" style="margin: 0.5rem; padding: 0; background-color: white; border-radius: 0.5rem; font-size: 0.5rem; position: absolute; top: 0; left: 0; width: 80%;">
-					<p style="color: black; padding-left: 0.5rem; padding-right: 0.5rem;">Use the arrow keys to move between slides, press <kbd>F</kbd> for full-screen and <kbd>S</kbd> to switch to story mode, which gives you all of the background information behind the slides.</p>
+				<div class="slides mobile-only">
+					<button id="storyslides-button-fullscreen">Full-screen</button>
+					<button id="storyslides-button-help-intro">Info</button>
+					<button id="storyslides-button-help-keys">Help</button>
+				</div>
+
+				<span class="story">or press <kbd>Escape</kbd></span>
+
+				<p id="storyslides-mode-story-explainer" class="slides storyslides-nice-border">Story mode allows you to read the presentation as a document, rather than a collection of separate slides, and includes extra background information on the content. It turns off keyboard shortcuts used for navigating between slides and is recommended if you're using a screen reader.</p>
+
+				<div id="storyslides-mode-slides-explainer-container" class="story">
+					<p id="storyslides-mode-slides-explainer">Slides mode displays each slide one at a time, as they would be projected for the audience. The extra information present in story mode is not displayed. Keyboard shortcuts or buttons can be used to move between slides.</p>
+					<button class="mobile-only close">Close</button>
 				</div>
 			</div>
 
+			<div class="slides">
+				<button id="storyslides-button-previous" aria-label="Previous"><span>&larr;</span></button>
+				<button id="storyslides-button-next" aria-label="Next"><span>&rarr;</span></button>
+			</div>
+		</div>
+
+		<div id="storyslides-slides-container">
+
+		<div class="slide full padded bottom title">
+			<h1>Adaptive Accessibility</h1>
+			<p id="author">
+			<span>Matthew Tylee Atkinson et al.</span><span class="story"><br/></span><span> @matatk</span><span class="story"> on Twitter</span>
+			</p>
 			<div class="story">
 				<p>This talk was given at the <a href="https://www.w3.org/2018/12/games-workshop/">W3C Workshop on Web Games</a>. You may also be interested in reading <a href="https://www.w3.org/2018/12/games-workshop/papers/web-games-adaptive-accessibility.html">our position paper</a>, the overview of <a href="https://developer.paciellogroup.com/blog/2019/07/accessibility-at-the-w3c-workshop-on-web-games/">Accessibility at the W3C Workshop on Web Games</a> on The Paciello Group 'blog and <a href="/articles/w3c-workshop-on-web-games/">my technical details post on what I learnt there from accessibility perspective</a>.</p>
 				<p><strong>Note:</strong> the talks were kept short, to give maximal time for discussion, therefore it's recommended that you check out our position paper for all of the details behind the ideas presented here.</p>
 			</div>
+		</div>
 
-			<div class="slide full middle centre light" data-pause>
-				<h2 class="story">Acknowledgements</h2>
-				<p class="story">First, some acknowledgements. You can find more info on the following in <a href="https://www.w3.org/2018/12/games-workshop/papers/web-games-adaptive-accessibility.html">our position paper</a>. The following groups and people contributed to the paper.</p>
-				<p>Active Game Accessibility</p>
-				<p>Ian Hamilton</p>
-				<p>W3C's Accessible Platform Architectures (APA) group and Research Questions sub-group</p>
-				<img src="tpg.svg" style="height: 1.5rem; margin-top: 0.75rem;" alt="The Paciello Group">
-				<p class="story">Thanks additionally to The Paciello Group for sponsoring my trip.</p>
-				<p class="story">If you happen to need any accessibility audits, training, strategy advice, UX reviews or anything like that, please consider <a href="https://www.paciellogroup.com/">The Paciello Group</a>.</p>
-			</div>
+		<div class="slide full middle centre light" data-pause>
+			<h2 class="story">Acknowledgements</h2>
+			<p class="story">First, some acknowledgements. You can find more info on the following in <a href="https://www.w3.org/2018/12/games-workshop/papers/web-games-adaptive-accessibility.html">our position paper</a>. The following groups and people contributed to the paper.</p>
+			<p>Active Game Accessibility</p>
+			<p>Ian Hamilton</p>
+			<p>W3C's Accessible Platform Architectures (APA) group and Research Questions sub-group</p>
+			<img src="tpg.svg" style="height: 1.5rem; margin-top: 0.75rem;" alt="The Paciello Group">
+			<p class="story">Thanks additionally to The Paciello Group for sponsoring my trip.</p>
+			<p class="story">If you happen to need any accessibility audits, training, strategy advice, UX reviews or anything like that, please consider <a href="https://www.paciellogroup.com/">The Paciello Group</a>.</p>
+		</div>
 
-			<div class="slide middle centre">
-				<h2 class="story">Why does game accessibility matter?</h2>
-				<p data-pause><span>Accessibility natters for the human benefits it brings:</span><span> access to <strong>culture</strong>, <strong>recreation</strong>, <strong>socialising</strong> and <strong>education</strong>.</span>
-			</div>
+		<div class="slide middle centre">
+			<h2 class="story">Why does game accessibility matter?</h2>
+			<p data-pause><span>Accessibility matters for the human benefits it brings:</span><span> access to <strong>culture</strong>, <strong>recreation</strong>, <strong>socialising</strong> and <strong>education</strong>.</span>
+		</div>
 
-			<div class="slide middle centre" data-pause>
-				<p class="story">However, game accessibility differs from "traditional" accessibility in some significant ways&hellip;</p>
-				<p>Games <strong>have</strong> to be challenging.</p>
-				<p>The challenge <strong>varies</strong> from game to game.</p>
-			</div>
+		<div class="slide middle centre" data-pause>
+			<p class="story">However, game accessibility differs from "traditional" accessibility in some significant ways&hellip;</p>
+			<p>Games <strong>have</strong> to be challenging.</p>
+			<p>The challenge <strong>varies</strong> from game to game.</p>
+		</div>
 
-			<!-- .full doesn't make any difference -->
-			<h2 class="slide middle centre title">Content Accessibility</h2>
+		<!-- .full doesn't make any difference -->
+		<h2 class="slide middle centre title">Content Accessibility</h2>
 
+		<div class="slide middle centre">
 			<p class="story">You can achieve a great deal with content accessibility. By designing the game with accessibility in mind, it can be made friendlier to all players. For example, the following two symbols differ in both shape and colour, thus providing two ways to tell them apart.</p>
 
 			<!-- TODO? Keep styles in story mode? -->
-			<div class="slide middle centre">
-				<p style="font-size: 25vw;">
-				<span style="color: yellow;">&#x25c6;</span>
-				<span style="color: magenta;">&#9679;</span>
-				</p>
-			</div>
+			<p style="font-size: 25vw;">
+			<span style="color: yellow;">&#x25c6;</span>
+			<span style="color: magenta;">&#9679;</span>
+			</p>
 
 			<p class="story">On the audio side, you could use spatial audio with good special effects to indicate to the player the type of environment they're in, or where they should explore.</p>
+		</div>
 
-			<div class="slide middle centre" data-pause>
-				<p class="story">Some accessibility features are more common than you might think. In Assassin's Creed Origins, <a href="https://www.reddit.com/r/gamedev/comments/86drfv/over_60_of_assassins_creed_origins_players_play/"><strong>60%</strong> of players turned subtitles on</a>, so in the following game Ubisoft enabled them by default, and&hellip;</p>
-				<p><strong>95%</strong> of Assassin's Creed Odyssey players left subtitles on.</p>
-				<p><strong>75%</strong> of The Division 2 players have turned them on; <strong>50%</strong> have them on at the moment.</p>
-				<p><em><a href="https://www.rockpapershotgun.com/2019/06/26/ubisofts-numbers-say-subtitles-are-really-jolly-popular/">source</a><span class="story"> for the info on Assassin's Creed Odyssey and The Division 2</span></em></p>
-			</div>
+		<div class="slide middle centre" data-pause>
+			<p class="story">Some accessibility features are more common than you might think. In Assassin's Creed Origins, <a href="https://www.reddit.com/r/gamedev/comments/86drfv/over_60_of_assassins_creed_origins_players_play/"><strong>60%</strong> of players turned subtitles on</a>, so in the following game Ubisoft enabled them by default, and&hellip;</p>
+			<p><strong>95%</strong> of Assassin's Creed Odyssey players left subtitles on.</p>
+			<p><strong>75%</strong> of The Division 2 players have turned them on; <strong>50%</strong> have them on at the moment.</p>
+			<p><em><a href="https://www.rockpapershotgun.com/2019/06/26/ubisofts-numbers-say-subtitles-are-really-jolly-popular/">source</a><span class="story"> for the info on Assassin's Creed Odyssey and The Division 2</span></em></p>
+		</div>
 
+		<div class="slide full">
 			<p class="story">Of course, using spatial audio is great for some people, but others (whether they be in a noisy environment, or perhaps have trouble hearing the game) may struggle to get the most out of this. In that case, you could provide visual cues to indicate the information that is coming through sound. Here's a great example of this in &quot;Everybody's gone to the rapture&quot;&hellip;</p>
+			<img src="raptureaudio.jpg" alt="In Everybody's gone to the rapture, visual cues that look like targets overlayed on relevant parts of the scene can direct the player to important areas, complementing the sound.">
+		</div>
 
-			<img class="slide full" src="raptureaudio.jpg" alt="In Everybody's gone to the rapture, visual cues that look like targets overlayed on relevant parts of the scene can direct the player to important areas, complementing the sound.">
-
+		<div class="slide full">
 			<p class="story">That screen-grab comes from <a href="http://gameaccessibilityguidelines.com/everybodys-gone-to-the-rapture-audio-aid/">a best practice example from the Game Accessibility Guidelines</a>, which is a very helpful resource for making inclusive decisions when designing your games.</p>
+			<img src="visual-audio-best-practice.png" alt="Game Accessibility Guidelines page containing the best practice example from Everybody's gone to the rapture.">
+		</div>
 
-			<img class="slide full" src="visual-audio-best-practice.png" alt="Game Accessibility Guidelines page containing the best practice example from Everybody's gone to the rapture.">
-
+		<div class="slide full middle centre" data-pause>
 			<p class="story">There are several sets of guidelines to which you can refer (these are linked from <a href="https://www.w3.org/2018/12/games-workshop/papers/web-games-adaptive-accessibility.html">our position paper</a>)&hellip;</p>
 
-			<div class="slide full middle centre" data-pause>
-				<p>Game Accessibility Guidelines<span class="story">, as above</span></p>
-				<p>Accessible Player Experiences</p>
-				<p>W3C Framework for Accessible Specification of Technology (FAST)</p>
-				<p>W3C Media Accessibility User Requirements (MAUR)</p>
-			</div>
+			<p>Game Accessibility Guidelines<span class="story">, as above</span></p>
+			<p>Accessible Player Experiences</p>
+			<p>W3C Framework for Accessible Specification of Technology (FAST)</p>
+			<p>W3C Media Accessibility User Requirements (MAUR)</p>
 
 			<p class="story">Following guidelines like these helps you make design decisions that include as many people as possible, and there is a lot that can be achieved with content design alone.</p>
+		</div>
 
+		<div class="slide full">
 			<p class="story">The game Railway Hero, covered in more detail in our position paper, provides a self-voiced UI (sound is recorded for each element), separate sound and music tracks, alternative colour modes, closed captions, a switch for disabling timed play and variable font sizes.</p>
+			<img src="rh2.png" alt="Railway Hero game play - the game is a top-down 2D puzzle game in which players need to fill gaps in railway tracks in a futuristic setting">
+		</div>
 
-			<img src="rh2.png" class="slide full" alt="Railway Hero game play - the game is a top-down 2D puzzle game in which players need to fill gaps in railway tracks in a futuristic setting">
-			<img src="rh1.png" class="slide full" alt="Railway Hero settings UI showing many accessibility and related options">
+		<img src="rh1.png" class="slide full" alt="Railway Hero settings UI showing many accessibility and related options">
 
-			<p class="story">However, content design can only go so far&mdash;many users have existing assistive technologies and adaptations that they'd like to be able to use with games. Examples include a screen-reader to read and navigate the content/UI on the screen, and custom input devices.</p>
-
-			<h2 class="story">What's missing?</h2>
-
-			<p class="story">If we wanted to support all possible choices users might have for reading the UI and using their preferred input devices, then we'd have to &hellip;</p>
-
-			<div class="slide full middle centre" data-pause>
-				<p>Record audio for every UI element</p>
-				<p>&hellip;in several languages</p>
-				<p>&hellip;at several speeds</p>
+		<div class="slide full middle centre" data-pause>
+			<div class="story">
+				<p>However, content design can only go so far&mdash;many users have existing assistive technologies and adaptations that they'd like to be able to use with games. Examples include a screen-reader to read and navigate the content/UI on the screen, and custom input devices.</p>
+				<h2>What's missing?</h2>
+				<p>If we wanted to support all possible choices users might have for reading the UI and using their preferred input devices, then we'd have to &hellip;</p>
 			</div>
 
-			<div class="slide full middle centre" data-pause>
-				<p>Make sure it's navigable with a keyboard</p>
-				<p>&hellip;and a mouse</p>
-				<p>&hellip;and works with a controller</p>
-				<p>&hellip;and with a single switch</p>
-			</div>
+			<p>Record audio for every UI element</p>
+			<p>&hellip;in several languages</p>
+			<p>&hellip;at several speeds</p>
+		</div>
+
+		<div class="slide full middle centre" data-pause>
+			<p>Make sure it's navigable with a keyboard</p>
+			<p>&hellip;and a mouse</p>
+			<p>&hellip;and works with a controller</p>
+			<p>&hellip;and with a single switch</p>
 
 			<p class="story">Content is hugely important, but it can only take us so far.</p>
+		</div>
 
-			<div class="slide full middle centre" data-pause>
-				<p>Users need to be able to perceive the content,</p>
-				<p>access the user interface,</p>
-				<p>and use the input devices they need.</p>
-			</div>
+		<div class="slide full middle centre" data-pause>
+			<p>Users need to be able to perceive the content,</p>
+			<p>access the user interface,</p>
+			<p>and use the input devices they need.</p>
+		</div>
 
-			<h2 class="full slide middle centre title">Integrating with existing assistive technologies</h2>
+		<h2 class="full slide middle centre title">Integrating with existing assistive technologies</h2>
 
+		<div class="slide middle centre" data-pause>
 			<h3 class="story">Examples of assistive technologies</h3>
+			<p><span class="story"><strong>Large-scale "traditional" assistive technologies such as:</strong> </span>Screen readers/magnifiers, mobile zoom.</p>
+			<p><span class="story"><strong>More focused and possibly platform-specific facilities such as:</strong> </span>Text transcription services.</p>
+			<p><span class="story"><strong>Hardware choices such as:</strong> </span>A larger screen, or custom controller.</p>
+			<p><span class="story"><strong>System settings changes such as:</strong> </span>Personalisations such as: contrast, font size or caption presentation.</p>
+			<p><span class="story"><strong>Individual game settings such as:</strong> </span>Variable game parameters.</p>
 
-			<div class="slide middle centre" data-pause>
-				<p><span class="story"><strong>Large-scale "traditional" assistive technologies such as:</strong> </span>Screen readers/magnifiers, mobile zoom.</p>
-				<p><span class="story"><strong>More focused and possibly platform-specific facilities such as:</strong> </span>Text transcription services.</p>
-				<p><span class="story"><strong>Hardware choices such as:</strong> </span>A larger screen, or custom controller.</p>
-				<p><span class="story"><strong>System settings changes such as:</strong> </span>Personalisations such as: contrast, font size or caption presentation.</p>
-				<p><span class="story"><strong>Individual game settings such as:</strong> </span>Variable game parameters.</p>
+			<div class="story">
+				<p>As we moved down the above list, the idea of what constitutes an assistive technology moved from more "traditional" large-scale software (and sometimes hardware) applications/devices to more focused services, or even individual settings within the platform or game.</p>
+				<p>As well as differing in size, the technologies may differ in specificity&mdash;whether they're applied to the system as a whole, a game engine, or a particular game.</p>
 			</div>
+		</div>
 
-			<p class="story">As we moved down the above list, the idea of what constitutes an assistive technology moved from more "traditional" large-scale software (and sometimes hardware) applications/devices to more focused services, or even individual settings within the platform or game.</p>
+		<img class="slide full" alt="Xbox Adaptive Controller, connected to several other switches and controllers that are also supported as alernative input sources" src="xac.webp">
 
-			<p class="story">As well as differing in size, the technologies may differ in specificity&mdash;whether they're applied to the </p>
+		<h3 class="full slide middle centre title">Example: UI Accessibility</h3>
 
-			<img class="slide full" alt="Xbox Adaptive Controller, connected to several other switches and controllers that are also supported as alernative input sources" src="xac.webp">
-
-			<h3 class="full slide middle centre title">Example: UI Accessibility</h3>
-
+		<div class="slide middle centre full" data-split>
 			<p class="story">When running an app or game on a computer (or console) the app/game process runs on top of the operating system; we could imagine two layers&hellip;</p>
 
-			<div class="slide middle centre full" data-split>
-				<hr class="story">
-				<p>App/Game</p>
-				<div></div>
-				<p>Operating System</p>
-				<hr class="story">
-			</div>
+			<hr class="story">
+			<p>App/Game</p>
+			<div></div>
+			<p>Operating System</p>
+			<hr class="story">
+		</div>
 
+		<div class="slide middle centre full" data-split>
 			<p class="story">The traditional stack of running an assistive technology program such as a screen-reader involves an accessibility layer, provided by the OS, that sits between it and the app, as follows.</p>
 
-			<div class="slide middle centre full" data-split>
-				<hr class="story">
-			    <p>App/Game</p>
-				<p>Accessibility layer &rarr; Assistive technology</p>
-				<p>Operating System</p>
-				<hr class="story">
-			</div>
+			<hr class="story">
+			<p>App/Game</p>
+			<p>Accessibility layer &rarr; Assistive technology</p>
+			<p>Operating System</p>
+			<hr class="story">
 
 			<div class="story">
 				<p>If the app uses standard system calls to create things like UI elements, these are intercepted by the accessibility layer, and the user's assistive technology can query the accessibility layer for information on them.</p>
 				<p>The assistive technology uses the information provided by the accessibility layer to present the app in a way the person using the machine can perceive&mdash;maybe by reading out the text of the buttons and controls in the UI; maybe by magnifying the screen and following the focus as it moves about the UI.</p>
-				<p>This works the same when the app is running in a browser; the browser provides an accessibility tree that exposes various properties of DOM elements (such as the types of controls they represent, or their text content), mirroring its structure.</p>
 			</div>
+		</div>
 
-			<div class="slide middle centre full" data-split>
-				<hr class="story">
-			    <p>Web App/Game</p>
-				<p>Accessibility tree &rarr; Assistive technology</p>
-				<p>Browser</p>
-				<hr class="story">
-			</div>
+		<div class="slide middle centre full" data-split>
+			<p class="story">This works the same when the app is running in a browser; the browser provides an accessibility tree that exposes various properties of DOM elements (such as the types of controls they represent, or their text content), mirroring its structure.</p>
+
+			<hr class="story">
+			<p>Web App/Game</p>
+			<p>Accessibility tree &rarr; Assistive technology</p>
+			<p>Browser</p>
+			<hr class="story">
 
 			<p class="story">We already have solutions for user interface accessibility on the web, based on this model&hellip;</p>
+		</div>
 
-			<img src="google-wave.jpg" class="slide light" alt="Google Wave communications web-app. I miss Google Wave!">
+		<img src="google-wave.jpg" class="slide full light" alt="Google Wave communications web-app. I miss Google Wave!">
 
+		<div class="slide middle centre">
 			<div class="story">
 				<p>The best (simplest) way to provide accessibility is to use the standard HTML elements for the job. Using the standard HTML elements automatically brings the needed accessibility information (the purpose of the element; its content; its label, state and value, if it's a form control).</p>
 				<p>The "native" HTML elements also provide accessible keyboard handling by default, such as <kbd>Space</kbd> to activate a button and <kbd>Enter</kbd> to follow a link.</p>
 				<p>The following code shows a standard button, link and "landmark region" demarcating where the primary content on the page (which makes it easy for screen-reader users to jump to).</p>
 			</div>
 
-			<div class="slide middle centre">
-				<div data-markdown><!--
-				```html
-				<button>OK</button>
+			<div data-markdown><!--
+			```html
+			<button>OK</button>
 
-				<a href="...">Sazerac recipe</a>
+			<a href="...">Sazerac recipe</a>
 
-				<main>
-				    This is important.
-				</main>
-				``` -->
-				</div>
+			<main>
+				This is important.
+			</main>
+			``` -->
 			</div>
+		</div>
 
+		<div class="slide middle centre">
 			<div class="story">
 				<p>However, if we'd used elements with no inherent meaning, we could add the semantics using special ARIA attributes. This fills in the details in the accessibility tree for assistive technologies. But that's all it does, so keyboard handling code would need to be added manually to fill in that which would've been provided by the native elements above.</p>
 				<p>The following code is semantically equivalent to the native HTML elements used above.</p>
 			</div>
 
-			<div class="slide middle centre">
-				<div data-markdown><!--
-				```html
-				<div role="button" tabindex="0">
-				OK</div>
+			<div data-markdown><!--
+			```html
+			<div role="button" tabindex="0">
+			    OK</div>
 
-				<div role="link" data-href="...">
-				Sazerac recipe</div>
+			<div role="link" data-href="...">
+			    Sazerac recipe</div>
 
-				<div role="main">Important</div>
-				``` -->
-				</div>
+			<div role="main">Important</div>
+			``` -->
 			</div>
+		</div>
 
-			<!-- TODO provide a way to do pausing but show the first one right away -->
-			<!-- TODO nested pausing doesn't work -->
-			<div class="slide middle centre">
-				<p data-pause><span>Assistive technologies (e.g. screen-readers) can pick up on these cues;</span><span> we need a way for web games to provide them.</span></p>
-				<p class="story">If we had such a way to bridge between games and accessibility information, we may be able to start by addressing UI accessibility and then explore from there.</p>
-			</div>
+		<!-- TODO provide a way to do pausing but show the first one right away -->
+		<!-- TODO nested pausing doesn't work -->
+		<div class="slide middle centre">
+			<p data-pause><span>Assistive technologies (e.g. screen-readers) can pick up on these cues;</span><span> we need a way for web games to provide them.</span></p>
 
-			<p class="story">Before we get to discussion questions, I wanted to cover one more example of how accessibility may be afforded.</p>
+			<p class="story">If we had such a way to bridge between games and accessibility information, we may be able to start by addressing UI accessibility and then explore from there.</p>
+			<p class="story">Before we get to discussion questions, I wanted to cover one more example of how accessibility may be afforded&hellip;</p>
+		</div>
 
-			<h3 class="full slide middle centre title">Example: Authoring Tools</h3>
-
+		<div class="full slide middle centre title">
+			<h3>Example: Authoring Tools</h3>
 			<p class="story">The traditional way to do level editing in games is to use a visual, CAD-like program to construct the level.</p>
+		</div>
 
-			<img class="slide full" src="t3dl-e.png" alt="A simple level being designed in a level-creation program called QuArK. Two rooms are adjacent, but one is slightly higher up than the ohter, so there's a set of stairs to get from one to the other, as well as a door.">
+		<img class="slide full" src="t3dl-e.png" alt="A simple level being designed in a level-creation program called QuArK. Two rooms are adjacent, but one is slightly higher up than the ohter, so there's a set of stairs to get from one to the other, as well as a door.">
 
+		<div class="slide middle centre" style="font-size: 0.76rem;">
 			<div class="story">
 				<p>However, we could express this problem a different way: we could describe the relationships between the different rooms in the level, and how we might like the map textured and lit, and then have the computer create the actual layout for us.</p>
 				<p>The following XML description gives us the same information as the design in the CAD-like editor above.</p>
 			</div>
 
-			<div class="slide middle centre" style="font-size: 0.76rem;">
-				<div data-markdown><!--
-				```xml
-				<map name=’Stair connection' style=’base’>
-				  <room id=’start’>
-				  <item pos=’c’ type=’info_player_start’ />
-				  <con type=’door’ target=’other’ wall=’n’
-				       pos=’t’ elevtype=’stairs’ />
-				  </room>
-				  <room id=’other’ />
-				</map>
-				``` -->
-				</div>
+			<div data-markdown><!--
+			```xml
+			<map name=’Stair connection' style=’base’>
+			  <room id=’start’>
+			  <item pos=’c’ type=’info_player_start’ />
+			  <con type=’door’ target=’other’ wall=’n’
+				   pos=’t’ elevtype=’stairs’ />
+			  </room>
+			  <room id=’other’ />
+			</map>
+			``` -->
 			</div>
 
 			<p class="story">This example comes from the <a href="https://github.com/matatk/agrip">AGRIP AudioQuake Level Description Language</a>, which has very simple geometry due to my poor maths, but has provided a means for blind people to make their own 3D levels. This one looks as follows when played&hellip;</p>
+		</div>
 
-			<img class="slide full" src="t3dl-g.png" alt="First-person view from the lower of the two rooms looking on at the stairs and door into the other room. Military base textures have been applied: corrugated steel walls and a tiled floor.">
+		<img class="slide full" src="t3dl-g.png" alt="First-person view from the lower of the two rooms looking on at the stairs and door into the other room. Military base textures have been applied: corrugated steel walls and a tiled floor.">
 
-			<h2 class="full slide middle centre title">Suggested outputs</h2>
+		<h2 class="full slide middle centre title">Suggested outputs</h2>
 
+		<div class="slide middle" style="font-size: 0.8rem;">
 			<p class="story">As mentioned in the paper&hellip;</p>
 
-			<div class="slide middle" style="font-size: 0.8rem;">
-				<ol data-pause>
-					<li>Map out how to bridge between rendered UI and the semantics assistive technologies need.</li>
-					<li>Find, identify or plan to create some reference adaptations at different levels (OS, engine, game).</li>
-					<li>Requirements for/identify a framework to bring in adaptations/recognise user personalisations.</li>
-					<li>Input for specs such as W3C's FAST and MAUR to see how they may be improved to support games.</li>
-					<li>Identify or consider how to make some accessible authoring tools.</li>
-				</ol>
-			</div>
+			<ol data-pause>
+				<li>Map out how to bridge between rendered UI and the semantics assistive technologies need.</li>
+				<li>Find, identify or plan to create some reference adaptations at different levels (OS, engine, game).</li>
+				<li>Requirements for/identify a framework to bring in adaptations/recognise user personalisations.</li>
+				<li>Input for specs such as W3C's FAST and MAUR to see how they may be improved to support games.</li>
+				<li>Identify or consider how to make some accessible authoring tools.</li>
+			</ol>
+		</div>
 
-			<h2 class="full slide middle centre title">Questions for discussion</h2>
-
+		<div class="full slide middle centre title">
+			<h2>Questions for discussion</h2>
 			<p class="story">As covered in the paper&hellip;</p>
+		</div>
 
-			<p class="slide middle centre">Can existing accessibility semantics and standards help us meet CVAA requirements?</p>
-			<p class="slide middle centre">How can we bridge the gap to existing assistive technologies to realise this support?</p>
-			<p class="slide middle centre">What info do we need to be able to express to make games accessible that current assistive technologies can't accept? What types of games are there?</p>
-			<p class="slide middle centre">Does it make sense to expose that info via the accessibility layer, or by content/rendering in-keeping with the game world? Which issues are better solved at the design/content/rendering level, with the help of the Game Accessibility Guidelines?</p>
-			<p class="slide middle centre">Could research into abstract games be of help to us?</p>
-			<p class="slide middle centre">What adaptations for specific engines might be produced that could start assisting people quickly?</p>
-			<p class="slide middle centre">How can we make authoring and modding tools accessible?</p>
+		<p class="slide middle centre">Can existing accessibility semantics and standards help us meet CVAA requirements?</p>
+		<p class="slide middle centre">How can we bridge the gap to existing assistive technologies to realise this support?</p>
+		<p class="slide middle centre">What info do we need to be able to express to make games accessible that current assistive technologies can't accept? What types of games are there?</p>
+		<p class="slide middle centre">Does it make sense to expose that info via the accessibility layer, or by content/rendering in-keeping with the game world? Which issues are better solved at the design/content/rendering level, with the help of the Game Accessibility Guidelines?</p>
+		<p class="slide middle centre">Could research into abstract games be of help to us?</p>
+		<p class="slide middle centre">What adaptations for specific engines might be produced that could start assisting people quickly?</p>
+		<p class="slide middle centre">How can we make authoring and modding tools accessible?</p>
 
-			<h2 class="slide title"></h2>
+		<h2 class="slide title"></h2>
 
-			<div class="slide middle">
-				<h2>Image Acknowledgements</h2>
-				<ul>
-					<li><a href="https://www.theverge.com/2019/4/30/18523449/microsoft-xbox-adaptive-controller-military-veterans-partnership">Xbox Adaptive Controller&mdash;The Verge</a></li>
-					<li><a href="https://www.pcworld.com/article/165779/Google_Wave_What_It_Is_And_How_It_Works.html">Google Wave&mdash;PC World</a></li>
-				</ul>
+		<div class="slide middle">
+			<h2>Image Acknowledgements</h2>
+			<ul>
+				<li><a href="https://www.theverge.com/2019/4/30/18523449/microsoft-xbox-adaptive-controller-military-veterans-partnership">Xbox Adaptive Controller&mdash;The Verge</a></li>
+				<li><a href="https://www.pcworld.com/article/165779/Google_Wave_What_It_Is_And_How_It_Works.html">Google Wave&mdash;PC World</a></li>
+			</ul>
+		</div>
+
+		</div>  <!-- end of slide container -->
+
+		<!-- This comes down here for stacking order purposes -->
+		<div class="storyslides-ui slides">
+			<div id="storyslides-progress"><div></div></div>
+
+			<p id="storyslides-help-info" class="storyslides-nice-border">Press <kbd>?</kbd> for help; <kbd>I</kbd> for info on story mode</p>
+
+			<!-- This gets associated with <body> in slides mode by script -->
+			<!-- It's not shown visually for all users because <body> gets focus when clicked on. -->
+			<!-- FIXME this makes it different between visual and non-visual screen-reader users -->
+			<p id="storyslides-screenreader-intro" hidden>The slideshow is in slides mode. Arrow keys will move between slides. To use story mode, which includes extra background information on the content, and lets you browse using a screen reader's virtual cursor, press S, or use the Tab key to reach the story mode button.</p>
+		</div>
+
+		<!-- The lock indicator must be outside UI as UI is hidden when slide is locked -->
+		<!-- aria-relevant not picked up by JAWS/Chrome; try others -->
+		<p id="storyslides-lock-indicator" class="storyslides-nice-border" aria-live="assertive"><span>Slide locked&mdash;press <kbd>Escape</kbd> to unlock</span></p>
+
+		</div>  <!-- end of main content container -->
+
+		<div id="storyslides-dialog-intro" class="storyslides-dialog" role="dialog" tabindex="-1" aria-labelledby="storyslides-dialog-intro-title" style="display: none;">
+			<h1 id="storyslides-dialog-intro-title">For more info&hellip;</h1>
+			<p>The real content of a talk is often not in the slides, but in what's said around them. Story mode shows you not only what was projected, but the explanation behind it too.</p>
+			<p>The presentation is currently in slides mode.</p>
+			<div class="mobile-only">
+				<p>To access story mode, use the menu.</p>
+				<p>If you'd rather stay in slides mode&hellip;</p>
+				<h2>Navigation in slides mode</h2>
+				<p>Tap in the left part of the screen to go back, or the right part of the screen to go forward.</p>
+				<h2>Keyboard</h2>
 			</div>
+			<p>Press <kbd>S</kbd> to switch to story mode, <kbd>?</kbd> for help on keyboard shortcuts and navigation, or <kbd>Escape</kbd> to close this.</p>
+			<hr>
+			<button class="close">Close</button>
+		</div>
 
-		</div> <!-- end of slide container -->
+		<div id="storyslides-dialog-keys" class="storyslides-dialog" role="dialog" tabindex="-1" aria-labelledby="storyslides-dialog-keys-title" style="display: none;">
+			<h1 id="storyslides-dialog-keys-title">Story Slides Help</h1>
+			<p class="mobile-only">Tap either the left or right third of the screen to move to the previous or next slide. If you have a keyboard attached, you can use the following shortcuts.</p>
+			<table>
+				<tr>
+					<th><p>Key(s)</p></th>
+					<th><p>Action</p></th>
+				</tr>
+				<tr>
+					<td><kbd>S</kbd></td>
+					<td><p>Switch to story mode</p></td>
+				</tr>
+				<tr>
+					<td><kbd>L</kbd></td>
+					<td><p>Lock a slide: disable all navigation keys, so if you're using a screen-reader in slides mode, you can explore the current slide with your virtual cursor.</p></td>
+				</tr>
+				<tr>
+					<td><kbd>F</kbd></td>
+					<td><p>Toggle full-screen slide view<span class="mobile-only"> (not supported on iPhone)</span></p></td>
+				</tr>
+				<tr>
+					<td><kbd>&rarr;</kbd> <kbd>&darr;</kbd> <kbd>Page&nbsp;Down</kbd></td>
+					<td><p>Next slide</p></td>
+				</tr>
+				<tr>
+					<td><kbd>&larr;</kbd> <kbd>&uarr;</kbd> <kbd>Page&nbsp;Up</kbd></td>
+					<td><p>Previous slide</p></td>
+				</tr>
+				<tr>
+					<td><kbd>Escape</kbd></td>
+					<td>
+						<ul>
+							<li><p><strong>In story mode:</strong> go to slides mode</p></li>
+							<li><p><strong>In slides mode:</strong> disable the current slide lock; no effect otherwise</p>
+						</ul>
+					</td>
+				</tr>
+				<tr>
+					<td><kbd>I</kbd></td>
+					<td><p>Show info on story mode and slides mode</p></td>
+				</tr>
+				<tr>
+					<td><p><kbd>?</kbd></p></td>
+					<td><p>Toggle this help dialog</p></td>
+				</tr>
+			</table>
+			<button class="close">Close</button>
+		</div>
 
-		<!-- TODO: announce ever? keyboard shortcut to announce it? -->
-		<div id="progress"><div></div></div>
-
-		<!-- FIXME TODO: add the following via script? -->
-		<!-- FIXME TODO: what happens when they're hidden visually too? -->
-		<p id="screen-reader-intro" class="visually-hidden">The slideshow is in slides mode. Arrow keys will move between slides. To use story mode, which includes extra background information on the content, and lets you browse using a screen reader's virtual cursor, press S, or use the Tab key to reach the story mode button.</p>
-		<p id="story-mode-explainer" class="visually-hidden">Story mode allows you to read the presentation as a document, rather than a collection of separate slides, and includes extra background information on the content. It turns off keyboard shortcuts used for navigating between slides and is recommended if you're using a screen reader.</p>
-		<p id="slides-mode-explainer" class="visually-hidden">Slides mode displays each slide one at a time, as they would be projected for the audience. The extra information present in story mode is not displayed. Keyboard shortcuts are used to move between slides.</p>
-
-		<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-		<script src="slideshow.js"></script>
+		<script src="vendor/marked-0.7.0.js"></script>
+		<script src="vendor/inert-2.1.1.js"></script>
+		<script src="vendor/screenfull-4.2.1.js"></script>
+		<script src="story-slides.js"></script>
 	</body>
 </html>

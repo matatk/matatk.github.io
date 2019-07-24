@@ -1,18 +1,17 @@
 @media screen {
 	/* Configuring stuff from the slideshow */
 
-	body {
+	html {  /* not <body> due to Safari fullscreen mode */
 		font-family: sans-serif;
 		background-color: black;
 		color: white;
 	}
 
-	#progress div {
+	#storyslides-progress div {
 		height: 1vh;
 		background-color: #0f0;
 		transition: width 1s;
 	}
-
 
 	/* Completely new stuff */
 
@@ -34,13 +33,22 @@
 	/* AT bit in stack */
 	[data-split] .part-even {
 		background-color: black;
+
 		/* color: var(--accent-colour); */
 		color: white;
 	}
 
-	h1, h2, h3, h4, h5, h6, strong { color: var(--accent-colour); }
+	h1,
+	h2,
+	h3,
+	h4,
+	h5,
+	h6,
+	strong { color: var(--accent-colour); }
 
-	.title h1, .title h2 { color: white; }
+	.title h1,
+	.title h2,
+	.title h3 { color: white; }
 
 	/* FIXME do I use this in Landmarks on the HTML5 slide? */
 	.slide.light {
@@ -48,7 +56,8 @@
 		color: black;
 	}
 
-	[data-split].light .part-even, [data-split].light .part-odd {
+	[data-split].light .part-even,
+	[data-split].light .part-odd {
 		background-color: white;
 		color: black;
 	}
@@ -59,7 +68,8 @@
 		margin-right: auto;
 	}
 
-	th, td {
+	th,
+	td {
 		padding: 0.15rem;
 		padding-left: 0.5rem;
 		padding-right: 0.5rem;
@@ -70,9 +80,13 @@
 		color: black;
 	}
 
-	a, a:visited { color: white; }
+	a,
+	a:visited { color: white; }
 
-	strong > a, strong > a:visited { color: var(--accent-colour); }
+	strong > a,
+	strong > a:visited {
+		color: var(--accent-colour);
+	}
 
 	pre {
 		text-align: left;
@@ -85,7 +99,8 @@
 	/* Thanks https://stackoverflow.com/a/489002/1485308 */
 	ol { counter-reset: item; }
 	ol li { display: block; }
-	ol li:before {
+
+	ol li::before {
 		content: counter(item) ". ";
 		counter-increment: item;
 		color: #1b75bc;
@@ -105,16 +120,14 @@
 	p.key.wide { width: 5rem; }
 	p.key:not(:last-child) { margin-bottom: 1rem; }
 
-
 	/* Debugging */
 
 	/*
 	.slide.active {
-		outline: 0.05rem dashed orange;
-		border: 0.05rem dashed blue;
+	outline: 0.05rem dashed orange;
+	border: 0.05rem dashed blue;
 	}
-	*/
-	/* Note...
-		overflow: hidden;
-	   is useful when e.g. the font is too big */
+	 */
+
+	/* Note: overflow: hidden; is useful when e.g. the font is too big */
 }
