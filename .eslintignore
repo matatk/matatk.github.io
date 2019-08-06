@@ -1,4 +1,4 @@
-_site
 *.min.js
+_site/
 vendor/
 audiochart-test/

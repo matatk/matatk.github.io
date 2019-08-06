@@ -1,7 +1,7 @@
 # http://EditorConfig.org
 root = true
 
-[*]
+[{*.c,*.cpp,*.js,Makefile,*.py,*.rs,*.sh,*.vim}]
 charset = utf-8
 end_of_line = lf
 indent_style = tab
@@ -12,5 +12,17 @@ trim_trailing_whitespace = true
 indent_style = space
 indent_size = 2
 
-[*.md]
+[{*.md,*.markdown}]
+indent_style = space
 trim_trailing_whitespace = false
+
+# Ignores
+# To ignore an entire subtree: echo 'root = true' > dir/.editorconfig
+# Stylelint is used to check CSS
+[{Gemfile.lock,*.min.js}]
+charset = none
+end_of_line = none
+insert_final_newline = none
+trim_trailing_whitespace = none
+indent_style = none
+indent_size = none
