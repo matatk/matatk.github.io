@@ -1,15 +1,16 @@
 permalink: /articles/:title/
 exclude:
- - Gemfile
- - Gemfile.lock
- - talks/2016/audiochart/vendor/get-vendor-libs.sh
- - talks/2016/audiochart/vendor/impress.js-repo/
- - talks/2016/audiochart/vendor/qwerty-hancock-repo/
+  - Gemfile
+  - Gemfile.lock
+  - Makefile
+  - talks/2016/audiochart/vendor/get-vendor-libs.sh
+  - talks/2016/audiochart/vendor/impress.js-repo/
+  - talks/2016/audiochart/vendor/qwerty-hancock-repo/
 include:
- - _AudioChart.spec.js
+  - _AudioChart.spec.js
 plugins:
- - jekyll-feed
- - jekyll-sitemap
+  - jekyll-feed
+  - jekyll-sitemap
 
 # GitHub defaults
 highlighter: rouge

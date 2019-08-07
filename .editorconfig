@@ -16,9 +16,12 @@ indent_size = 2
 indent_style = space
 trim_trailing_whitespace = false
 
+[*.css]
+# Stylelint is used to check CSS, but we'd like auto-whitespace-trimming
+trim_trailing_whitespace = true
+
 # Ignores
 # To ignore an entire subtree: echo 'root = true' > dir/.editorconfig
-# Stylelint is used to check CSS
 [{Gemfile.lock,*.min.js}]
 charset = none
 end_of_line = none

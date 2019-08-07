@@ -5,7 +5,7 @@
   },
   "extends": "eslint:recommended",
   "parserOptions": {
-    "ecmaVersion": 2017
+    "ecmaVersion": 5
   },
   "root": true,
   "rules": {
@@ -47,7 +47,6 @@
         "functions": false
       }
     ],
-    "no-var": "error",
     "one-var": [
       "error",
       "never"

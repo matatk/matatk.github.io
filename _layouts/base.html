@@ -16,25 +16,27 @@
 	</head>
 	<body>
 		<nav role="navigation">
+			<!-- When a list's bullets are removed with CSS, VoiceOver stops
+				 seeing the list as a list semantically. -->
 			<details id="menu-vertical">
 				<summary>Site navigation</summary>
-				<ul>
-					<li><a href="/">Home</a></li>
-					<li><a href="/research/">Research</a></li>
-					<li><a href="/creations/">Creations</a></li>
-					<li><a href="/articles/">Articles</a></li>
-					<li><a href="/talks/">Talks</a></li>
-					<li><a href="/contact/">Contact</a></li>
+				<ul role="list">
+					<li role="listitem"><a href="/">Home</a></li>
+					<li role="listitem"><a href="/research/">Research</a></li>
+					<li role="listitem"><a href="/creations/">Creations</a></li>
+					<li role="listitem"><a href="/articles/">Articles</a></li>
+					<li role="listitem"><a href="/talks/">Talks</a></li>
+					<li role="listitem"><a href="/contact/">Contact</a></li>
 				</ul>
 			</details>
 			<div id="menu-horizontal">
-				<ul>
-					<li><a href="/">Home</a></li>
-					<li><a href="/research/">Research</a></li>
-					<li><a href="/creations/">Creations</a></li>
-					<li><a href="/articles/">Articles</a></li>
-					<li><a href="/talks/">Talks</a></li>
-					<li><a href="/contact/">Contact</a></li>
+				<ul role="list">
+					<li role="listitem"><a href="/">Home</a></li>
+					<li role="listitem"><a href="/research/">Research</a></li>
+					<li role="listitem"><a href="/creations/">Creations</a></li>
+					<li role="listitem"><a href="/articles/">Articles</a></li>
+					<li role="listitem"><a href="/talks/">Talks</a></li>
+					<li role="listitem"><a href="/contact/">Contact</a></li>
 				</ul>
 			</div>
 		</nav>

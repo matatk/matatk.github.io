@@ -7,11 +7,14 @@ title: Home
 <div id="home-content">
 	<p>I am an accessibility consultant, researcher and developer working towards ubiquitous accessibility for information and communication technologies. My main research interest is developing the means, such as user profiling techniques, to match people to forms of assistance and applying these in areas from web to game accessibility.</p>
 
-	<h2>Articles</h2>
-	<ul>
-		{% for post in site.posts %}
-		<li>{{ post.date | date: "%Y-%m-%d" }}: <a href="{{ post.url }}">{{ post.title }}</a> ({{ post.tags | array_to_sentence_string }})</li>
+	<h2>Recent articles</h2>
+	<ul id="articles" role="list">
+		{% for post in site.posts limit:5 %}
+		<li role="listitem"><a href="{{ post.url }}">{{ post.title }}</a><br>
+			{{ post.date | date: "%B %Y" }}<br>
+			<!--{{ post.tags | array_to_sentence_string }}--></li>
 		{% endfor %}
 	</ul>
+	<p><a href="articles/all/">All articles, by date</a></p>
 </div>
 <div id="home-picture"></div>

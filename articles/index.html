@@ -1,10 +1,12 @@
 ---
 layout: page
-title: Articles
+title: Articles tag cloud
 script:
  - https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js
  - /script/tag-cloud.js
 ---
+
+<p>Alternative view: <a href="all/">Articles by date</a></p>
 
 <div id="tag-cloud"></div>
 {% for tag in site.tags %}
