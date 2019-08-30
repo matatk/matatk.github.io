@@ -7,7 +7,7 @@ I am a Senior Accessibility Engineer with [The Paciello Group](http://paciellogr
 
 ## Publications
 
-My publications can be accessed from [Loughborough's Institutional Repository](https://dspace.lboro.ac.uk/dspace-jspui/browse?type=author&value=Atkinson%2C+Matthew+T.).  I'm also on [Google Scholar Citations](http://scholar.google.com/citations?hl=en&user=a3_nU40AAAAJ) and [CiteULike](http://www.citeulike.org/user/matatk).
+My publications can be accessed from [Loughborough's Institutional Repository](https://repository.lboro.ac.uk/search?q=%3Aauthor%3A+%22Matthew+T.+Atkinson%22).  I'm also on [Google Scholar Citations](http://scholar.google.com/citations?hl=en&user=a3_nU40AAAAJ) and [CiteULike](http://www.citeulike.org/user/matatk).
 
 **If you are a researcher wishing to cite AudioQuake, please cite [the SIGGRAPH/Sandbox paper](http://hdl.handle.net/2134/4431) and/or [the Level Description Language paper](http://hdl.handle.net/2134/4478).**
 
