@@ -6,6 +6,9 @@ exclude:
   - talks/2016/audiochart/vendor/get-vendor-libs.sh
   - talks/2016/audiochart/vendor/impress.js-repo/
   - talks/2016/audiochart/vendor/qwerty-hancock-repo/
+  - talks/2019/web-games/node_modules/
+  - talks/2019/web-games/package*.json
+  - talks/2019/web-games/webpack.config.js
 include:
   - _AudioChart.spec.js
 plugins:

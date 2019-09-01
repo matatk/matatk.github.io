@@ -1,0 +1,27 @@
+{
+  "name": "story-slides-presentation",
+  "version": "1.0.0",
+  "private": true,
+  "description": "",
+  "homepage": "",
+  "bugs": {
+    "url": ""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://..."
+  },
+  "license": "",
+  "author": "",
+  "main": "",
+  "scripts": {
+    "build": "webpack"
+  },
+  "devDependencies": {
+    "@babel/core": "~7.5",
+    "@babel/preset-env": "~7.5",
+    "babel-loader": "~8.0",
+    "webpack": "~4.39",
+    "webpack-cli": "~3.3"
+  }
+}

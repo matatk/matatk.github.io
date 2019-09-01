@@ -16,14 +16,13 @@
 		<link href="story-slides.mode-slides.css" rel="stylesheet">
 		<link href="story-slides.mode-story.css" rel="stylesheet">
 		<link href="story-slides.type-spacing.css" rel="stylesheet">
+		<link href="story-slides.loading.css" rel="stylesheet">
 		<!-- Your themes -->
 		<link href="theme.mode-slides.css" rel="stylesheet">
 	</head>
 	<body>
-		<div id="storyslides-main-content">
-
-		<!-- FIXME can I move this to the end? -->
-		<p id="storyslides-browser-support-note"><strong>This presentation's slide view does not support Internet Explorer, sorry. However, you can view all of the content&mdash;including notes on each slide&mdash;in &quot;story mode&quot; by disabling styles (press <kbd>Alt</kbd>, then on the &quot;View&quot; menu, select &quot;Style&quot; and then &quot;No style&quot;).</strong></p>
+		<p id="loading">Loading&hellip;</p>
+		<div id="storyslides-main-content" class="loading">
 
 		<div class="storyslides-ui">
 			<button id="storyslides-mobile-menu-toggle" class="slides mobile-only" aria-expanded="false">Menu</button>
@@ -427,6 +426,6 @@
 		<script src="vendor/marked-0.7.0.js"></script>
 		<script src="vendor/inert-2.1.1.js"></script>
 		<script src="vendor/screenfull-4.2.1.js"></script>
-		<script src="story-slides.js"></script>
+		<script src="story-slides.min.js"></script>
 	</body>
 </html>

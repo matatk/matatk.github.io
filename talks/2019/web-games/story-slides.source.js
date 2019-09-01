@@ -25,9 +25,10 @@
 	const storageKeyMode = win.location.pathname + '.mode'
 	const storageKeyIntroShown = win.location.pathname + '.slides-intro-shown'
 
-	const nonDialogContent = doc.getElementById('storyslides-main-content')
-	const dialogIntro = doc.getElementById('storyslides-dialog-intro')
-	const dialogKeys = doc.getElementById('storyslides-dialog-keys')
+	const elId = (id) => doc.getElementById(id)  // TODO move somehow?
+	const nonDialogContent = elId('storyslides-main-content')
+	const dialogIntro = elId('storyslides-dialog-intro')
+	const dialogKeys = elId('storyslides-dialog-keys')
 	let openDialog = null
 
 	let storyModeScrollTimeout = null
@@ -244,13 +245,13 @@
 	}
 
 	function toggleOrDismissMobileMenu(dismiss) {
-		const toggle = doc.getElementById('storyslides-mobile-menu-toggle')
+		const toggle = elId('storyslides-mobile-menu-toggle')
 		if (dismiss) {
 			toggle.setAttribute('aria-expanded', 'false')
 		} else {
 			toggle.setAttribute('aria-expanded', toggle.getAttribute('aria-expanded') === 'false' ? 'true' : 'false')
 		}
-		doc.getElementById('storyslides-mobile-menu-content').classList.toggle('mobile-none', dismiss)
+		elId('storyslides-mobile-menu-content').classList.toggle('mobile-none', dismiss)
 	}
 
 
@@ -266,12 +267,12 @@
 		doc.addEventListener('keydown', keyHandlerModeSlides)
 		doc.removeEventListener('scroll', scrollHandlerStoryMode)
 
-		doc.getElementById('storyslides-slides-container').setAttribute('aria-live', 'polite')
+		elId('storyslides-slides-container').setAttribute('aria-live', 'polite')
 
-		doc.getElementById('storyslides-button-mode-toggle').innerText = 'Switch to story mode'
-		doc.getElementById('storyslides-button-mode-toggle')
+		elId('storyslides-button-mode-toggle').innerText = 'Switch to story mode'
+		elId('storyslides-button-mode-toggle')
 			.setAttribute('aria-describedby', 'storyslides-mode-story-explainer')
-		doc.getElementById('storyslides-button-mode-toggle').onclick = () => switchToMode('story')
+		elId('storyslides-button-mode-toggle').onclick = () => switchToMode('story')
 
 		applicationifyBody()
 
@@ -447,12 +448,12 @@
 		doc.addEventListener('keydown', keyHandlerModeStory)
 		doc.addEventListener('scroll', scrollHandlerStoryMode)
 
-		doc.getElementById('storyslides-slides-container').removeAttribute('aria-live')
+		elId('storyslides-slides-container').removeAttribute('aria-live')
 
-		doc.getElementById('storyslides-button-mode-toggle').innerText = 'Switch to slides mode'
-		doc.getElementById('storyslides-button-mode-toggle')
+		elId('storyslides-button-mode-toggle').innerText = 'Switch to slides mode'
+		elId('storyslides-button-mode-toggle')
 			.setAttribute('aria-describedby', 'storyslides-mode-slides-explainer')
-		doc.getElementById('storyslides-button-mode-toggle').onclick = () => switchToMode('slides')
+		elId('storyslides-button-mode-toggle').onclick = () => switchToMode('slides')
 
 		neutraliseBody()
 
@@ -542,6 +543,7 @@
 
 	function doSplits() {
 		const containers = doc.querySelectorAll('[data-split]')
+		let percentagesOk = true
 
 		for (const container of containers) {
 			const elements = Array.from(container.children)
@@ -554,11 +556,15 @@
 				: container.dataset.split.split(' ')
 
 			if (percentages.length > 0) {
-				checkPercentages(percentages, numNonStoryElements, container)
+				const check = checkPercentages(
+					percentages, numNonStoryElements, container)
+				if (!check) percentagesOk = false
 			}
 
 			processSplitContainer(container, percentages, elements)
 		}
+
+		return percentagesOk
 	}
 
 	function processSplitContainer(container, percentages, elements) {
@@ -607,7 +613,7 @@
 		}, 0)
 
 		if (sum !== 100) {
-			error(`Percentages add up to ${sum} for split container`, container)
+			error(`Percentages add up to ${sum} for split container:`, container)
 		}
 	}
 
@@ -731,9 +737,10 @@
 	}
 
 	function checkForElements() {
+		let result = true
+
 		const idsToCheck = Object.freeze({
 			'storyslides-main-content': error,
-			'storyslides-browser-support-note': error,
 			'storyslides-mobile-menu-toggle': error,
 			'storyslides-mobile-menu-content': error,
 			'storyslides-button-mode-toggle': error,
@@ -757,21 +764,27 @@
 		})
 
 		for (const id in idsToCheck) {
-			const element = doc.getElementById(id)
+			const element = elId(id)
 			if (!element) {
 				idsToCheck[id](`missing element with id "${id}"`)
+				result = false
 			}
 		}
+
+		return result
 	}
 
 	function checkSlideContainment() {
-		const container = doc.getElementById('storyslides-slides-container')
+		const container = elId('storyslides-slides-container')
 		const message = "The number of children of the slides container isn't the same as the number of slides. This could be due to putting story mode content outside of slides, having some slides outside of the slides contianer, or having other non-slide elements inside the container."
 
 		if (slides.length !== container.children.length) {
 			win.alert(message)
 			error(message)
+			return false
 		}
+
+		return true
 	}
 
 
@@ -779,53 +792,65 @@
 	// Start-up
 	//
 
-	debug('starting up')
-	win.history.scrollRestoration = 'manual'  // un-bork story mode
-	checkForDuplicateIds()
-	checkForElements()
-	checkSlideContainment()
+	function main() {
+		debug('starting up')
+		win.history.scrollRestoration = 'manual'  // un-bork story mode
 
-	doc.getElementById('storyslides-browser-support-note').remove()  // TODO FOUC
+		const results = [
+			checkForDuplicateIds(),
+			checkForElements(),
+			checkSlideContainment(),
+			doSplits()
+		]
 
-	// Fullscreen API isn't supported on iPhone
-	if (screenfull.enabled) {
-		doc.getElementById('storyslides-button-fullscreen').onclick = toggleFullscreen
-	} else {
-		doc.getElementById('storyslides-button-fullscreen').remove()
-	}
-
-	doc.getElementById('storyslides-button-help-intro').onclick = function() {
-		showOrToggleDialog(dialogIntro)
-	}
-	doc.getElementById('storyslides-button-help-keys').onclick = function() {
-		showOrToggleDialog(dialogKeys)
-	}
-
-	doc.getElementById('storyslides-button-previous').onclick = moveToPreviousSlide
-	doc.getElementById('storyslides-button-next').onclick = moveToNextRevealOrSlide
-
-	for (const dialog of [dialogIntro, dialogKeys]) {
-		// Already marked as display: none; in the HTML to avoid FOUC
-		dialog.querySelector('button.close').onclick = function() {
-			hideDialog(this.parentNode)
+		if (!results.every(Boolean)) {
+			elId('loading').innerText = 'Error (check console)'
+			return
 		}
-	}
 
-	renderMarkdown()
-	doSplits()
-	preparePauses()
+		// These can't produce errors (except if the markdown lib's borked)
+		renderMarkdown()
+		preparePauses()
 
-	// It may take longer to get all of the assets on mobile devices
-	win.addEventListener('load', function() {
+		elId('loading').remove()
+
+		// Fullscreen API isn't supported on iPhone
+		if (screenfull.enabled) {
+			elId('storyslides-button-fullscreen').onclick = toggleFullscreen
+		} else {
+			elId('storyslides-button-fullscreen').remove()
+		}
+
+		elId('storyslides-button-help-intro').onclick = function() {
+			showOrToggleDialog(dialogIntro)
+		}
+		elId('storyslides-button-help-keys').onclick = function() {
+			showOrToggleDialog(dialogKeys)
+		}
+
+		elId('storyslides-button-previous').onclick = moveToPreviousSlide
+		elId('storyslides-button-next').onclick = moveToNextRevealOrSlide
+
+		for (const dialog of [dialogIntro, dialogKeys]) {
+			// Already marked as display: none; in the HTML to avoid FOUC
+			dialog.querySelector('button.close').onclick = function() {
+				hideDialog(this.parentNode)
+			}
+		}
+
 		switchToMode(getStoredMode(), true)  // skip check for same mode
-	})
+		win.addEventListener('hashchange', reflectLocationFromURL)
 
-	// TODO ordering?
-	win.addEventListener('hashchange', reflectLocationFromURL)
+		elId('storyslides-mobile-menu-toggle').onclick = function() {
+			// We don't call this directly as it'll take the event parameter to
+			// mean we must dismiss the menu
+			toggleOrDismissMobileMenu()
+		}
 
-	doc.getElementById('storyslides-mobile-menu-toggle').onclick = function() {
-		// We don't call this directly as it'll take the event parameter to
-		// mean we must dismiss the menu
-		toggleOrDismissMobileMenu()
+		elId('storyslides-main-content').classList.remove('loading')
+		debug('started')
 	}
+
+	// Depending on 'net connection and mobile device, this may take some time...
+	win.addEventListener('load', main)
 })(window, document)
