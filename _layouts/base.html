@@ -10,41 +10,47 @@
 		<meta name="author" content="Dr Matthew Tylee Atkinson Ph.D.">
 		<meta name="description" content="Personal web site and 'blog">
 		<meta name="keywords"
-			content="accessibility,programming,computing,blog">
+		content="accessibility,programming,computing,blog">
 		{% for js in page.script %}<script type="text/javascript" src="{{ js }}"></script>{% endfor %}
 		<script src="/script/ga.js"></script>
+		<script defer src="/script/user-prefers-theme.js"></script>
+		<script defer src="/script/theme-toggle.js"></script>
 	</head>
 	<body>
 		<nav role="navigation">
 			<!-- When a list's bullets are removed with CSS, VoiceOver stops
-				 seeing the list as a list semantically. -->
-			<details id="menu-vertical">
-				<summary>Site navigation</summary>
-				<ul role="list">
-					<li role="listitem"><a href="/">Home</a></li>
-					<li role="listitem"><a href="/research/">Research</a></li>
-					<li role="listitem"><a href="/creations/">Creations</a></li>
-					<li role="listitem"><a href="/articles/">Articles</a></li>
-					<li role="listitem"><a href="/talks/">Talks</a></li>
-					<li role="listitem"><a href="/contact/">Contact</a></li>
-				</ul>
-			</details>
-			<div id="menu-horizontal">
-				<ul role="list">
-					<li role="listitem"><a href="/">Home</a></li>
-					<li role="listitem"><a href="/research/">Research</a></li>
-					<li role="listitem"><a href="/creations/">Creations</a></li>
-					<li role="listitem"><a href="/articles/">Articles</a></li>
-					<li role="listitem"><a href="/talks/">Talks</a></li>
-					<li role="listitem"><a href="/contact/">Contact</a></li>
-				</ul>
-			</div>
+	   seeing the list as a list semantically. -->
+	   <details id="menu-vertical">
+		   <summary>Site navigation</summary>
+		   <ul role="list">
+			   <li role="listitem"><a href="/">Home</a></li>
+			   <li role="listitem"><a href="/research/">Research</a></li>
+			   <li role="listitem"><a href="/creations/">Creations</a></li>
+			   <li role="listitem"><a href="/articles/">Articles</a></li>
+			   <li role="listitem"><a href="/talks/">Talks</a></li>
+			   <li role="listitem"><a href="/contact/">Contact</a></li>
+		   </ul>
+	   </details>
+	   <div id="menu-horizontal">
+		   <ul role="list">
+			   <li role="listitem"><a href="/">Home</a></li>
+			   <li role="listitem"><a href="/research/">Research</a></li>
+			   <li role="listitem"><a href="/creations/">Creations</a></li>
+			   <li role="listitem"><a href="/articles/">Articles</a></li>
+			   <li role="listitem"><a href="/talks/">Talks</a></li>
+			   <li role="listitem"><a href="/contact/">Contact</a></li>
+		   </ul>
+	   </div>
 		</nav>
 		<main role="main">
-{{ content }}
+		{{ content }}
 		</main>
 		<footer role="contentinfo">
-			<p>Copyright 2012&ndash;2019 Matthew Tylee Atkinson</p>
+			<p>Copyright 2012&ndash;2019 Matthew Tylee Atkinson
+			<span style="float: right;">
+				<button id="toggle-theme"></button>
+			</span>
+			</p>
 		</footer>
 	</body>
 </html>

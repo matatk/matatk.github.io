@@ -3,6 +3,9 @@ exclude:
   - Gemfile
   - Gemfile.lock
   - Makefile
+  - node_modules/
+  - package.json
+  - package-lock.json
   - talks/2016/audiochart/vendor/get-vendor-libs.sh
   - talks/2016/audiochart/vendor/impress.js-repo/
   - talks/2016/audiochart/vendor/qwerty-hancock-repo/

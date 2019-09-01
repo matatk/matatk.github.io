@@ -147,12 +147,12 @@ blockquote {
 	color: #6c6c6c;
 
 	/* Colours chosen because:
-		- Contrast of text to background is OK by WCAG 2 Level AA.
-		- The thick border looks (about) the same colour as the text and is
-		  WCAG 2.1-compliant.
-		- Contrast betwwen <blockquote> and <body> text is greater than 2:1,
-		  so some will be able to see the difference, but if not, the sidebar
-		  and incrased margin are there.
+	- Contrast of text to background is OK by WCAG 2 Level AA.
+	- The thick border looks (about) the same colour as the text and is
+	WCAG 2.1-compliant.
+	- Contrast betwwen <blockquote> and <body> text is greater than 2:1,
+	so some will be able to see the difference, but if not, the sidebar
+	and incrased margin are there.
 	 */
 }
 
@@ -173,11 +173,11 @@ blockquote {
 }
 
 /* Widest layout:
- + Capped body text width (45em in inherited size)
- + Give body at least 0.5em left+right margins.
- + Float home page picture.
- + Max padding for menu items.
- Viewport size in [r]ems: (45 + 1) * 1.2 = 55.2 */
++ Capped body text width (45em in inherited size)
++ Give body at least 0.5em left+right margins.
++ Float home page picture.
++ Max padding for menu items.
+Viewport size in [r]ems: (45 + 1) * 1.2 = 55.2 */
 
 /* TODO: check if the above line is correct - isn't rems the body font size? */
 @media screen and (min-width: 55.2em) {
@@ -197,32 +197,30 @@ blockquote {
 	footer { clear: both; }
 }
 
-@media (prefers-color-scheme: dark) {
-	/* Thanks https://css-tricks.com/dark-modes-with-css/ */
+/*
+ *
+ * Dark theme
+ *
+ */
 
-	/* and http://www.mattlag.com/scripting/hexcolorinverter.php */
+body.user-prefers-theme-dark {
+	background-color: #333;
+	color: #eee;
+}
 
-	/* and https://developer.paciellogroup.com/resources/contrastanalyser/ */
+/* The inverse of #888, used for borders above, is #777. Howecer
+ * #777 on #333 (the background colour) has insufficient contrast,
+ * so we'll just keep #888. */
 
-	body {
-		background-color: #333;
-		color: #eee;
-	}
+.user-prefers-theme-dark blockquote { color: #939393; }
 
-	/* The inverse of #888, used for borders above, is #777. Howecer
-	 * #777 on #333 (the background colour) has insufficient contrast,
-	 * so we'll just keep #888. */
+/* #7fff7f; - Bit-flip inverse looks quite nice */
 
-	blockquote { color: #939393; }
+/* #ff80ff; - Lightness inverse matches the theme */
+.user-prefers-theme-dark a { color: #7fff7f; }
 
-	/* #7fff7f; - Bit-flip inverse looks quite nice */
-
-	/* #ff80ff; - Lightness inverse matches the theme */
-	a { color: #7fff7f; }
-
-	a:focus,
-	a:hover {
-		/* Use light-mode background as above */
-		color: black;  /* This is actually WCAG-OK and white isn't! */
-	}
+.user-prefers-theme-dark a:focus,
+.user-prefers-theme-dark a:hover {
+	/* Use light-mode background as above */
+	color: black;  /* This is actually WCAG-OK and white isn't! */
 }

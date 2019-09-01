@@ -1,0 +1,33 @@
+{
+  "name": "matatk.github.io",
+  "version": "1.0.0",
+  "private": true,
+  "description": "personal website",
+  "homepage": "https://github.com/matatk/matatk.github.io#readme",
+  "bugs": {
+    "url": "https://github.com/matatk/matatk.github.io/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/matatk/matatk.github.io.git"
+  },
+  "license": "Proprietary",
+  "author": "Matthew Tylee Atkinson",
+  "main": "index.js",
+  "husky": {
+    "hooks": {
+      "pre-commit": "vendor-copy && git add script/user-prefers-theme.js"
+    }
+  },
+  "dependencies": {
+    "husky": "~3.0",
+    "user-prefers-theme": "github:matatk/user-prefers-theme",
+    "vendor-copy": "~2.0"
+  },
+  "vendorCopy": [
+    {
+      "from": "node_modules/user-prefers-theme/user-prefers-theme.js",
+      "to": "script/user-prefers-theme.js"
+    }
+  ]
+}
