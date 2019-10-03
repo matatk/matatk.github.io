@@ -1,7 +1,7 @@
 ---
 title: W3C Workshop on Web Games
 layout: article
-tags: web games accessibility
+tags: web games accessibility tpg tpg-blog-post
 extra-style: syntax
 ---
 
