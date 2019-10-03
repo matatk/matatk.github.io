@@ -3,13 +3,23 @@
 	width: extend-to-zoom;
 }
 
-body {
+html {
 	background-color: #eee;
 	color: #333;
 	font-family: Verdana, sans-serif;
 	font-size: 1.2em;
-	line-height: 1.5;
+	line-height: 1.6;
 }
+
+dt,
+dd,
+li,
+p { font-family: Georgia, serif; }
+
+nav a,
+footer p { font-family: Verdana, sans-serif; }
+
+code { font-family: Menlo, monospace; }
 
 /* HTML5 for IE */
 header,
@@ -26,7 +36,7 @@ a {
 
 nav a {
 	display: block;
-	padding: 0.5em;
+	padding: 0.5rem;
 }
 
 a:focus,
@@ -37,7 +47,7 @@ a:hover {
 	/* FIXME: Actually white is only 3.5:1! */
 }
 
-nav summary { padding-bottom: 0.5em; }
+nav summary { padding-bottom: 0.5rem; }
 
 nav ul {
 	list-style-type: none;
@@ -67,12 +77,12 @@ dl.article-meta ul { margin-top: 0; }
 #menu-horizontal ul { display: flex; }
 #menu-horizontal li { flex-grow: 1; }
 
-#menu-vertical li:last-child { padding-bottom: 1em; }
+#menu-vertical li:last-child { padding-bottom: 1rem; }
 
 main,
-footer { border-top: 0.1em solid #888; }
+footer { border-top: 0.1rem solid #888; }
 
-h1 { font-size: 2em; }
+h1 { font-size: 2rem; }
 
 h1,
 h2,
@@ -85,13 +95,10 @@ h6 { line-height: 1.2; }
 li p { margin-bottom: 0; }
 
 /* TODO should this be in highlighting CSS only? */
-
 /* This causes some code samples to scroll horizontally; is that really good? */
 pre {
 	overflow: auto;
-
 	/* white-space: pre-wrap; */
-
 	/* not sure about this */
 }
 
@@ -127,23 +134,23 @@ code.highlighter-rouge { line-height: 1; }
 	margin: 0;
 }
 
-#articles li:not(:last-child) { padding-bottom: 1em; }
+#articles li:not(:last-child) { padding-bottom: 1rem; }
 
 #articles li a {
-	font-size: 1.2em;
+	font-size: 1.2rem;
 	line-height: 1.5;
 }
 
 img {
 	width: 100%;
-	box-shadow: 0.25em 0.25em #888;  /* same colour as blockquote, highlight */
+	box-shadow: 0.25rem 0.25rem #888;  /* same colour as blockquote, highlight */
 }
 
 blockquote {
 	margin: 0;
-	padding-left: 1em;
-	padding-right: 1em;
-	border-left: 0.25em solid #888; /* same as syntax-highlighted code */
+	padding-left: 1rem;
+	padding-right: 1rem;
+	border-left: 0.25rem solid #888; /* same as syntax-highlighted code */
 	color: #6c6c6c;
 
 	/* Colours chosen because:
@@ -156,42 +163,46 @@ blockquote {
 	 */
 }
 
-@media screen and (min-width: 42em) {
+@media screen and (min-width: 42rem) {  /* 35rem at 1.2x */
 	#menu-vertical { display: none; }
 	#menu-horizontal { display: block; }
 
-	nav a { padding: 0.75em; }
+	nav a { padding: 0.75rem; }
 
 	body {
-		margin-left: 1em;
-		margin-right: 1em;
+		margin-left: 1rem;
+		margin-right: 1rem;
 	}
 }
 
-@media screen and (min-width: 45em) {
-	nav a { padding: 1em; }
+@media screen and (min-width: 45rem) {  /* 37.5rem at 1.2x */
+	nav a { padding: 1rem; }
 }
 
 /* Widest layout:
- + Capped body text width (45em in inherited size)
- + Give body at least 0.5em left+right margins.
- + Float home page picture.
- + Max padding for menu items.
- Viewport size in [r]ems: (45 + 1) * 1.2 = 55.2 */
 
-/* TODO: check if the above line is correct - isn't rems the body font size? */
-@media screen and (min-width: 55.2em) {
+   + Capped body text width (45rem)
+   + Give body at least 0.5rem left + right margins.
+   + Float home page picture.
+   + Max padding for menu items.
+
+   Note: rems in media queries are always on the browser default (which may be
+		 increased by user zooming, but doesn't take into account the <html>
+		 size above), so in this case, the viewport size in media-query-rems
+		 is: (45 + 1) * 1.2 = 55.2
+ */
+@media screen and (min-width: 55.2rem) {  /* 46rem at 1.2x */
 	body {
 		margin: auto;
-		max-width: 45em;
+		max-width: 45rem;
 	}
 
-	nav a { padding: 1.5em; }
+	nav a { padding: 1.5rem; }
 
 	#home-content {
 		float: right;
 		margin-left: 250px;
-		padding-left: 2em;
+		padding-left: 2rem;
 	}
 
 	footer { clear: both; }
