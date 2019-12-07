@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>Game Accessibility: Low Vision</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="mobile-web-app-capable" content="yes">
+		<style>
+:root {
+	--author-font-height-percent-of-slide: 8;
+	--author-aspect-ratio: calc(16 / 9);
+}
+		</style>
+		<!-- Story Slides Standard CSS -->
+		<link href="story-slides.mode-slides.css" rel="stylesheet">
+		<link href="story-slides.mode-story.css" rel="stylesheet">
+		<link href="story-slides.type-spacing.css" rel="stylesheet">
+		<!-- Your themes -->
+		<link href="theme.mode-slides.css" rel="stylesheet">
+	</head>
+	<body>
+		<div id="storyslides-main-content">
+
+		<!-- FIXME can I move this to the end? -->
+		<p id="storyslides-browser-support-note"><strong>This presentation's slide view does not support Internet Explorer, sorry. However, you can view all of the content&mdash;including notes on each slide&mdash;in &quot;story mode&quot; by disabling styles (press <kbd>Alt</kbd>, then on the &quot;View&quot; menu, select &quot;Style&quot; and then &quot;No style&quot;).</strong></p>
+
+		<div class="storyslides-ui">
+			<button id="storyslides-mobile-menu-toggle" class="slides mobile-only" aria-expanded="false">Menu</button>
+			<div id="storyslides-mobile-menu-content" class="mobile-none">
+				<button id="storyslides-button-mode-toggle"></button>
+
+				<div class="slides mobile-only">
+					<button id="storyslides-button-fullscreen">Full-screen</button>
+					<button id="storyslides-button-help-intro">Info</button>
+					<button id="storyslides-button-help-keys">Help</button>
+				</div>
+
+				<span class="story">or press <kbd>Escape</kbd></span>
+
+				<p id="storyslides-mode-story-explainer" class="slides storyslides-nice-border">Story mode allows you to read the presentation as a document, rather than a collection of separate slides, and includes extra background information on the content. It turns off keyboard shortcuts used for navigating between slides and is recommended if you're using a screen reader.</p>
+
+				<div id="storyslides-mode-slides-explainer-container" class="story">
+					<p id="storyslides-mode-slides-explainer">Slides mode displays each slide one at a time, as they would be projected for the audience. The extra information present in story mode is not displayed. Keyboard shortcuts or buttons can be used to move between slides.</p>
+					<button class="mobile-only close">Close</button>
+				</div>
+			</div>
+
+			<div class="slides">
+				<button id="storyslides-button-previous" aria-label="Previous"><span>&larr;</span></button>
+				<button id="storyslides-button-next" aria-label="Next"><span>&rarr;</span></button>
+			</div>
+		</div>
+
+		<div id="storyslides-slides-container">
+
+		<!-- to be added
+
+WORMS!
+* Turn-based
+* Zoom
+* Cartoony; clear graphics
+
+Dungeon Keeper
+
+JEDI KNIGHT!!!!!
+
+GuideBot as AT?
+
+Quake III/TF2 vs CS/Overwatch?
+
+Half-Life? (Narrative) BioShock?
+
+Badland
+Braid
+illi / other?
+Lifeline
+
+? Dynamite Jack (mag + game can be done but is awkward)
+
+		-->
+
+		<div class="slide full padded bottom title">
+			<h1>Game Accessibility: Low Vision</h1>
+			<p id="author">
+				<span>Matthew Tylee Atkinson et al.</span>
+				<span class="story"><br/></span>
+				<span> @matatk</span><span class="story"> on Twitter</span>
+			</p>
+		</div>
+
+		<div class="slide middle centre">
+			<p data-pause><span>My experiences playing games with a vision impairment</span><span> (though I'll also be talking about general low-vision stuff).</span></p>
+		</div>
+
+		<div class="slide middle centre">
+			<p>HT Ian, Amy, &hellip;</p>
+		</div>
+
+		<div class="slide middle">
+			<h2>Overview</h2>
+			<ul>
+				<li>Assistive tech</li>
+				<li>Design</li>
+				<li>Community</li>
+			</ul>
+		</div>
+
+
+		<h2 class="slide middle centre">Assistive tech</h2>
+		<div class="slide middle centre">
+			<p class="story">This section is mainly talking about support for&hellip;</p>
+			<p>Traditional assistive tech</p>
+			<p class="story">Later on we'll also cover&hellip;</p>
+		</div>
+		<p class="slide middle centre">Assistive features</p>
+		<p class="slide middle centre">Inclusive design</p>
+
+		<div class="slide middle">
+			<h3>Assistive tech</h3>
+			<ul>
+				<li>Desktop</li>
+				<li>Console</li>
+				<li>Mobile</li>
+				<li>VR and AR</li>
+			</ul>
+		</div>
+
+		<p class="slide middle centre">IMAGE TBD: Manual zoom (move head closer to object)</p>
+
+		<h3 class="full padded bottom slide horizontal" data-split="15% 85%">
+			<div class="rotate">Assistive tech</div>
+			<span>Desktop</span>
+		</h3>
+
+		<div class="slide middle centre">
+			<p data-pause class="really-big">:-(<strong> *</strong></p>
+			<p class="story">Generally, native-app style games on desktop platforms can't benefit from assistive technologies such as screen magnifiers.</p>
+			<p class="story">That being said, web-based games would potentially work with screen magnifiers and web browser zoom, but they may not be designed for it.</p>
+		</div>
+
+		<h3 class="full padded bottom slide horizontal" data-split="15% 85%">
+			<div class="rotate">Assistive tech</div>
+			<span>Console</span>
+		</h3>
+
+		<div class="slide middle centre">
+			<p data-pause class="really-big">:-)<strong> *</strong></p>
+			<p class="story">There are assistive features such as pan-and-zoom (and invert colours) on consoles these days.</p>
+			<p class="story">Games may not be designed with an awareness of them.</p>
+			<p class="story">There are also features that enable you to get help when playing games, such as Xbox's <a href="https://beta.support.xbox.com/help/account-profile/accessibility/copilot">co-pilot</a>.</p>
+		</div>
+
+		<p class="slide middle center">IMAGE TBD: Co-pilot</p>
+
+		<h3 class="full padded bottom slide horizontal" data-split="15% 85%">
+			<div class="rotate">Assistive tech</div>
+			<span>Mobile</span>
+		</h3>
+
+		<div class="slide middle centre">
+			<p data-pause class="really-big">:-)<strong> *</strong></p>
+			<p class="story">There are assistive features such as pan-and-zoom (and invert colours) on consoles these days.</p>
+			<p class="story">Games may not be designed with an awareness of them.</p>
+		</div>
+
+		<p class="slide middle centre">IMAGE TBD: Sorcery!</p>
+		<p class="slide middle centre">IMAGE TBD: Blackbar</p>
+		<p class="slide middle centre">IMAGE TBD: Puzzles</p>
+
+		<div class="slide middle centre">
+			<p>However, you can miss important<br>stuff when zoomed in.</p>
+		</div>
+
+		<p class="slide middle centre">IMAGE TBD: Machinarium examples</p>
+
+		<div class="slide middle centre">
+			<p>One more thing&hellip;</p>
+			<p class="story">You can use some mobile devices, such as the iPad <strong>as</strong> an assistive technology&hellip;</p>
+			<p class="story">As with apps, games can benefit from the larger screen size.</p>
+			<p class="story">You can also enlarge games designed for the iPhone on the iPad.</p>
+		</div>
+
+		<p class="slide middle centre">IMAGE TBD: Large screen of tablet vs phone</p>
+		<p class="slide middle centre">IMAGE TBD: x2 button for iPhone apps</p>
+
+		<p class="slide middle centre">Mobile devices might also be used <strong>as</strong> assistive technology: e.g. to play a digital version of a boardgame that might be hard to play IRL.</p>
+		<p class="slide middle centre">IMAGE TBD: Digital board game</p>
+
+		<h3 class="full padded bottom slide horizontal" data-split="15% 85%">
+			<div class="rotate">Assistive tech</div>
+			<span>VR and AR</span>
+		</h3>
+
+		<p class="slide middle centre">IMAGE TBD: SeeingVR - AT within VR</p>
+		<p class="slide middle centre">IMAGE TBD: SeeingVR - VR enhanced for accessibility</p>
+
+
+		<h2 class="slide middle centre">Design</h2>
+
+		<div class="slide middle">
+			<h3>Design</h3>
+			<ul>
+				<li>Text size</li>
+				<li>Colour</li>
+				<li>Detail</li>
+				<li>Style</li>
+				<li>Reactions</li>
+				<li>Orientation</li>
+			</ul>
+		</div>
+
+		<h3 class="full padded bottom slide horizontal" data-split="15% 85%">
+			<div class="rotate">Design</div>
+			<span>Text size</span>
+		</h3>
+
+		<div class="slide middle centre">
+			<p class="story">Text size is the</p>
+			<p class="really-big">#1</p>
+			<p class="story">complaint about game accessibility.</p>
+		</div>
+
+		<!--
+		<iframe class="slide full" width="560" height="315" src="https://www.youtube.com/embed/GCiAS8joYhA" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+		-->
+
+		<img class="slide" alt="FIXME" src="https://steamuserimages-a.akamaihd.net/ugc/850468678096308470/00C92F697837EB458AF135FC4CA3CD355BB87E1F/">
+
+		<h3 class="full padded bottom slide horizontal" data-split="15% 85%">
+			<div class="rotate">Design</div>
+			<span>Colour</span>
+		</h3>
+
+		<div class="slide full middle centre">
+			<p class="story">Some games have options to assist users who struggle to see colours. For example, Frozen Bubble offers an option to include shapes as well as colours.</p>
+			<img src="fb-standard.png" alt="FIXME">
+		</div>
+
+		<div class="slide full middle centre">
+			<img src="fb-colour-defecit.png" alt="FIXME">
+		</div>
+
+		<div class="slide full middle centre">
+			<p class="story">However, it is better when the game is designed to not need such an option.</p>
+			<p>IMAGE TBD: (video could be used but an image would suffice)</p>
+			<iframe width="560" height="315" src="https://www.youtube.com/embed/oHCPP4M3Eho" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+		</div>
+
+		<h3 class="full padded bottom slide horizontal" data-split="15% 85%">
+			<div class="rotate">Design</div>
+			<span>Detail</span>
+		</h3>
+
+		<div class="slide middle centre">
+			<p data-pause>The level of detail in games has increased over time.<span> This can make it harder to see what's going on.</span></p>
+		</div>
+
+		<img class="slide full" src="Descent_II_gameplay.png" alt="FIXME Descent II">
+		<img class="slide full" src="overload-ed.jpg" alt="FIXME">
+
+		<img class="slide full" src="Doom_ingame_1.png" alt="FIXME">
+		<img class="slide full" src="Reverent_(Doom).jpg" alt="FIXME">
+		<img class="slide full" src="MW-S1-02.jpg" alt="Very detailed scene from Call of Duty: Modern Warfare">
+
+		<img class="slide full" src="bass-1-e1500052341432-1.png" alt="FIXME">
+		<img class="slide full" src="machinarium-wallpaper-plaza-1920x1200.jpg" alt="FIXME">
+
+		<!-- FIXME Space Invaders example? -->
+		<p class="slide middle centre">IMAGE TBD: Racing game example</p>
+
+		<!-- FIXME text about modern games vs older ones and thus why I prefer older ones -->
+
+		<h3 class="full padded bottom slide horizontal" data-split="15% 85%">
+			<div class="rotate">Design</div>
+			<span>Style</span>
+		</h3>
+
+		<div class="slide middle centre">
+			<p class="story">Sometimes the aesthetics of a game actually make it more accessible. Two popular styles at the moment are really enticing for me: retro-style pixel art and synthwave. These involve low-res graphics and/or bright colours, which are ace for me :-).</p>
+			<p>IMAGE TBD: Mirror's Edge (3D, 2D)</p>
+		</div>
+
+		<img class="slide full" src="Screenshot1.png" alt="FIXME">
+
+		<p class="slide centre middle">IMAGE TBD: Minecraft</p>
+
+		<!-- Eldritch -->
+		<iframe class="slide full" width="560" height="315" src="https://www.youtube.com/embed/LdJwGm5VPoY" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+		<div class="slide centre middle">
+			<p>Audiogames</p>
+		</div>
+
+		<p class="slide middle centre">IMAGE TBD: Papa Sangre</p>
+		<p class="slide middle centre">IMAGE TBD: Accessibility-specific</p>
+
+		<h3 class="full padded bottom slide horizontal" data-split="15% 85%">
+			<div class="rotate">Design</div>
+			<span>Reactions</span>
+		</h3>
+
+		<iframe class="slide full" width="560" height="315" src="https://www.youtube.com/embed/HJrgjtUQIcU" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+		<p class="slide centre middle">IMAGE TBD: Rally games (call back to the issues around detail in racing games, earlier)</p>
+		<p class="slide centre middle">IMAGE TBD: Co-pilot (in the helper sense) e.g. Knights and Bikes</p>
+		<p class="slide centre middle">IMAGE TBD: Button-mashing</p>
+
+		<h3 class="full padded bottom slide horizontal" data-split="15% 85%">
+			<div class="rotate">Design</div>
+			<span>Orientation</span>
+		</h3>
+
+		<p class="slide middle centre">IMAGE TBD: Maps</p>
+		<p class="slide middle centre">IMAGE TBD: Waypoints</p>
+
+
+		<h2 class="slide middle centre">Community</h2>
+
+		<div class="slide middle">
+			<h3>Community</h3>
+			<ul>
+				<li>Communication</li>
+				<li>Online play</li>
+				<li>Modding</li>
+				<li>Mapping</li>
+			</ul>
+		</div>
+
+		<h3 class="full padded bottom slide horizontal" data-split="15% 85%">
+			<div class="rotate">Community</div>
+			<span>Communication</span>
+		</h3>
+
+		<img class="slide full" src="eviternity.png" alt="Announcement of the Eviternity megawad for Doom II on the Doomworld Forum">
+
+		<img class="slide full" src="logos/Discord-Logo+Wordmark-Color.svg" alt="Discord">
+
+		<div class="slide full middle centre">
+			<div class="logo-container">
+				<img src="logos/TwitchExtrudedWordmarkPurple.svg" alt="Twitch">
+				<img src="logos/mixer-footer.png" alt="Mixer">
+				<img src="logos/yt_logo_rgb_dark.png" alt="YouTube">
+				<img src="logos/CaffeineTV-Logo-White.png" alt="Caffeine">
+				<img src="logos/fatter_logo.png" alt="Mirrativ">
+			</div>
+		</div>
+
+		<p class="slide middle centre">IMAGE TBD: Keeping up with the chat can be hard</p>
+
+		<h3 class="full padded bottom slide horizontal" data-split="15% 85%">
+			<div class="rotate">Community</div>
+			<span>Online play</span>
+		</h3>
+
+		<p class="slide middle centre">IMAGE TBD: Reactions (again, as depends on others). DM example?</p>
+		<p class="slide middle centre">IMAGE TBD: Keeping up with chat whilst also playing the game</p>
+		<p class="slide middle centre">IMAGE TBD: Playing with bots</p>
+		<p class="slide middle centre">IMAGE TBD: co-op</p>
+
+		<h3 class="full padded bottom slide horizontal" data-split="15% 85%">
+			<div class="rotate">Community</div>
+			<span>Modding</span>
+		</h3>
+
+		<p class="slide middle centre">IMAGE TBD: Visual example of a total conversion, before/after</p>
+
+		<div class="slide full">
+			<p class="story">For making modifications, you might use a code editor. It could be one that comes with the game, thus requiring that accessibility was considered in the development of its UI, or it could be any stadnard editor.</p>
+			<img src="https://upload.wikimedia.org/wikipedia/commons/8/8c/Vim-%28logiciel%29-console.png" alt="FIXME">
+		</div>
+
+		<h3 class="full padded bottom slide horizontal" data-split="15% 85%">
+			<div class="rotate">Community</div>
+			<span>Mapping</span>
+		</h3>
+
+		<p class="slide middle centre">IMAGE TBD: 2D tile-laying</p>
+		<p class="slide middle centre">IMAGE TBD: 3D CAD—UnrealEd?</p>
+		<p class="slide middle centre">IMAGE TBD: LDL</p>
+
+		</div>  <!-- end of slide container -->
+
+		<!-- This comes down here for stacking order purposes -->
+		<div class="storyslides-ui slides">
+			<div id="storyslides-progress"><div></div></div>
+
+			<p id="storyslides-help-info" class="storyslides-nice-border">Press <kbd>?</kbd> for help; <kbd>I</kbd> for info on story mode</p>
+
+			<!-- This gets associated with <body> in slides mode by script -->
+			<!-- It's not shown visually for all users because <body> gets focus when clicked on. -->
+			<!-- FIXME this makes it different between visual and non-visual screen-reader users -->
+			<p id="storyslides-screenreader-intro" hidden>The slideshow is in slides mode. Arrow keys will move between slides. To use story mode, which includes extra background information on the content, and lets you browse using a screen reader's virtual cursor, press S, or use the Tab key to reach the story mode button.</p>
+		</div>
+
+		<!-- The lock indicator must be outside UI as UI is hidden when slide is locked -->
+		<!-- aria-relevant not picked up by JAWS/Chrome; try others -->
+		<p id="storyslides-lock-indicator" class="storyslides-nice-border" aria-live="assertive"><span>Slide locked&mdash;press <kbd>Escape</kbd> to unlock</span></p>
+
+		</div>  <!-- end of main content container -->
+
+		<div id="storyslides-dialog-intro" class="storyslides-dialog" role="dialog" tabindex="-1" aria-labelledby="storyslides-dialog-intro-title" style="display: none;">
+			<h1 id="storyslides-dialog-intro-title">For more info&hellip;</h1>
+			<p>The real content of a talk is often not in the slides, but in what's said around them. Story mode shows you not only what was projected, but the explanation behind it too.</p>
+			<p>The presentation is currently in slides mode.</p>
+			<div class="mobile-only">
+				<p>To access story mode, use the menu.</p>
+				<p>If you'd rather stay in slides mode&hellip;</p>
+				<h2>Navigation in slides mode</h2>
+				<p>Tap in the left part of the screen to go back, or the right part of the screen to go forward.</p>
+				<h2>Keyboard</h2>
+			</div>
+			<p>Press <kbd>S</kbd> to switch to story mode, <kbd>?</kbd> for help on keyboard shortcuts and navigation, or <kbd>Escape</kbd> to close this.</p>
+			<hr>
+			<button class="close">Close</button>
+		</div>
+
+		<div id="storyslides-dialog-keys" class="storyslides-dialog" role="dialog" tabindex="-1" aria-labelledby="storyslides-dialog-keys-title" style="display: none;">
+			<h1 id="storyslides-dialog-keys-title">Story Slides Help</h1>
+			<p class="mobile-only">Tap either the left or right third of the screen to move to the previous or next slide. If you have a keyboard attached, you can use the following shortcuts.</p>
+			<table>
+				<tr>
+					<th><p>Key(s)</p></th>
+					<th><p>Action</p></th>
+				</tr>
+				<tr>
+					<td><kbd>S</kbd></td>
+					<td><p>Switch to story mode</p></td>
+				</tr>
+				<tr>
+					<td><kbd>L</kbd></td>
+					<td><p>Lock a slide: disable all navigation keys, so if you're using a screen-reader in slides mode, you can explore the current slide with your virtual cursor.</p></td>
+				</tr>
+				<tr>
+					<td><kbd>F</kbd></td>
+					<td><p>Toggle full-screen slide view<span class="mobile-only"> (not supported on iPhone)</span></p></td>
+				</tr>
+				<tr>
+					<td><kbd>&rarr;</kbd> <kbd>&darr;</kbd> <kbd>Page&nbsp;Down</kbd></td>
+					<td><p>Next slide</p></td>
+				</tr>
+				<tr>
+					<td><kbd>&larr;</kbd> <kbd>&uarr;</kbd> <kbd>Page&nbsp;Up</kbd></td>
+					<td><p>Previous slide</p></td>
+				</tr>
+				<tr>
+					<td><kbd>Escape</kbd></td>
+					<td>
+						<ul>
+							<li><p><strong>In story mode:</strong> go to slides mode</p></li>
+							<li><p><strong>In slides mode:</strong> disable the current slide lock; no effect otherwise</p>
+						</ul>
+					</td>
+				</tr>
+				<tr>
+					<td><kbd>I</kbd></td>
+					<td><p>Show info on story mode and slides mode</p></td>
+				</tr>
+				<tr>
+					<td><p><kbd>?</kbd></p></td>
+					<td><p>Toggle this help dialog</p></td>
+				</tr>
+			</table>
+			<button class="close">Close</button>
+		</div>
+
+		<script src="vendor/marked-0.7.0.js"></script>
+		<script src="vendor/inert-2.1.1.js"></script>
+		<script src="vendor/screenfull-4.2.1.js"></script>
+		<script src="story-slides.js"></script>
+	</body>
+</html>
