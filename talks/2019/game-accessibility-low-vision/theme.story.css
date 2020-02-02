@@ -1,0 +1,105 @@
+/*
+ * Story mode user CSS
+ *
+ *  - Allows you to set the colours for the story mode (the simpler and more
+ *    muted the better).
+ *
+ *  - Contains some recommended styling for basic story elements.
+ *
+ *  - Provides a space to add rules specific to this presentation. (Use
+ *    theme.common.css to share rules between story and slides modes.)
+ *
+ * The story-mode content will be placed in a centred column of the width
+ * specified below. The base font size will be set to the below. Also...
+ *
+ *  - Line spacing is 1.5 by default for readability.
+ *
+ *  - <div>s inside headings will be rendered as inline-block, so you can style
+ *    a heading in an attractive graphical way (as a split slide) in slides mode,
+ *    but it won't be line-broken in story mode.
+ *
+ *  - <br>s are hidden and a space is inserted before them (by code).
+ *
+ *  - The UI top bar is set to use the same font size as the content.
+ *
+ *  - Images are sized, preserving aspect ratio, to take up as much width as
+ *    they can (i.e. either the body width, or containing <figure> width).
+ *    Their height is capped (via code and CSS) at their width, so that tall
+ *    images don't take over too much space. (If you have an image that's very
+ *    tall and you want to render it as such, you could use a CSS class to make
+ *    an exception for it.)
+ *
+ *  - An 0.5em space gap is added betwen images and <figcaption>s.
+ *
+ *  - <iframe>s are sized so they take 100% of the body width, and a height
+ *    that assumes they should be displayed in 16:9 ratio.
+ *
+ * First, however, we'll define our colours...
+ */
+
+@media screen and (prefers-color-scheme: light) {
+	:root {
+		/* Base colours */
+		--accent-colour: green;
+		--secondary-accent-colour: black;
+		--background-colour: white;
+		--secondary-background-colour: black;
+		--text-colour: #333;
+		--secondary-text-colour: #757575;
+
+		/* Presentation-specific colours */
+
+		/* ... */
+	}
+}
+
+@media screen and (prefers-color-scheme: dark) {
+	a { color: #8f8fff; }
+	a:visited { color: #ff8fff; }
+
+	:root {
+		/* Base colours */
+		--accent-colour: green;
+		--secondary-accent-colour: lightgreen;
+		--background-colour: #222;
+		--secondary-background-colour: black;
+		--text-colour: #ddd;
+		--secondary-text-colour: #757575;
+
+		/* Presentation-specific colours */
+
+		/* ... */
+	}
+}
+
+@media screen {
+	:root {
+		--body-width: 45rem;
+		--base-font-size: 1.5rem;  /* Also used for the intro screens */
+	}
+
+	html { font-family: var(--story-mode-font-family); }
+
+	/* Presentation-specific extras... */
+
+	.logo-container {
+		background-color: var(--secondary-background-colour);
+		padding: 1em;
+		margin-top: 2em;
+		margin-bottom: 2em;
+	}
+
+	.logo-container figure { flex-basis: calc(var(--body-width) * 0.3); }
+
+	.logo-container figcaption {
+		font-size: 0.8em;
+		text-align: center;
+	}
+}
+
+figcaption a { overflow-wrap: break-word; }
+
+/* Thanks https://fvsch.com/object-fit-decoration/ :-) */
+img.border { filter: drop-shadow(0 0 0.1em var(--text-colour)); }
+
+.x2-button { box-shadow: 0 0 0 0.025em var(--secondary-text-colour); }

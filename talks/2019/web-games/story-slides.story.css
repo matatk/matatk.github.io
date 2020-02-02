@@ -52,10 +52,6 @@ h6 div { display: inline-block; }
 	pre { overflow: scroll; }
 
 	.storyslides-ui > .story {  /* There's only one */
-		display: block;
-		position: -webkit-sticky;
-		position: sticky;
-		top: 0;
 		border-bottom: 0.1em solid var(--text-colour);
 		padding-top: 0.5em;
 		padding-bottom: 0.5em;
@@ -71,14 +67,17 @@ h6 div { display: inline-block; }
 	#storyslides-button-mode-slides:hover ~ #storyslides-mode-slides-explainer-container {
 		/* Nullify the hiding */
 		display: block;
-
-		/* Style the para */
 		position: relative;
 		margin: 0;
 		margin-top: 0.5em;
-		padding: 0.5em;
+		padding: 0 1rem 0 1rem;
 		background-color: var(--background-colour);
 		outline: 0.1em dotted var(--text-colour);
+	}
+
+	#storyslides-mode-slides-explainer {
+		margin: 0;
+		padding: 0.5rem 0 0.5rem 0;
 	}
 }
 

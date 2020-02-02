@@ -1,0 +1,32 @@
+@media screen {
+	/* Use this file to declare rules that apply to story and slides modes */
+
+	.really-big {
+		font-size: 5em;
+		margin: 0;
+		text-align: center;  /* not actually needed in slides mode */
+	}
+
+	.x2-button {
+		font-family: sans-serif;
+		background-color: var(--secondary-text-colour);
+		color: white;
+		border: 0.1em solid white;
+		border-radius: 1em;
+		padding: 0.25em;
+	}
+
+	#translator {
+		width: 30%;
+		margin: auto;
+	}
+
+	.logo-container {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		align-content: center;
+	}
+
+	.logo-container figcaption a { color: var(--secondary-text-colour); }
+}

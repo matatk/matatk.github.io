@@ -2,7 +2,7 @@
 /* global marked screenfull */
 // Screen reader stuff...
 //
-//  TODO: Make Loading... an alert?
+//  TODO: Make Loading... an alert? Or aria-busy?
 //  TODO: With Firefox + JAWS, booting straight into a slide (e.g. when
 //        restoring tabs) in slides mode doesn't set application mode, but it
 //        does read the slide contents. Going via the intro works. On Chrome,
@@ -17,7 +17,6 @@
 //
 // FIXME: with iOS VO, the dialogs don't get focus when opening
 // FIXME: table too wide on iPhone
-//  Note: not fully loading on mobile breaks the CSS
 //  TODO: need both mobile menu and mobile menu buttons to have explicit CSS
 //        z-index rule in Chrome (they don't inherit)
 //  TODO: Can we only check if a slide is overflowing when it's visible?
@@ -25,6 +24,7 @@
 //
 // General stuff...
 //
+// FIXME: can't go back to the page before the slides (redirect/hsitory state?)
 //  TODO: use a reset
 //  TODO: support links the story mode doc - how does this work w/ the hash?
 //  TODO: IE note is FOUCy
@@ -41,12 +41,11 @@
 	const dialogMenu = doc.getElementById('storyslides-dialog-menu')
 	const initialTitle = doc.title
 
+	let contentErrors = false
 	let openDialog = null
+	let runAfterClosingDialog = null
 	let storyModeScrollTimeout = null
 	let scrollCameFromMe = false
-	let ignoreHashChange = false
-	let errors = false
-	let runAfterClosingDialog = null
 
 
 	//
@@ -90,7 +89,7 @@
 		win.sessionStorage.setItem(storageKeyMode, validateMode(mode))
 	}
 
-	function updateProgress(mode) {
+	function updateProgress(addToHistory) {
 		// The author could've removed the progress indicator. (TODO?)
 		const progress = doc.querySelector('#storyslides-progress > div')
 		if (progress) {
@@ -98,11 +97,32 @@
 			progress.style.width = `${Math.round(percent)}%`
 		}
 
-		const extra = mode === 'story' ? '(story mode) ' : ''
 		const slideNumber = currentIndex + 1
+		const hash = `#slide-${slideNumber}`
 
-		doc.title = `Slide ${slideNumber} ${extra}- ${initialTitle}`
-		win.location.hash = `#slide-${slideNumber}`
+		doc.title = `Slide ${slideNumber} - ${initialTitle}`
+
+		const statePusher = () => {
+			if (win.location.hash) {
+				if (win.location.hash !== hash) {
+					win.history.pushState({ index: currentIndex }, doc.title, hash)
+				}
+			} else {
+				win.history.replaceState({ index: currentIndex }, doc.title, hash)
+			}
+		}
+
+		if (addToHistory) {
+			if (win.history.state) {
+				// Check that the current state isn't for the same index (which
+				// would be the case if we switched modes) first.
+				if (win.history.state.index !== currentIndex) {
+					statePusher()
+				}
+			} else {
+				statePusher()
+			}
+		}
 	}
 
 	function isOverflowing(element) {
@@ -125,81 +145,95 @@
 		}
 	}
 
-	function setActiveSlide(index, externalHashChange, triggeredByScroll) {
-		debug('setActiveSlide():', getStoredMode(), 'current', currentIndex, 'to', index, 'ext:', externalHashChange, 'scr:', triggeredByScroll)
-		if (isNaN(index)) {
-			error('Requested slide index is not a number.')
-			return
+	function checkSetActiveSlideOptions(options) {
+		if (typeof options !== 'object') {
+			error('setActiveSlide options must be object', options)
 		}
-		if (index < 0 || index > (slides.length - 1)) {
-			error(`Requested slide index ${index} is out of bounds.`)
-			return
+		if (!Object.prototype.hasOwnProperty.call(options, 'index')) {
+			error('setActiveSlide options must specify index', options)
 		}
+		if (isNaN(options.index)) {
+			error('Requested slide index is not a number.', options)
+		}
+		if (options.index < 0 || options.index > (slides.length - 1)) {
+			error(`Requested slide index ${options.index} is out of bounds.`)
+		}
+		if (options.triggeredByScroll
+			&& typeof options.triggeredByScroll !== 'boolean') {
+			error('triggeredByScroll must be boolean', options)
+		}
+		if (options.restoringPreviousState
+			&& typeof options.restoringPreviousState !== 'boolean') {
+			error('restoringPreviousState must be boolean', options)
+		}
+		for (const key of Object.keys(options)) {
+			const validOptions = Object.freeze(
+				['index', 'triggeredByScroll', 'restoringPreviousState'])
+			if (!validOptions.includes(key)) {
+				error(`Unexpected key '${key}' in options object`, options)
+			}
+		}
+	}
+
+	function setActiveSlide(options) {
+		checkSetActiveSlideOptions(options)
 
 		const mode = getStoredMode()
 		if (mode === 'slides') {
-			checkSlideForOverflow(index)
-
 			if (currentIndex !== null) {
 				slides[currentIndex].classList.remove('active')
 			}
-			slides[index].classList.add('active')
+			slides[options.index].classList.add('active')
 
-		} else if (!triggeredByScroll && index > 0) {
+			checkSlideForOverflow(options.index)
+
+		} else if (!options.triggeredByScroll) {
 			// Story mode - focus and scroll to the slide
-			//
-			// However, don't scroll to the start of the first slide, so that
-			// the mode button is more visible.
-			//
-			// For any other slide, when we scroll to it, the start of it will
-			// be underneath the top bar (where the mode button is), so we will
-			// need to correct for this by shifting the page down a bit.
 			//
 			// Note: screen-readers may set the focus on to elements as the
 			//       user reads and scrolls through the document using the
 			//       virtual cursor - that's not story-slides doing it :-).
 			scrollCameFromMe = true
-			slides[index].focus()  // needs to be done first for SRs
-			slides[index].scrollIntoView(true)
-			const top = slides[index].getBoundingClientRect().top
-			const eightth = window.innerHeight / 8
-			if (top < eightth) {  // slides at end probably won't be
-				win.scrollBy(0, -eightth)
+			slides[options.index].focus()  // needs to be done first for SRs
+			if (options.index === 0) {
+				// If the page was just loaded, then we'll be at the top
+				// already and there will be no need to scroll, so we should
+				// un-ignore the next scroll event :-).
+				if (win.pageYOffset > 0) {
+					win.scrollTo(0, 0)
+				} else {
+					scrollCameFromMe = false
+				}
+			} else {
+				slides[options.index].scrollIntoView(true)
 			}
 		}
 
-		currentIndex = index
-		// A hash gets inserted for the first slide
-		if (currentIndex === 0 || !externalHashChange) ignoreHashChange = true
-		updateProgress(mode)
+		currentIndex = options.index
+		updateProgress(options.restoringPreviousState !== true)
 	}
 
 	function setActiveSlideFromHash() {
-		// This will always call setActiveSlide() with externalHashChange set
-		// to true (even if we've defaulted to the first slide) becuase it only
-		// gets called for 'random access' hash changes, including at startup.
-
 		if (win.location.hash) {
 			const match = win.location.hash.match(/^#slide-(\d+)$/)
 			if (match) {
 				const desired = Number(match[1]) - 1
 				if (desired > -1 && desired < slides.length) {
-					setActiveSlide(desired, true, false)
+					setActiveSlide({ index: desired })
 					return
 				}
 			}
 		}
 
-		setActiveSlide(0, true, false)
+		setActiveSlide({ index: 0 })
 	}
 
-	function hashChangeHandler() {
-		if (ignoreHashChange) {
-			debug(`hash changed to ${win.location.hash}: ignoring`)
-			ignoreHashChange = false
-		} else {
-			debug(`hash changed to ${win.location.hash}: setting active slide`)
-			setActiveSlideFromHash()
+	function popState(event) {
+		if (event.state !== null) {
+			setActiveSlide({
+				index: event.state.index,
+				restoringPreviousState: true
+			})
 		}
 	}
 
@@ -348,12 +382,12 @@
 	}
 
 	function moveToPreviousSlide() {
-		setActiveSlide(previousSlideNumber(), false, false)
+		setActiveSlide({ index: previousSlideNumber() })
 	}
 
 	function moveToNextRevealOrSlide() {
 		if (revealStepsOrNextSlide()) {
-			setActiveSlide(nextSlideNumber(), false, false)
+			setActiveSlide({ index: nextSlideNumber() })
 		}
 	}
 
@@ -413,7 +447,7 @@
 				if (!locked()) switchToMode('story')
 				break
 			case '?':
-			case 'h':  // TODO doc
+			case 'h':
 				if (!locked()) {
 					showOrToggleDialog(dialogKeys)
 				}
@@ -430,19 +464,17 @@
 					hideOpenDialog()
 				}
 				break
-			case 'p':  // TODO doc
+			case 'p':
 				announce(progressPercent() + '%')
 				break
-			case 'o':  // TODO doc
+			case 'o':
 				announce('Slide ' + (currentIndex + 1) + ' of ' + slides.length)
 				break
-			case 'g':  // TODO doc
-				setActiveSlide(Number(win.prompt('Go to slide')) - 1, false, false)
-				// TODO should it set externalHashChange to true?
-				break
+			/*
 			case 'm':
 				// For debugging
 				showOrToggleDialog(dialogMenu)
+			*/
 		}
 	}
 
@@ -488,12 +520,13 @@
 
 	function realStoryModeScrollHandler() {
 		if (!scrollCameFromMe) {
-			debug('realStoryModeScrollHandler(): handling scroll')
 			const current = doc.elementFromPoint(
 				win.innerWidth / 2, win.innerHeight / 3)
-			setActiveSlide(findParentSlideIndex(current), false, true)
+			setActiveSlide({
+				index: findParentSlideIndex(current),  // FIXME breaks smtms?
+				triggeredByScroll: true
+			})
 		} else {
-			debug('realStoryModeScrollHandler(): ignoring scroll')
 			scrollCameFromMe = false
 		}
 	}
@@ -634,7 +667,7 @@
 	function checkPercentages(percentages, expectedLength, container) {
 		if (percentages.length !== expectedLength) {
 			error('Mismatched percentages for split container:', container)
-			errors = true
+			contentErrors = true
 		}
 
 		const sum = percentages.reduce((accumulator, currentValue) => {
@@ -644,7 +677,7 @@
 
 		if (sum !== 100) {
 			error(`Percentages add up to ${sum} for split container`, container)
-			errors = true
+			contentErrors = true
 		}
 	}
 
@@ -770,7 +803,7 @@
 		const uniqueIds = new Set(allIds)
 		if (allIds.length > uniqueIds.size) {
 			error('Duplicate element IDs detected')
-			errors = true
+			contentErrors = true
 		}
 	}
 
@@ -793,8 +826,10 @@
 			'storyslides-mode-slides-explainer-container',
 			'storyslides-mode-story-explainer',
 			'storyslides-progress',
+			'storyslides-screen-errors',
 			'storyslides-screen-intro',
 			'storyslides-screen-intro-heading',
+			'storyslides-screen-loading',
 			'storyslides-slides-container',
 			'storyslides-top-ui'
 		])
@@ -803,7 +838,7 @@
 			const element = doc.getElementById(id)
 			if (!element) {
 				error(`missing element with id "${id}"`)
-				errors = true
+				contentErrors = true
 			}
 		}
 	}
@@ -814,7 +849,7 @@
 
 		if (slides.length !== container.children.length) {
 			error(message)
-			errors = true
+			contentErrors = true
 		}
 	}
 
@@ -890,8 +925,9 @@
 			doc.getElementById('storyslides-button-fullscreen').remove()
 		}
 
-		win.history.scrollRestoration = 'manual'  // TODO doc
-		win.addEventListener('hashchange', hashChangeHandler)
+		win.history.scrollRestoration = 'manual'
+		win.addEventListener('popstate', popState)
+		win.addEventListener('hashchange', setActiveSlideFromHash)
 	}
 
 	function startUpInMode(mode) {
@@ -899,10 +935,11 @@
 		doc.getElementById('storyslides-screen-intro').remove()
 		contentAndUI.hidden = false
 		switchToMode(mode, true)
+		debug('ready')
 	}
 
 	function main() {
-		debug('StorySlides: starting up...')
+		debug('starting up...')
 		doc.getElementById('storyslides-browser-support-note').remove()
 		disableModeStyleSheets()
 
@@ -914,7 +951,7 @@
 		// This is the least likely to cause flashing when laoding...
 		toggleStyleSheetsForMode('story')
 
-		if (errors === true) {
+		if (contentErrors === true) {
 			doc.getElementById('storyslides-screen-errors').hidden = false
 			return
 		}

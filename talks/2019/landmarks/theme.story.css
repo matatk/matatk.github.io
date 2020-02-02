@@ -19,13 +19,16 @@
 }
 
 @media screen and (prefers-color-scheme: dark) {
+	a { color: #8f8fff; }
+	a:visited { color: #ff8fff; }
+
 	:root {
 		/* Base colours */
 		--accent-colour: yellow;
 		--secondary-accent-colour: white;
-		--background-colour: black;
+		--background-colour: #222;
 		--secondary-background-colour: white;
-		--text-colour: white;
+		--text-colour: #ddd;
 		--secondary-text-colour: #757575;
 
 		/* Presentation-specific colours */

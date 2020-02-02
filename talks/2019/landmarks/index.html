@@ -7,14 +7,13 @@
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="mobile-web-app-capable" content="yes">
 		<style>
-/* Basic slides mode settings
-   These have to be set here so they're easy to access by the code or shared
-   across modes. */
+/* Basic slides mode settings: These have to be set here so they're easy to
+   access by the code or shared across modes. */
 :root {
-	/* Edit theme.(story|slides).css to change most colours and settings */
 	--author-font-height-percent-of-slide: 8;
 	--author-aspect-ratio: calc(16 / 9);
 	--story-mode-font-family: Georgia, serif;
+	/* Edit theme.(story|slides).css to change most colours and settings */
 }
 		</style>
 		<!-- Story Slides CSS -->
@@ -610,12 +609,12 @@
 
 		<!-- StorySlides screens/dialogs -->
 		<div class="storyslides-ui">
-			<div id="storyslides-screen-errors" hidden>  <!-- TODO id? -->
+			<div id="storyslides-screen-errors" hidden>
 				<h1>Content errors detected</h1>
 				<p>An error, or errors, were detected in your presentation's content&mdash;open the browser console for more info.</p>
 			</div>
 
-			<div id="storyslides-screen-loading" hidden>  <!-- TODO id? -->
+			<div id="storyslides-screen-loading" hidden>
 				<p>Loading&hellip;</p>
 			</div>
 
@@ -650,35 +649,43 @@
 					</tr>
 					<tr>
 						<td><kbd>S</kbd></td>
-						<td><p>Switch to story mode</p></td>
+						<td><p>Switch to story mode.</p></td>
 					</tr>
 					<tr>
 						<td><kbd>L</kbd></td>
-						<td><p>Lock a slide: disable all navigation keys, so if you're using a screen-reader, you can explore the current slide with your virtual cursor.</p></td>
+						<td><p>Lock the current slide: disable all navigation keys, so if you're using a screen-reader, you can explore the current slide with your virtual cursor.</p></td>
 					</tr>
 					<tr>
 						<td><kbd>F</kbd></td>
-						<td><p>Toggle full-screen slide view<span class="mobile-only"> (not supported on iPhone)</span></p></td>
+						<td><p>Toggle full-screen slide view<span class="mobile-only"> (not supported on iPhone)</span>.</p></td>
 					</tr>
 					<tr>
 						<td><kbd>&rarr;</kbd> <kbd>&darr;</kbd> <kbd>Page&nbsp;Down</kbd></td>
-						<td><p>Next slide</p></td>
+						<td><p>Next slide.</p></td>
 					</tr>
 					<tr>
 						<td><kbd>&larr;</kbd> <kbd>&uarr;</kbd> <kbd>Page&nbsp;Up</kbd></td>
-						<td><p>Previous slide</p></td>
+						<td><p>Previous slide.</p></td>
 					</tr>
 					<tr>
 						<td><kbd>Escape</kbd></td>
 						<td>
 							<ul>
-								<li><p><strong>In slides mode:</strong> disable the current slide lock; no effect otherwise</p>
-									<li><p><strong>In story mode:</strong> go to slides mode</p></li>
+								<li><p><strong>In slides mode:</strong> disable the current slide lock (no effect otherwise).</p></li>
+								<li><p><strong>In story mode:</strong> go to slides mode.</p></li>
 							</ul>
 						</td>
 					</tr>
 					<tr>
-						<td><p><kbd aria-hidden="true">?</kbd><span class="visually-hidden">question mark</span></p></td> <!-- FIXME style -->
+						<td><kbd>P</kbd></td>
+						<td><p>If you're running a screen-reader, announce the current slide progress as a percentage.</p></td>
+					</tr>
+					<tr>
+						<td><kbd>O</kbd></td>
+						<td><p>If you're running a screen-reader, announce the current slide number and the total number of slides.</p></td>
+					</tr>
+					<tr>
+						<td><kbd aria-hidden="true">?</kbd><span class="visually-hidden">question mark</span> <kbd>h</kbd></td>
 						<td><p>Toggle this help dialog</p></td>
 					</tr>
 				</table>
