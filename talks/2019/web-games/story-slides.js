@@ -1,48 +1,60 @@
 'use strict';
 /* global marked screenfull */
-// FIXME: white thing on startup is the ".storyslides-ui:first-of-type" in the
-//		  story mode CSS - can we includ a CSS link but disable it?
+// Screen reader stuff...
+//
+//  TODO: Make Loading... an alert?
+//  TODO: With Firefox + JAWS, booting straight into a slide (e.g. when
+//        restoring tabs) in slides mode doesn't set application mode, but it
+//        does read the slide contents. Going via the intro works. On Chrome,
+//        booting directly into a slide does work, but I don't hear the
+//        application mode entry noise.
+//  TODO: Vary rarely, JAWS will flip up to the top of story mode, read a bit
+//        and then go back down to the bit that was foucused.
+//  TODO: Support identifying the curent slide by which has the focus, rather
+//        than just visual scrolling?
+//
+// Mobile stuff...
+//
 // FIXME: with iOS VO, the dialogs don't get focus when opening
+// FIXME: table too wide on iPhone
+//  Note: not fully loading on mobile breaks the CSS
+//  TODO: need both mobile menu and mobile menu buttons to have explicit CSS
+//        z-index rule in Chrome (they don't inherit)
+//  TODO: Can we only check if a slide is overflowing when it's visible?
+//  TODO: where should I add a global keydown listener - doc/window?
 //
-// TODO: can't press story mode button successfully in Firefox
-// TODO: need both mobile menu and mobile menu buttons to have explicit CSS
-//       z-index rule in Chrome
-// TODO: max-width of dialog is same as width (even with cmd+/-) doesn't do
-//       minimum
-// TODO: Can we only check if a slide is overflowing when it's visible?
-// TODO: where should I add a global keydown listener - doc/window?
-// TODO: Look for things that can be done via CSS like the IE notice.
-// TODO: possible FOUCs - refer to TODOs below
+// General stuff...
 //
-// TODO: IE: fullscreen (promises)
-// TODO: How to announce progress? Provide a keyboard shortcut?
-// TODO: slide locked indication accessible to screen reader users - focusing
-//       the body overrides it?
+//  TODO: use a reset
+//  TODO: support links the story mode doc - how does this work w/ the hash?
+//  TODO: IE note is FOUCy
 (function(win, doc) {
 	const slides = Array.from(doc.getElementsByClassName('slide'))
 	let currentIndex = null
 
 	const storageKeyMode = win.location.pathname + '.mode'
-	const storageKeyIntroShown = win.location.pathname + '.slides-intro-shown'
+	const storageKeyHelpShown = win.location.pathname + '.help-shown'
 
-	const nonDialogContent = doc.getElementById('storyslides-main-content')
-	const dialogIntro = doc.getElementById('storyslides-dialog-intro')
+	const contentAndUI = doc.getElementById('storyslides-main-content')
+	const slidesContainer = doc.getElementById('storyslides-slides-container')
 	const dialogKeys = doc.getElementById('storyslides-dialog-keys')
-	let openDialog = null
+	const dialogMenu = doc.getElementById('storyslides-dialog-menu')
+	const initialTitle = doc.title
 
+	let openDialog = null
 	let storyModeScrollTimeout = null
 	let scrollCameFromMe = false
-	let hashChangeCameFromMe = false
+	let ignoreHashChange = false
+	let errors = false
+	let runAfterClosingDialog = null
 
 
 	//
 	// Utilities
 	//
 
-	// TODO bind to where it was called from?
-	const warn = (...args) => win.console.warn('StorySlides:', ...args)
-	const error = (...args) => win.console.error('StorySlides:', ...args)
-	const debug = (...args) => win.console.debug('StorySlides:', ...args)
+	const debug = win.console.debug.bind(win.console.debug, 'StorySlides:')
+	const error = win.console.error.bind(win.console.error, 'StorySlides:')
 
 	function hasStrictDataBoolean(element, attrName) {
 		return element.dataset[attrName] === ''
@@ -51,6 +63,16 @@
 	function validateMode(mode) {
 		if (mode === 'slides' || mode === 'story') return mode
 		throw new Error(`Mode '${mode}' isn't valid`)
+	}
+
+	function progressPercent() {
+		return Math.round(((currentIndex + 1) / slides.length) * 100)
+	}
+
+	function announce(text) {
+		const announcer = doc.getElementById('storyslides-announcer')
+		announcer.innerText = text
+		setTimeout(() => announcer.innerText = '', 1000)
 	}
 
 
@@ -68,20 +90,19 @@
 		win.sessionStorage.setItem(storageKeyMode, validateMode(mode))
 	}
 
-	function updateLocation() {
-		win.location.hash = `#slide-${currentIndex + 1}`
-		// Doesn't fire a hashchange event if asked to re-set the same hash.
-	}
-
-	// This is here because we need to track it across modes.
-	function updateProgressBar() {
-		// The author could've removed the progress section, e.g. for giving
-		// the talk.
+	function updateProgress(mode) {
+		// The author could've removed the progress indicator. (TODO?)
 		const progress = doc.querySelector('#storyslides-progress > div')
 		if (progress) {
-			const percent = ((currentIndex + 1) / slides.length) * 100
+			const percent = progressPercent()
 			progress.style.width = `${Math.round(percent)}%`
 		}
+
+		const extra = mode === 'story' ? '(story mode) ' : ''
+		const slideNumber = currentIndex + 1
+
+		doc.title = `Slide ${slideNumber} ${extra}- ${initialTitle}`
+		win.location.hash = `#slide-${slideNumber}`
 	}
 
 	function isOverflowing(element) {
@@ -96,78 +117,89 @@
 		return null
 	}
 
-	function setActiveSlide(index, triggeredByURL, triggeredByStoryModeScroll) {
+	function checkSlideForOverflow(index) {
+		const overflow = isOverflowing(slides[index])
+		if (overflow) {
+			win.alert(`Slide ${index + 1} is overflowing by; ${JSON.stringify(overflow, null, 2)}`)
+			error('Slide is overflowing:', slides[index], 'by:', overflow)
+		}
+	}
+
+	function setActiveSlide(index, externalHashChange, triggeredByScroll) {
+		debug('setActiveSlide():', getStoredMode(), 'current', currentIndex, 'to', index, 'ext:', externalHashChange, 'scr:', triggeredByScroll)
+		if (isNaN(index)) {
+			error('Requested slide index is not a number.')
+			return
+		}
 		if (index < 0 || index > (slides.length - 1)) {
-			error(`Slide index ${index} is out of bounds.`)
+			error(`Requested slide index ${index} is out of bounds.`)
 			return
 		}
 
-		// Scrolling in story mode can update the current slide
-		if (currentIndex !== null) {
-			slides[currentIndex].classList.remove('active')
-		}
-		slides[index].classList.add('active')
+		const mode = getStoredMode()
+		if (mode === 'slides') {
+			checkSlideForOverflow(index)
 
-		// The 'first-slide' class enables showing hints through CSS only
-		// (nice). The user could change slides via story mode, though.
-		if (index === 0) {
-			doc.body.classList.add('first-slide')
-		} else if (currentIndex === 0) {
-			doc.body.classList.remove('first-slide')
-		}
-
-		switch (getStoredMode()) {
-			case 'slides': {
-				const overflow = isOverflowing(slides[index])
-				if (overflow) {
-					win.alert(`Slide ${index + 1} is overflowing by; ${JSON.stringify(overflow, null, 2)}`)
-					error('Slide is overflowing:', slides[index], 'by:', overflow)
-				}
+			if (currentIndex !== null) {
+				slides[currentIndex].classList.remove('active')
 			}
-				break  // TODO does this need to be outside of the block?
-			case 'story':
-				// Don't scroll to the start of the first slide, so that the
-				// mode button is more visible.
-				//
-				// For any other slide, when we scroll to it, the start of it
-				// will be underneath the top bar (where the mode button is),
-				// so we will need to correct for this by shifting the page
-				// down a bit.
-				if (!triggeredByStoryModeScroll && index > 0) {
-					scrollCameFromMe = true
-					slides[index].setAttribute('tabindex', -1)
-					slides[index].focus()
-					slides[index].removeAttribute('tabindex')
-					slides[index].scrollIntoView(true)
-					const top = slides[index].getBoundingClientRect().top
-					const eightth = window.innerHeight / 8
-					if (top < eightth) {  // slides at end probably won't be
-						win.scrollBy(0, -eightth)
-					}
-				}
+			slides[index].classList.add('active')
+
+		} else if (!triggeredByScroll && index > 0) {
+			// Story mode - focus and scroll to the slide
+			//
+			// However, don't scroll to the start of the first slide, so that
+			// the mode button is more visible.
+			//
+			// For any other slide, when we scroll to it, the start of it will
+			// be underneath the top bar (where the mode button is), so we will
+			// need to correct for this by shifting the page down a bit.
+			//
+			// Note: screen-readers may set the focus on to elements as the
+			//       user reads and scrolls through the document using the
+			//       virtual cursor - that's not story-slides doing it :-).
+			scrollCameFromMe = true
+			slides[index].focus()  // needs to be done first for SRs
+			slides[index].scrollIntoView(true)
+			const top = slides[index].getBoundingClientRect().top
+			const eightth = window.innerHeight / 8
+			if (top < eightth) {  // slides at end probably won't be
+				win.scrollBy(0, -eightth)
+			}
 		}
 
 		currentIndex = index
-		updateProgressBar()
-		if (!triggeredByURL) hashChangeCameFromMe = true  // already reflected
-		updateLocation()
+		// A hash gets inserted for the first slide
+		if (currentIndex === 0 || !externalHashChange) ignoreHashChange = true
+		updateProgress(mode)
 	}
 
-	function reflectLocationFromURL() {
-		if (!hashChangeCameFromMe) {
-			if (win.location.hash) {
-				const match = win.location.hash.match(/^#slide-(\d+)$/)
-				if (match) {
-					const desired = Number(match[1]) - 1
-					if (desired > -1 && desired < slides.length) {
-						setActiveSlide(desired, true, null)
-						return
-					}
+	function setActiveSlideFromHash() {
+		// This will always call setActiveSlide() with externalHashChange set
+		// to true (even if we've defaulted to the first slide) becuase it only
+		// gets called for 'random access' hash changes, including at startup.
+
+		if (win.location.hash) {
+			const match = win.location.hash.match(/^#slide-(\d+)$/)
+			if (match) {
+				const desired = Number(match[1]) - 1
+				if (desired > -1 && desired < slides.length) {
+					setActiveSlide(desired, true, false)
+					return
 				}
 			}
-			setActiveSlide(0, false, null)
+		}
+
+		setActiveSlide(0, true, false)
+	}
+
+	function hashChangeHandler() {
+		if (ignoreHashChange) {
+			debug(`hash changed to ${win.location.hash}: ignoring`)
+			ignoreHashChange = false
 		} else {
-			hashChangeCameFromMe = false
+			debug(`hash changed to ${win.location.hash}: setting active slide`)
+			setActiveSlideFromHash()
 		}
 	}
 
@@ -181,76 +213,53 @@
 			screenfull.exit()  // prevents aberrations in Firefox and iOS Safari
 		}
 
-		// TODO: must check for mobile menu here, can't just check in
-		// keybeindings as it could've been clicked. Should we move *all*
-		// checks like for open dialogs here?
-		toggleOrDismissMobileMenu(true)
+		hideOpenDialog()
 
-		switch (mode) {
-			case 'story':
-				goModeStory()
-				break
-			case 'slides':
-			case null:
-				goModeSlides()
+		if (mode === 'story') {
+			goModeStory()
+			setActiveSlideFromHash()
+		} else {
+			// It seems the only reliable way to make the live region work on
+			// load is to give it some time to settle before fettling the CSS
+			// that makes the slides show up.
+			const showSlide = () => setTimeout(setActiveSlideFromHash, 1000)
+			// Notes:
+			//  - A value of 0 almost worked across browsers and SRs.
+			//  - Would be nice to do more research and testing.
+			//  - If the user switches back to story mode before this, it'll
+			//    get called twice, but that's no biggie.
+
+			// We can't call these two directly because if this is the first
+			// time the user has used slides mode this session, and the help
+			// dialog is shown, we need the slide to appear after that.
+			goModeSlides(showSlide)
 		}
-
-		reflectLocationFromURL()
 	}
 
-	// The following are called by the go-mode functions
+	// The following are called by the go-mode functions.
+	// The style toggle is also called at startup.
 
 	function toggleStyleSheetsForMode(mode) {
-		validateMode(mode)
 		const oppositeMode = mode === 'slides' ? 'story' : 'slides'
 		for (const styleSheet of doc.styleSheets) {
 			if (styleSheet.href) {
-				if (styleSheet.href.includes(`mode-${mode}`)) {
+				if (styleSheet.href.includes(`.${mode}`)) {
 					styleSheet.disabled = false
 				}
-				if (styleSheet.href.includes(`mode-${oppositeMode}`)) {
+				if (styleSheet.href.includes(`.${oppositeMode}`)) {
 					styleSheet.disabled = true
 				}
 			}
 		}
 	}
 
-	function disableInlineStyles() {  // slides to story mode
-		for (const element of doc.querySelectorAll('[style]')) {
-			if (element.id && element.id.startsWith('dialog-')) continue
-			element.dataset.originalStyle = element.getAttribute('style')
-			element.removeAttribute('style')
-		}
-	}
-
-	function restoreInlineStyles() {  // story to slides mode
-		for (const element of doc.querySelectorAll('[data-original-style]')) {
-			element.setAttribute('style', element.dataset.originalStyle)
-			element.removeAttribute('data-original-style')
-		}
-	}
-
-	function neutraliseBody() {
-		doc.body.removeAttribute('role')
-		doc.body.removeAttribute('aria-describedby')
-		doc.body.removeAttribute('tabindex')
-	}
-
 	function applicationifyBody() {
 		doc.body.setAttribute('role', 'application')
-		// Note: no aria-label as screen-readers announce this on each slide
-		doc.body.setAttribute('aria-describedby', 'storyslides-screenreader-intro')
-		doc.body.setAttribute('tabindex', 0)
+		doc.body.focus()  // encourage SRs to use application mode
 	}
 
-	function toggleOrDismissMobileMenu(dismiss) {
-		const toggle = doc.getElementById('storyslides-mobile-menu-toggle')
-		if (dismiss) {
-			toggle.setAttribute('aria-expanded', 'false')
-		} else {
-			toggle.setAttribute('aria-expanded', toggle.getAttribute('aria-expanded') === 'false' ? 'true' : 'false')
-		}
-		doc.getElementById('storyslides-mobile-menu-content').classList.toggle('mobile-none', dismiss)
+	function unApplicationifyBody() {
+		doc.body.removeAttribute('role')
 	}
 
 
@@ -258,68 +267,62 @@
 	// Slides mode
 	//
 
-	function goModeSlides() {
+	function goModeSlides(thenRun) {
 		toggleStyleSheetsForMode('slides')
-		restoreInlineStyles()
 
 		doc.removeEventListener('keydown', keyHandlerModeStory)
 		doc.addEventListener('keydown', keyHandlerModeSlides)
 		doc.removeEventListener('scroll', scrollHandlerStoryMode)
 
-		doc.getElementById('storyslides-slides-container').setAttribute('aria-live', 'polite')
-
-		doc.getElementById('storyslides-button-mode-toggle').innerText = 'Switch to story mode'
-		doc.getElementById('storyslides-button-mode-toggle')
-			.setAttribute('aria-describedby', 'storyslides-mode-story-explainer')
-		doc.getElementById('storyslides-button-mode-toggle').onclick = () => switchToMode('story')
-
+		slidesContainer.setAttribute('aria-live', 'assertive')
+		// Note: if JAWS is launched after Firefox, this doesn't work
+		//       (<https://bugzilla.mozilla.org/show_bug.cgi?id=1453673>).
 		applicationifyBody()
 
-		viewSizing()
-		win.addEventListener('resize', viewSizing)
+		win.removeEventListener('resize', storyViewportHandler)
+		win.addEventListener('resize', slidesViewportHandler)
+		slidesViewportHandler()
+
 		storeMode('slides')
 
-		if (!win.sessionStorage.getItem(storageKeyIntroShown)) {
-			showOrToggleDialog(dialogIntro)
-			win.sessionStorage.setItem(storageKeyIntroShown, true)
+		if (!win.sessionStorage.getItem(storageKeyHelpShown)) {
+			runAfterClosingDialog = thenRun
+			showOrToggleDialog(dialogKeys)
+			win.sessionStorage.setItem(storageKeyHelpShown, true)
+		} else {
+			thenRun()
 		}
 	}
 
 	function hideOpenDialog() {
 		if (openDialog) {
-			const previousOpenDialog = openDialog
-			hideDialog(openDialog)
-			return previousOpenDialog
+			const dialogThatWasOpen = openDialog
+			openDialog.hidden = true
+			contentAndUI.removeAttribute('inert')
+			applicationifyBody()
+			openDialog = null
+
+			// We may've been asked to defer running some code (i.e. show the
+			// slide after showing the help dialog for the first time).
+			if (runAfterClosingDialog) {
+				runAfterClosingDialog()
+				runAfterClosingDialog = null
+			}
+
+			return dialogThatWasOpen
 		}
+		return null
 	}
 
 	function showOrToggleDialog(dialog) {
-		const showTheDialog = hideOpenDialog() !== dialog
-		if (showTheDialog && dialog.style.display) {
-			dialog.removeAttribute('style')
-			nonDialogContent.setAttribute('inert', '')  // sets aria-hidden
-			neutraliseBody()
-			dialog.focus()
+		const switchToNewDialog = hideOpenDialog() !== dialog
+		if (switchToNewDialog && dialog.hidden === true) {
+			dialog.hidden = false
+			dialog.scrollTop = 0
+			contentAndUI.setAttribute('inert', '')  // sets aria-hidden
+			unApplicationifyBody()
+			dialog.focus()  // already has tabindex -1
 			openDialog = dialog
-		}
-	}
-
-	// TODO simplify
-	function hideDialog(dialog) {
-		if (!openDialog) {
-			error('no open dialog')
-			return
-		}
-		if (openDialog !== dialog) {
-			error(`trying to hide "${dialog.id}" but "${openDialog.id}" is open`)
-			return
-		}
-		if (!dialog.style.display) {
-			dialog.style.display = 'none'
-			nonDialogContent.removeAttribute('inert')
-			applicationifyBody()
-			doc.body.focus()
-			openDialog = null
 		}
 	}
 
@@ -345,38 +348,40 @@
 	}
 
 	function moveToPreviousSlide() {
-		setActiveSlide(previousSlideNumber(), false, null)
+		setActiveSlide(previousSlideNumber(), false, false)
 	}
 
 	function moveToNextRevealOrSlide() {
 		if (revealStepsOrNextSlide()) {
-			setActiveSlide(nextSlideNumber(), false, null)
+			setActiveSlide(nextSlideNumber(), false, false)
 		}
 	}
 
 	function toggleSlideLock() {
-		if (!doc.body.classList.contains('storyslides-slide-locked')) {
-			// Note: most .storyslides-ui stuff is removed via CSS
+		if (!doc.body.classList.contains('storyslides-locked')) {
 			hideOpenDialog()
-			neutraliseBody()
-			doc.body.classList.add('storyslides-slide-locked')
+			unApplicationifyBody()
+			doc.body.classList.add('storyslides-locked')
+			win.alert("Slide locked. Press Escape to unlock. If you're using a screen-reader, you can now explore the slide with the virtual cursor.")
+			slides[currentIndex].focus()
 		} else {
-			applicationifyBody()
-			doc.body.classList.remove('storyslides-slide-locked')
+			applicationifyBody()  // snap out of virtual cursor mode
+			doc.body.classList.remove('storyslides-locked')
+			win.alert('Slide unlocked.')
 		}
-		doc.body.focus()  // FIXME firefox doesn't like this
 	}
+
+	const locked = () => doc.body.classList.contains('storyslides-locked')
 
 	function toggleFullscreen() {
 		if (screenfull.enabled) {
 			screenfull.toggle()
+			// On Safari on iOS it's a bit buggy and doesn't resize, even after
+			// calling slidesViewportHandler after the toggle is resolved - probably due
+			// to the animation effect.
 		} else {
 			win.alert('fullscreen mode is not available')
 		}
-	}
-
-	function notLocked() {
-		return !doc.body.classList.contains('storyslides-slide-locked')
 	}
 
 	// There seem to be problems re-adding a document keydown handler when a
@@ -386,51 +391,58 @@
 	// closing dialogs here too.
 	function keyHandlerModeSlides(event) {
 		if (event.isComposing || event.keyCode === 229) return
-		if (event.ctrlKey || event.metaKey) return  // un-bork locking
+		if (event.ctrlKey || event.metaKey) return
 
 		switch (event.key) {
 			case 'ArrowLeft':
 			case 'ArrowUp':
 			case 'PageUp':
-				if (notLocked() && !openDialog) moveToPreviousSlide()
+				if (!locked() && !openDialog) moveToPreviousSlide()
 				break
 			case 'ArrowRight':
 			case 'ArrowDown':
 			case 'PageDown':
-				if (notLocked() && !openDialog) moveToNextRevealOrSlide()
+				if (!locked() && !openDialog) moveToNextRevealOrSlide()
 				// Note: not supporting the space key as it's echoed by
 				// screen-readers.
 				break
 			case 'f':
-				if (notLocked()) toggleFullscreen()
+				if (!locked()) toggleFullscreen()
 				break
 			case 's':
-				if (notLocked()) {
-					if (openDialog) hideDialog(openDialog)
-					switchToMode('story')
-				}
+				if (!locked()) switchToMode('story')
 				break
 			case '?':
-				if (notLocked()) {
+			case 'h':  // TODO doc
+				if (!locked()) {
 					showOrToggleDialog(dialogKeys)
 				}
 				break
-			case 'i':
-				if (notLocked()) {
-					showOrToggleDialog(dialogIntro)
-				}
-				break
 			case 'l':
-				if (notLocked()) {
+				if (!locked()) {
 					toggleSlideLock()
 				}
 				break
 			case 'Escape':
-				if (!notLocked()) {
+				if (locked()) {
 					toggleSlideLock()
-				} else if (openDialog) {
-					hideDialog(openDialog)  // TODO just use hideopendialog?
+				} else {
+					hideOpenDialog()
 				}
+				break
+			case 'p':  // TODO doc
+				announce(progressPercent() + '%')
+				break
+			case 'o':  // TODO doc
+				announce('Slide ' + (currentIndex + 1) + ' of ' + slides.length)
+				break
+			case 'g':  // TODO doc
+				setActiveSlide(Number(win.prompt('Go to slide')) - 1, false, false)
+				// TODO should it set externalHashChange to true?
+				break
+			case 'm':
+				// For debugging
+				showOrToggleDialog(dialogMenu)
 		}
 	}
 
@@ -440,23 +452,24 @@
 	//
 
 	function goModeStory() {
+		if (currentIndex !== null) {
+			slides[currentIndex].classList.remove('active')
+		}
+
+		slidesContainer.removeAttribute('aria-live')
+		unApplicationifyBody()
+		doc.body.blur()  // otherwise SRs may try to read the entire thing
+
 		toggleStyleSheetsForMode('story')
-		disableInlineStyles()
 
 		doc.removeEventListener('keydown', keyHandlerModeSlides)
 		doc.addEventListener('keydown', keyHandlerModeStory)
 		doc.addEventListener('scroll', scrollHandlerStoryMode)
 
-		doc.getElementById('storyslides-slides-container').removeAttribute('aria-live')
+		win.removeEventListener('resize', slidesViewportHandler)
+		win.addEventListener('resize', storyViewportHandler)
+		storyViewportHandler()
 
-		doc.getElementById('storyslides-button-mode-toggle').innerText = 'Switch to slides mode'
-		doc.getElementById('storyslides-button-mode-toggle')
-			.setAttribute('aria-describedby', 'storyslides-mode-slides-explainer')
-		doc.getElementById('storyslides-button-mode-toggle').onclick = () => switchToMode('slides')
-
-		neutraliseBody()
-
-		win.removeEventListener('resize', viewSizing)
 		storeMode('story')
 	}
 
@@ -475,10 +488,12 @@
 
 	function realStoryModeScrollHandler() {
 		if (!scrollCameFromMe) {
+			debug('realStoryModeScrollHandler(): handling scroll')
 			const current = doc.elementFromPoint(
 				win.innerWidth / 2, win.innerHeight / 3)
 			setActiveSlide(findParentSlideIndex(current), false, true)
 		} else {
+			debug('realStoryModeScrollHandler(): ignoring scroll')
 			scrollCameFromMe = false
 		}
 	}
@@ -487,6 +502,26 @@
 		clearTimeout(storyModeScrollTimeout)
 		storyModeScrollTimeout = setTimeout(
 			() => realStoryModeScrollHandler(event), 250)
+	}
+
+
+	//
+	// Handling line breaks
+	//
+
+	// Line breaks may be used in slides mode, but not desired in story mode
+	// (e.g. when breaking up a heading across lines). Thus we go through and
+	// replace <br class="slides"> with <span class="story"> </span><br
+	// class="slides">
+
+	function fettleLineBreaks() {
+		const slideModeLineBreaks = doc.querySelectorAll('br.slides')
+		for (const lineBreak of slideModeLineBreaks) {
+			const lineBreakSpace = doc.createElement('span')
+			lineBreakSpace.classList.add('story')
+			lineBreakSpace.textContent = ' '
+			lineBreak.parentElement.insertBefore(lineBreakSpace, lineBreak)
+		}
 	}
 
 
@@ -599,6 +634,7 @@
 	function checkPercentages(percentages, expectedLength, container) {
 		if (percentages.length !== expectedLength) {
 			error('Mismatched percentages for split container:', container)
+			errors = true
 		}
 
 		const sum = percentages.reduce((accumulator, currentValue) => {
@@ -608,6 +644,7 @@
 
 		if (sum !== 100) {
 			error(`Percentages add up to ${sum} for split container`, container)
+			errors = true
 		}
 	}
 
@@ -648,6 +685,8 @@
 	// Respoinding to viewport size changes
 	//
 
+	// Slides mode
+	//
 	// The author sets two CSS custom properties under the :root pseudo-class
 	// to specify slide aspect ratio and font size, such as in the following
 	// examples.
@@ -661,7 +700,7 @@
 	// Based on those dimentions, the base font size is set accordingly too.
 
 	// Thanks https://davidwalsh.name/css-variables-javascript :-)
-	function viewSizing() {
+	function slidesViewportHandler() {
 		const viewWidth = doc.documentElement.clientWidth
 		const viewHeight = doc.documentElement.clientHeight
 		const viewAspect = viewWidth / viewHeight
@@ -708,6 +747,15 @@
 			.setProperty('--computed-base-font-size', realRootFontSize + 'px')
 	}
 
+	// Story mode
+	//
+	// In story mode, we want to cap the max-height of images.
+	function storyViewportHandler() {
+		for (const image of contentAndUI.querySelectorAll('img')) {
+			image.style.setProperty('--rendered-width', image.width + 'px')
+		}
+	}
+
 
 	//
 	// Linting
@@ -718,48 +766,44 @@
 	// done above.
 
 	function checkForDuplicateIds() {
-		const elementsWithId = Array.from(doc.querySelectorAll('[id]'))
-		const elementIds = elementsWithId.map(element => element.id)
-		for (const [index, id] of elementIds.entries()) {
-			const firstIndexOfId = elementIds.indexOf(id)
-			if (firstIndexOfId !== index) {
-				error(`Duplicate occurence of id "${id}":`, elementsWithId[index], 'First occurence was:', elementsWithId[firstIndexOfId])
-				return false
-			}
+		const allIds = Array.from(doc.querySelectorAll('[id]'), e => e.id)
+		const uniqueIds = new Set(allIds)
+		if (allIds.length > uniqueIds.size) {
+			error('Duplicate element IDs detected')
+			errors = true
 		}
-		return true
 	}
 
 	function checkForElements() {
-		const idsToCheck = Object.freeze({
-			'storyslides-main-content': error,
-			'storyslides-browser-support-note': error,
-			'storyslides-mobile-menu-toggle': error,
-			'storyslides-mobile-menu-content': error,
-			'storyslides-button-mode-toggle': error,
-			'storyslides-button-fullscreen': error,
-			'storyslides-button-help-intro': error,
-			'storyslides-button-help-keys': error,
-			'storyslides-mode-story-explainer': error,
-			'storyslides-mode-slides-explainer-container': error,
-			'storyslides-mode-slides-explainer': error,
-			'storyslides-button-previous': error,
-			'storyslides-button-next': error,
-			'storyslides-slides-container': error,
-			'storyslides-progress': warn,  // user may remove when giving talk
-			'storyslides-help-info': error,
-			'storyslides-screenreader-intro': error,
-			'storyslides-lock-indicator': error,
-			'storyslides-dialog-intro': error,
-			'storyslides-dialog-intro-title': error,
-			'storyslides-dialog-keys': error,
-			'storyslides-dialog-keys-title': error,
-		})
+		const idsToCheck = Object.freeze([
+			'storyslides-announcer',
+			// 'storyslides-browser-support-note',
+			'storyslides-button-fullscreen',
+			'storyslides-button-help-keys',
+			'storyslides-button-menu',
+			'storyslides-button-mode-slides',
+			'storyslides-button-mode-story',
+			'storyslides-button-next',
+			'storyslides-button-previous',
+			'storyslides-dialog-keys',
+			'storyslides-dialog-keys-title',
+			'storyslides-dialog-menu',
+			'storyslides-main-content',
+			'storyslides-mode-slides-explainer',
+			'storyslides-mode-slides-explainer-container',
+			'storyslides-mode-story-explainer',
+			'storyslides-progress',
+			'storyslides-screen-intro',
+			'storyslides-screen-intro-heading',
+			'storyslides-slides-container',
+			'storyslides-top-ui'
+		])
 
-		for (const id in idsToCheck) {
+		for (const id of idsToCheck) {
 			const element = doc.getElementById(id)
 			if (!element) {
-				idsToCheck[id](`missing element with id "${id}"`)
+				error(`missing element with id "${id}"`)
+				errors = true
 			}
 		}
 	}
@@ -769,8 +813,8 @@
 		const message = "The number of children of the slides container isn't the same as the number of slides. This could be due to putting story mode content outside of slides, having some slides outside of the slides contianer, or having other non-slide elements inside the container."
 
 		if (slides.length !== container.children.length) {
-			win.alert(message)
 			error(message)
+			errors = true
 		}
 	}
 
@@ -779,53 +823,127 @@
 	// Start-up
 	//
 
-	debug('starting up')
-	win.history.scrollRestoration = 'manual'  // un-bork story mode
-	checkForDuplicateIds()
-	checkForElements()
-	checkSlideContainment()
-
-	doc.getElementById('storyslides-browser-support-note').remove()  // TODO FOUC
-
-	// Fullscreen API isn't supported on iPhone
-	if (screenfull.enabled) {
-		doc.getElementById('storyslides-button-fullscreen').onclick = toggleFullscreen
-	} else {
-		doc.getElementById('storyslides-button-fullscreen').remove()
-	}
-
-	doc.getElementById('storyslides-button-help-intro').onclick = function() {
-		showOrToggleDialog(dialogIntro)
-	}
-	doc.getElementById('storyslides-button-help-keys').onclick = function() {
-		showOrToggleDialog(dialogKeys)
-	}
-
-	doc.getElementById('storyslides-button-previous').onclick = moveToPreviousSlide
-	doc.getElementById('storyslides-button-next').onclick = moveToNextRevealOrSlide
-
-	for (const dialog of [dialogIntro, dialogKeys]) {
-		// Already marked as display: none; in the HTML to avoid FOUC
-		dialog.querySelector('button.close').onclick = function() {
-			hideDialog(this.parentNode)
+	// TODO DRY?
+	function disableModeStyleSheets() {
+		for (const styleSheet of doc.styleSheets) {
+			if (styleSheet.href) {
+				if (styleSheet.href.includes('.story.') ||
+					styleSheet.href.includes('.slides.')) {
+					styleSheet.disabled = true
+				}
+			}
 		}
 	}
 
-	renderMarkdown()
-	doSplits()
-	preparePauses()
-
-	// It may take longer to get all of the assets on mobile devices
-	win.addEventListener('load', function() {
-		switchToMode(getStoredMode(), true)  // skip check for same mode
-	})
-
-	// TODO ordering?
-	win.addEventListener('hashchange', reflectLocationFromURL)
-
-	doc.getElementById('storyslides-mobile-menu-toggle').onclick = function() {
-		// We don't call this directly as it'll take the event parameter to
-		// mean we must dismiss the menu
-		toggleOrDismissMobileMenu()
+	// On Chrome, switching to story mode always puts focus on the button at
+	// the top, even if we try to focus the slide we want to visit (using the
+	// 'add tabindex, focus, remove tabindex' approach. This addresses that
+	// issue.
+	function makeSlidesProgrammaticallyFocusable() {
+		for (const slide of slides) {
+			slide.setAttribute('tabindex', '-1')
+		}
 	}
+
+	// This moves the DOM node for the UI that should come first in the focus
+	// order up to the start of the <body>. It's a convenience to the author,
+	// as it allows them to have their slide/story content at the top of the
+	// HTML when editing.
+	function moveTopUI() {
+		const topUI = doc.getElementById('storyslides-top-ui')
+		contentAndUI.insertBefore(topUI, contentAndUI.firstChild)
+	}
+
+	function registerClickHandlers() {
+		const setup = {
+			'storyslides-button-menu': () => showOrToggleDialog(dialogMenu),
+			'storyslides-button-help-keys': () => showOrToggleDialog(dialogKeys),
+			'storyslides-button-mode-story': () => switchToMode('story'),
+			'storyslides-button-mode-slides': () => switchToMode('slides'),
+			'storyslides-button-previous': moveToPreviousSlide,
+			'storyslides-button-next': moveToNextRevealOrSlide
+		}
+
+		for (const id in setup) {
+			doc.getElementById(id).addEventListener('click', setup[id])
+		}
+
+		dialogKeys.querySelector('button.close').onclick = hideOpenDialog
+		dialogMenu.querySelector('button.close').onclick = hideOpenDialog
+	}
+
+	function prepareContentAndUI() {
+		// TODO catch any errors? Show error screen?
+		makeSlidesProgrammaticallyFocusable()
+		moveTopUI()
+		registerClickHandlers()
+		fettleLineBreaks()
+		renderMarkdown()
+		preparePauses()
+
+		if (screenfull.enabled) {  // not supported on iPhone
+			doc.getElementById('storyslides-button-fullscreen').onclick = () => {
+				hideOpenDialog()
+				toggleFullscreen()
+			}
+		} else {
+			doc.getElementById('storyslides-button-fullscreen').remove()
+		}
+
+		win.history.scrollRestoration = 'manual'  // TODO doc
+		win.addEventListener('hashchange', hashChangeHandler)
+	}
+
+	function startUpInMode(mode) {
+		prepareContentAndUI()
+		doc.getElementById('storyslides-screen-intro').remove()
+		contentAndUI.hidden = false
+		switchToMode(mode, true)
+	}
+
+	function main() {
+		debug('StorySlides: starting up...')
+		doc.getElementById('storyslides-browser-support-note').remove()
+		disableModeStyleSheets()
+
+		checkForDuplicateIds()
+		checkForElements()
+		checkSlideContainment()
+		doSplits()  // checks percentages
+
+		// This is the least likely to cause flashing when laoding...
+		toggleStyleSheetsForMode('story')
+
+		if (errors === true) {
+			doc.getElementById('storyslides-screen-errors').hidden = false
+			return
+		}
+
+		const loading = doc.getElementById('storyslides-screen-loading')
+		setTimeout(function() {
+			if (loading) loading.hidden = false
+		}, 0)
+
+		win.onload = function() {
+			loading.remove()
+			const previousMode = getStoredMode()
+			if (previousMode) {
+				startUpInMode(previousMode)
+			} else {
+				const heading = doc.getElementById('storyslides-screen-intro-heading')
+				heading.innerText = initialTitle
+
+				doc.getElementById('storyslides-choose-story').onclick =
+					() => startUpInMode('story')
+				doc.getElementById('storyslides-choose-slides').onclick =
+					() => startUpInMode('slides')
+
+				const intro = doc.getElementById('storyslides-screen-intro')
+				intro.hidden = false
+				heading.focus()
+			}
+		}
+	}
+
+	main()
 })(window, document)

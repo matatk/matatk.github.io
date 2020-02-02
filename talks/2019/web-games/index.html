@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-GB">
 	<head>
 		<meta charset="UTF-8">
 		<title>W3C Workshop on Web Games Presentation: Adaptive Accessibility</title>
@@ -7,52 +7,30 @@
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="mobile-web-app-capable" content="yes">
 		<style>
+/* Basic slides mode settings
+   These have to be set here so they're easy to access by the code or shared
+   across modes. */
 :root {
+	/* Edit theme.(story|slides).css to change most colours and settings */
 	--author-font-height-percent-of-slide: 8;
 	--author-aspect-ratio: calc(16 / 9);
+	--story-mode-font-family: Georgia, serif;
 }
 		</style>
-		<!-- Story Slides Standard CSS -->
-		<link href="story-slides.mode-slides.css" rel="stylesheet">
-		<link href="story-slides.mode-story.css" rel="stylesheet">
-		<link href="story-slides.type-spacing.css" rel="stylesheet">
+		<!-- Story Slides CSS -->
+		<link href="story-slides.common.css" rel="stylesheet">
+		<link href="story-slides.intro.css" rel="stylesheet">
+		<link href="story-slides.slides.css" rel="stylesheet">
+		<link href="story-slides.story.css" rel="stylesheet">
 		<!-- Your themes -->
-		<link href="theme.mode-slides.css" rel="stylesheet">
+		<link href="theme.common.css" rel="stylesheet">
+		<link href="theme.slides.css" rel="stylesheet">
+		<link href="theme.story.css" rel="stylesheet">
 	</head>
-	<body>
-		<div id="storyslides-main-content">
-
-		<!-- FIXME can I move this to the end? -->
-		<p id="storyslides-browser-support-note"><strong>This presentation's slide view does not support Internet Explorer, sorry. However, you can view all of the content&mdash;including notes on each slide&mdash;in &quot;story mode&quot; by disabling styles (press <kbd>Alt</kbd>, then on the &quot;View&quot; menu, select &quot;Style&quot; and then &quot;No style&quot;).</strong></p>
-
-		<div class="storyslides-ui">
-			<button id="storyslides-mobile-menu-toggle" class="slides mobile-only" aria-expanded="false">Menu</button>
-			<div id="storyslides-mobile-menu-content" class="mobile-none">
-				<button id="storyslides-button-mode-toggle"></button>
-
-				<div class="slides mobile-only">
-					<button id="storyslides-button-fullscreen">Full-screen</button>
-					<button id="storyslides-button-help-intro">Info</button>
-					<button id="storyslides-button-help-keys">Help</button>
-				</div>
-
-				<span class="story">or press <kbd>Escape</kbd></span>
-
-				<p id="storyslides-mode-story-explainer" class="slides storyslides-nice-border">Story mode allows you to read the presentation as a document, rather than a collection of separate slides, and includes extra background information on the content. It turns off keyboard shortcuts used for navigating between slides and is recommended if you're using a screen reader.</p>
-
-				<div id="storyslides-mode-slides-explainer-container" class="story">
-					<p id="storyslides-mode-slides-explainer">Slides mode displays each slide one at a time, as they would be projected for the audience. The extra information present in story mode is not displayed. Keyboard shortcuts or buttons can be used to move between slides.</p>
-					<button class="mobile-only close">Close</button>
-				</div>
-			</div>
-
-			<div class="slides">
-				<button id="storyslides-button-previous" aria-label="Previous"><span>&larr;</span></button>
-				<button id="storyslides-button-next" aria-label="Next"><span>&rarr;</span></button>
-			</div>
-		</div>
-
-		<div id="storyslides-slides-container">
+	<body tabindex="-1">
+		<!-- StorySlides main content and slide- and story-mode UI -->
+		<div id="storyslides-main-content" hidden>
+			<div id="storyslides-slides-container">
 
 		<div class="slide full padded bottom title">
 			<h1>Adaptive Accessibility</h1>
@@ -71,7 +49,7 @@
 			<p>Active Game Accessibility</p>
 			<p>Ian Hamilton</p>
 			<p>W3C's Accessible Platform Architectures (APA) group and Research Questions sub-group</p>
-			<img src="images/tpg.svg" style="height: 1.5rem; margin-top: 0.75rem;" alt="The Paciello Group">
+			<img src="images/tpg.svg" class="tpg-logo" alt="The Paciello Group">
 			<p class="story">Thanks additionally to The Paciello Group for sponsoring my trip.</p>
 			<p class="story">If you happen to need any accessibility audits, training, strategy advice, UX reviews or anything like that, please consider <a href="https://www.paciellogroup.com/">The Paciello Group</a>.</p>
 		</div>
@@ -93,10 +71,9 @@
 		<div class="slide middle centre">
 			<p class="story">You can achieve a great deal with content accessibility. By designing the game with accessibility in mind, it can be made friendlier to all players. For example, the following two symbols differ in both shape and colour, thus providing two ways to tell them apart.</p>
 
-			<!-- TODO? Keep styles in story mode? -->
-			<p style="font-size: 25vw;">
-			<span style="color: yellow;">&#x25c6;</span>
-			<span style="color: magenta;">&#9679;</span>
+			<p class="the-colour-and-the-shape">
+				<span>&#x25c6;</span>
+				<span>&#9679;</span>
 			</p>
 
 			<p class="story">On the audio side, you could use spatial audio with good special effects to indicate to the player the type of environment they're in, or where they should explore.</p>
@@ -278,7 +255,7 @@
 
 		<img class="slide full" src="images/t3dl-e.png" alt="A simple level being designed in a level-creation program called QuArK. Two rooms are adjacent, but one is slightly higher up than the ohter, so there's a set of stairs to get from one to the other, as well as a door.">
 
-		<div class="slide middle centre" style="font-size: 0.76rem;">
+		<div class="slide middle centre slightly-smaller">
 			<div class="story">
 				<p>However, we could express this problem a different way: we could describe the relationships between the different rooms in the level, and how we might like the map textured and lit, and then have the computer create the actual layout for us.</p>
 				<p>The following XML description gives us the same information as the design in the CAD-like editor above.</p>
@@ -304,7 +281,7 @@
 
 		<h2 class="full slide middle centre title">Suggested outputs</h2>
 
-		<div class="slide middle" style="font-size: 0.8rem;">
+		<div class="slide middle a-little-smaller">
 			<p class="story">As mentioned in the paper&hellip;</p>
 
 			<ol data-pause>
@@ -329,7 +306,7 @@
 		<p class="slide middle centre">What adaptations for specific engines might be produced that could start assisting people quickly?</p>
 		<p class="slide middle centre">How can we make authoring and modding tools accessible?</p>
 
-		<h2 class="slide title"></h2>
+		<div class="slide title"></div>
 
 		<div class="slide middle">
 			<h2>Image Acknowledgements</h2>
@@ -339,90 +316,122 @@
 			</ul>
 		</div>
 
-		</div>  <!-- end of slide container -->
-
-		<!-- This comes down here for stacking order purposes -->
-		<div class="storyslides-ui slides">
-			<div id="storyslides-progress"><div></div></div>
-
-			<p id="storyslides-help-info" class="storyslides-nice-border">Press <kbd>?</kbd> for help; <kbd>I</kbd> for info on story mode</p>
-
-			<!-- This gets associated with <body> in slides mode by script -->
-			<!-- It's not shown visually for all users because <body> gets focus when clicked on. -->
-			<!-- FIXME this makes it different between visual and non-visual screen-reader users -->
-			<p id="storyslides-screenreader-intro" hidden>The slideshow is in slides mode. Arrow keys will move between slides. To use story mode, which includes extra background information on the content, and lets you browse using a screen reader's virtual cursor, press S, or use the Tab key to reach the story mode button.</p>
-		</div>
-
-		<!-- The lock indicator must be outside UI as UI is hidden when slide is locked -->
-		<!-- aria-relevant not picked up by JAWS/Chrome; try others -->
-		<p id="storyslides-lock-indicator" class="storyslides-nice-border" aria-live="assertive"><span>Slide locked&mdash;press <kbd>Escape</kbd> to unlock</span></p>
-
-		</div>  <!-- end of main content container -->
-
-		<div id="storyslides-dialog-intro" class="storyslides-dialog" role="dialog" tabindex="-1" aria-labelledby="storyslides-dialog-intro-title" style="display: none;">
-			<h1 id="storyslides-dialog-intro-title">For more info&hellip;</h1>
-			<p>The real content of a talk is often not in the slides, but in what's said around them. Story mode shows you not only what was projected, but the explanation behind it too.</p>
-			<p>The presentation is currently in slides mode.</p>
-			<div class="mobile-only">
-				<p>To access story mode, use the menu.</p>
-				<p>If you'd rather stay in slides mode&hellip;</p>
-				<h2>Navigation in slides mode</h2>
-				<p>Tap in the left part of the screen to go back, or the right part of the screen to go forward.</p>
-				<h2>Keyboard</h2>
 			</div>
-			<p>Press <kbd>S</kbd> to switch to story mode, <kbd>?</kbd> for help on keyboard shortcuts and navigation, or <kbd>Escape</kbd> to close this.</p>
-			<hr>
-			<button class="close">Close</button>
+
+			<!-- StorySlides UI -->
+			<div id="storyslides-top-ui" class="storyslides-ui">
+				<!-- This gets moved to the top of the page -->
+				<div class="slides mobile-only">
+					<button id="storyslides-button-menu">Menu</button>
+					<button class="slides" id="storyslides-button-previous" aria-label="Previous"><span>&larr;</span></button>
+				</div>
+				<div class="story">
+					<button id="storyslides-button-mode-slides" aria-describedby="storyslides-mode-slides-key storyslides-mode-slides-explainer">Switch to slides mode</button>
+					<span id="storyslides-mode-slides-key">or press <kbd>Escape</kbd></span>
+					<div id="storyslides-mode-slides-explainer-container">
+						<p id="storyslides-mode-slides-explainer">Slides mode displays each slide one at a time, as they would be projected for the audience. The extra information present in story mode is not displayed. Keyboard shortcuts or buttons can be used to move between slides.</p>
+						<button class="mobile-only close">Close</button>
+					</div>
+				</div>
+			</div>
+
+			<!-- This stays here, as makes sense in the DOM order -->
+			<div class="storyslides-ui slides">
+				<button class="mobile-only" id="storyslides-button-next" aria-label="Next"><span>&rarr;</span></button>
+				<div id="storyslides-progress"><div></div></div>
+			</div>
 		</div>
 
-		<div id="storyslides-dialog-keys" class="storyslides-dialog" role="dialog" tabindex="-1" aria-labelledby="storyslides-dialog-keys-title" style="display: none;">
-			<h1 id="storyslides-dialog-keys-title">Story Slides Help</h1>
-			<p class="mobile-only">Tap either the left or right third of the screen to move to the previous or next slide. If you have a keyboard attached, you can use the following shortcuts.</p>
-			<table>
-				<tr>
-					<th><p>Key(s)</p></th>
-					<th><p>Action</p></th>
-				</tr>
-				<tr>
-					<td><kbd>S</kbd></td>
-					<td><p>Switch to story mode</p></td>
-				</tr>
-				<tr>
-					<td><kbd>L</kbd></td>
-					<td><p>Lock a slide: disable all navigation keys, so if you're using a screen-reader in slides mode, you can explore the current slide with your virtual cursor.</p></td>
-				</tr>
-				<tr>
-					<td><kbd>F</kbd></td>
-					<td><p>Toggle full-screen slide view<span class="mobile-only"> (not supported on iPhone)</span></p></td>
-				</tr>
-				<tr>
-					<td><kbd>&rarr;</kbd> <kbd>&darr;</kbd> <kbd>Page&nbsp;Down</kbd></td>
-					<td><p>Next slide</p></td>
-				</tr>
-				<tr>
-					<td><kbd>&larr;</kbd> <kbd>&uarr;</kbd> <kbd>Page&nbsp;Up</kbd></td>
-					<td><p>Previous slide</p></td>
-				</tr>
-				<tr>
-					<td><kbd>Escape</kbd></td>
-					<td>
-						<ul>
-							<li><p><strong>In story mode:</strong> go to slides mode</p></li>
-							<li><p><strong>In slides mode:</strong> disable the current slide lock; no effect otherwise</p>
-						</ul>
-					</td>
-				</tr>
-				<tr>
-					<td><kbd>I</kbd></td>
-					<td><p>Show info on story mode and slides mode</p></td>
-				</tr>
-				<tr>
-					<td><p><kbd>?</kbd></p></td>
-					<td><p>Toggle this help dialog</p></td>
-				</tr>
-			</table>
-			<button class="close">Close</button>
+		<!-- StorySlides screens/dialogs -->
+		<div class="storyslides-ui">
+			<div id="storyslides-screen-errors" hidden>  <!-- TODO id? -->
+				<h1>Content errors detected</h1>
+				<p>An error, or errors, were detected in your presentation's content&mdash;open the browser console for more info.</p>
+			</div>
+
+			<div id="storyslides-screen-loading" hidden>  <!-- TODO id? -->
+				<p>Loading&hellip;</p>
+			</div>
+
+			<div id="storyslides-screen-intro" hidden>
+				<h1 id="storyslides-screen-intro-heading" tabindex="-1"></h1>
+				<fieldset>
+					<legend>Read presentation as&hellip;</legend>
+					<div id="storyslides-grid">
+						<h2>Story</h2>
+						<div id="storyslides-desc-story">
+							<!-- <p>Story mode gives you everything that was on the slides, plus what was said <em>about</em> the slides.</p> -->
+							<p>The real content of a talk is often not in the slides, but in what's said around them. Story mode shows you not only what was projected, but the explanation behind it too.</p>
+						</div>
+						<button id="storyslides-choose-story" aria-describedby="storyslides-desc-story">Story (recommended)</button>
+
+						<h2>Slides</h2>
+						<div id="storyslides-desc-slides">
+							<p>Slides mode shows you just the slides as presented.</p>
+						</div>
+						<button id="storyslides-choose-slides" aria-describedby="storyslides-desc-slides storyslides-desc-help">Slides</button>
+					</div>
+				</fieldset>
+			</div>
+
+			<div id="storyslides-dialog-keys" role="dialog" tabindex="-1" aria-labelledby="storyslides-dialog-keys-title" class="storyslides-dialog" hidden>
+				<h1 id="storyslides-dialog-keys-title">Slides mode help</h1>
+				<p class="mobile-only">Tap either the left or right third of the screen to move to the previous or next slide. If you have a keyboard attached, you can use the following shortcuts.</p>
+				<table>
+					<tr>
+						<th><p>Key</p></th>
+						<th><p>Action</p></th>
+					</tr>
+					<tr>
+						<td><kbd>S</kbd></td>
+						<td><p>Switch to story mode</p></td>
+					</tr>
+					<tr>
+						<td><kbd>L</kbd></td>
+						<td><p>Lock a slide: disable all navigation keys, so if you're using a screen-reader, you can explore the current slide with your virtual cursor.</p></td>
+					</tr>
+					<tr>
+						<td><kbd>F</kbd></td>
+						<td><p>Toggle full-screen slide view<span class="mobile-only"> (not supported on iPhone)</span></p></td>
+					</tr>
+					<tr>
+						<td><kbd>&rarr;</kbd> <kbd>&darr;</kbd> <kbd>Page&nbsp;Down</kbd></td>
+						<td><p>Next slide</p></td>
+					</tr>
+					<tr>
+						<td><kbd>&larr;</kbd> <kbd>&uarr;</kbd> <kbd>Page&nbsp;Up</kbd></td>
+						<td><p>Previous slide</p></td>
+					</tr>
+					<tr>
+						<td><kbd>Escape</kbd></td>
+						<td>
+							<ul>
+								<li><p><strong>In slides mode:</strong> disable the current slide lock; no effect otherwise</p>
+									<li><p><strong>In story mode:</strong> go to slides mode</p></li>
+							</ul>
+						</td>
+					</tr>
+					<tr>
+						<td><p><kbd aria-hidden="true">?</kbd><span class="visually-hidden">question mark</span></p></td> <!-- FIXME style -->
+						<td><p>Toggle this help dialog</p></td>
+					</tr>
+				</table>
+				<button class="close">Close</button>
+			</div>
+
+			<div id="storyslides-dialog-menu" role="dialog" tabindex="-1" aria-labelledby="storyslides-dialog-menu-heading" class="storyslides-dialog" hidden>
+				<h1 id="storyslides-dialog-menu-heading">View and Info</h1>
+				<button id="storyslides-button-mode-story" aria-describedby="storyslides-mode-story-explainer">Switch to story mode</button>
+				<button id="storyslides-button-fullscreen">Full-screen</button>
+				<button id="storyslides-button-help-keys">Help</button>
+				<p id="storyslides-mode-story-explainer">Story mode allows you to read the presentation as a document, rather than a collection of separate slides, and includes extra background information on the content.</p>
+				<button class="close">Close</button>
+			</div>
 		</div>
+
+		<p id="storyslides-browser-support-note">This presentation does not support Internet Explorer, sorry. Please use Firefox, Chrome, Opera or Edge.</p>
+
+		<div id="storyslides-announcer" role="log" aria-live="assertive" class="visually-hidden"></div>
 
 		<script src="vendor/marked-0.7.0.js"></script>
 		<script src="vendor/inert-2.1.1.js"></script>

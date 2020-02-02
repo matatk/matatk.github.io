@@ -1,0 +1,13 @@
+@media screen {
+	/* Use this file to declare rules that apply to story and slides modes */
+
+	.tpg-logo {
+		height: 1.5rem;
+		margin-top: 0.75rem;
+	}
+
+	/* FIXME */
+	.the-colour-and-the-shape { font-size: 25vw; }
+	.the-colour-and-the-shape :first-child { color: yellow; }
+	.the-colour-and-the-shape :last-child { color: magenta; }
+}
