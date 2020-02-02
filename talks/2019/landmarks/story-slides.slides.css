@@ -1,0 +1,429 @@
+/*
+ * StorySlides internal slides mode CSS
+ */
+
+@media screen {
+	:root {
+		/* Slides */
+		--gutter-vertical: 0.25rem;
+		--gutter-horizontal: 1rem;
+
+		/* The following are provided by script...
+		 *
+		 * --computed-slide-height
+		 * --computed-slide-width
+		 * --computed-vertical-margin
+		 * --computed-horizontal-margin
+		 * --computed-base-font-size */
+
+		/* UI */
+		--fade-length: 1s;
+	}
+
+	/*
+	 *
+	 * Typography, spacing and individual content elements
+	 *
+	 */
+
+	/* Setting the computed base font size here so that all other spacing is
+	 * natural for slide layout. UI works around this using the 'initial'
+	 * keyword. */
+	html {
+		font-size: var(--computed-base-font-size);
+		background-color: var(--background-colour);  /* needs to be on html for Safari */
+		color: var(--text-colour);
+		margin: 0;
+		padding: 0;
+	}
+
+	body {
+		line-height: 1.4;  /* goes better with 8vh text than 1.5 */
+		margin: 0;
+		padding: 0;
+	}
+
+	h1,
+	h2,
+	h3,
+	h4,
+	h5,
+	h6,
+	p {
+		padding-top: 0.25em;
+		padding-bottom: 0.25em;
+		margin: 0;
+	}
+
+	ul,
+	ol,
+	li,
+	dl {
+		margin-top: 0;
+		margin-bottom: 0;
+	}
+
+	/* TODO: Check browser */
+	ul,
+	ol,
+	dl { padding-left: 1em; }
+
+	/* By default, assume that images want to be as big as they can be to fill
+	 * the slide. */
+	img {
+		display: block;
+		width: 100%;
+		height: 100%;
+		object-fit: contain;
+	}
+
+	/* ...and similar for figures. */
+	figure {
+		margin: 0;
+		width: 100%;
+		height: 100%;
+	}
+
+	/* TODO: combine figure and iframe? */
+
+	/* ...and iframes. */
+	iframe {
+		margin: 0;
+		width: 100%;
+		height: 100%;
+	}
+
+	pre { text-align: left; }
+
+	hr { border-bottom: 0.1em solid var(--text-colour); }  /* TODO DRY with table? */
+
+	/*
+	 *
+	 * Slide content
+	 *
+	 */
+
+	/* Non-current slides shouldn't be shown */
+	.slide { display: none; }
+
+	/* The current slide should be as large as it can be to fit within the
+	 * screen. The author-desired aspect ratio of the slides is a CSS variable.
+	 * The script works out the dimensions of the slides in pixels and stores
+	 * them in other CSS variables.
+	 *
+	 * The base font size is specified by the author as a percentage of the
+	 * slide height, so that things are nicely scaleable. Again, the script
+	 * works out what this font size is in pixels.
+	 *
+	 * The script sets the slide's layout to flex. This allows the entire
+	 * slide's contents to expand to fill the slide, which allows effects such
+	 * as positioning content vertically at the bottom of the slide (or the
+	 * middle).
+	 *
+	 * It's assumed that most slides will be simple text/lists/images and will
+	 * want some padding (as defined above) by default. */
+	.slide.active {
+		position: absolute;
+		width: var(--computed-slide-width);
+		height: var(--computed-slide-height);
+		max-width: var(--computed-slide-width);
+		max-height: var(--computed-slide-height);
+		margin-top: var(--computed-vertical-margin);
+		margin-bottom: var(--computed-vertical-margin);
+		margin-left: var(--computed-horizontal-margin);
+		margin-right: var(--computed-horizontal-margin);
+		padding: var(--gutter-vertical) var(--gutter-horizontal);
+		display: flex;
+		flex-direction: column;
+	}
+
+	/* Support vertical splitting of content within part of a slide.
+	 *
+	 * TODO: unused currently - but could be useful? */
+	.slide.active [data-split] {  /* doesn't match slide but that's above */
+		display: flex;
+		flex-direction: column;
+	}
+
+	/* TODO: don't think horizontal styles are working or being used ATM
+	 *
+	 * FIXME: horizontal + bottom on the slide doesn't work */
+	.slide.horizontal { flex-direction: row; }
+
+	/* Slides that have the class of (top|middle|bottom) or elements within
+	 * slides that have one of those classes should align their content
+	 * vertically accordingly. To do this, they are rendred as flexboxes (the
+	 * slides themselves already are). */
+	.slide.active.top:not(.horizontal),
+	.slide.active .top {
+		display: flex;
+		flex-direction: column;
+		justify-content: flex-start;
+		height: 100%;
+		width: 100%;
+	}
+
+	.slide.active.bottom:not(.horizontal),
+	.slide.active .bottom {
+		display: flex;
+		flex-direction: column;
+		justify-content: flex-end;
+		height: 100%;
+		width: 100%;
+	}
+
+	.slide.active.middle:not(.horizontal),
+	.slide.active .middle {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		height: 100%;
+		width: 100%;
+	}
+
+	/* Slides can be split into different vertical (or TODO horizontal) parts.
+	 * The author can specify the allocation of space to each of these parts,
+	 * but if they don't we need a sensible default. By making each part
+	 * equally greedy for the whole space, we arrive at each part being
+	 * allocated (1/n)th of the space. */
+	[data-split] > * { flex-basis: 100%; }
+
+	/* Some slides will want to take up the full space, with no padding. This
+	 * can be used to achieve some effects, such as full-height/-width
+	 * backgrounds. */
+	.slide.active.full { padding: 0; }
+
+	/* If a slide asked to use the full-size layout /only/ so that it could
+	 * have full-height/-width background colours - and actually /does/ want
+	 * the normal padding around its text content - then the class "padded" can
+	 * be added to insert the padding back in inside each top-level slide
+	 * content child element. */
+	.slide.active.full.padded:not(.horizontal) > :first-child {
+		padding-top: var(--gutter-vertical);
+		padding-left: var(--gutter-horizontal);
+		padding-right: var(--gutter-horizontal);
+	}
+
+	.slide.active.full.padded.horizontal > :first-child {
+		padding-top: var(--gutter-vertical);
+		padding-left: var(--gutter-horizontal);
+		padding-bottom: var(--gutter-vertical);
+	}
+
+	.slide.active.full.padded > * {
+		padding-left: var(--gutter-horizontal);
+		padding-right: var(--gutter-horizontal);
+	}
+
+	.slide.active.full.padded:not(.horizontal) > :last-child {
+		padding-left: var(--gutter-horizontal);
+		padding-right: var(--gutter-horizontal);
+		padding-bottom: var(--gutter-vertical);
+	}
+
+	.slide.active.full.padded.horizontal > :last-child {
+		padding-top: var(--gutter-vertical);
+		padding-right: var(--gutter-horizontal);
+		padding-bottom: var(--gutter-vertical);
+	}
+
+	/* If the "centre" (or "center") class was added to a slide, the user wants
+	 * the text centred horizontally. This needs to be passed on to the
+	 * script-created <div>. */
+	.slide.active.centre,
+	.slide.active.center { text-align: center; }
+
+	.slide.active .centre,
+	.slide.active .center { text-align: center; }
+
+	/* Likewise if the user wanted right-aligned content. */
+	.slide.active.right { text-align: right; }
+	.slide.active .right { text-align: right; }
+
+	/* The author can specify that certain items on a slide are to be revealed
+	 * gradually (by setting the 'data-pause' attribute on the container of the
+	 * things). A custom attribute is used to track the state of things not yet
+	 * revealed (it's added automatically when the slideshow starts). */
+	[data-storyslides-step] {
+		visibility: hidden;
+	}
+
+	/* Story mode content should not be available to anyone when we are in
+	 * slides mode, which we are if this stylesheet is loaded.
+	 *
+	 * This includes the help text on the story mode top bar. */
+	.story { display: none; }
+
+	/*
+	 *
+	 * UI
+	 *
+	 */
+
+	/* The progress bar is a container with nested <div> that adjusts its
+	 * width. Got this neat trick from impress.js; thanks :-).
+	 *
+	 * Note: no colour is specified here, so it won't actually show up. The
+	 *       theme stylesheet needs to specify a background-color for the
+	 *       #storyslides-progress>div element. */
+	#storyslides-progress {
+		display: block;
+		position: absolute;
+		right: 0;
+		left: 0;
+		bottom: 0;
+	}
+	#storyslides-progress > div { width: 0; }
+
+	/* The menu, previous and next buttons come first in the DOM and focus
+	 * order, but must be rendered on top of the slides. Decided to do this
+	 * rather than put them all after the slides, in case someone ever puts a
+	 * focusable element on a slide. */
+	.storyslides-ui,
+	.storyslides-ui button { z-index: 1; } /* TODO: why needed? */
+
+	/*
+	 * Mobile-ish menu and previous/next buttons
+	 */
+	@media (hover: none) and (pointer: coarse) {
+		/* FIXME doc */
+		#storyslides-button-menu {
+			position: absolute;
+			top: 0;
+			left: 0;
+			z-index: 2;  /* ? TODO dry variable? */
+		}
+
+		/* Previous slide and next slide invisible buttons are used to move
+		 * between slides on mobile devices - this avoided the need for custom
+		 * gesture detection (e.g. swipe between slides), which would've
+		 * blocked pinch-to-zoom gestures. */
+		#storyslides-button-previous,
+		#storyslides-button-next {
+			background: none;
+			position: absolute;
+			top: 0;
+			bottom: 0;
+			width: 33vw;
+			border: none;
+			box-shadow: none;
+		}
+		#storyslides-button-previous { left: 0; }
+		#storyslides-button-next { right: 0; }
+
+		/* When the previous/next buttons get focus, show large back/forward
+		 * arrows within them, to indicate their purpose. Drop-shadows are used
+		 * to improve contrast. */
+		#storyslides-button-previous > span,
+		#storyslides-button-next > span {
+			display: none;
+		}
+
+		#storyslides-button-previous:focus > span,
+		#storyslides-button-next:focus > span {
+			display: inline;
+			color: var(--text-colour);
+			font-size: 30vw;
+			visibility: visible;
+			filter: drop-shadow(0 0 0.05em black);
+		}
+	}
+
+	/*
+	 * Dialogs
+	 */
+
+	/* Roll our own dialogs as <dialog> support isn't great.
+	 *
+	 * On mobile devices, we make them bigger, and use the technique
+	 * described in the CSS-Tricks article:
+	 * https://css-tricks.com/the-trick-to-viewport-units-on-mobile/ */
+	.storyslides-dialog {
+		position: absolute;
+		overflow-y: scroll;
+		margin: auto;
+		padding: 1em;
+		background-color: var(--background-colour);
+		border: 0.25em solid var(--background-colour);
+		outline: 0.1em solid var(--text-colour);
+		height: 100vh;
+		width: 100vw;
+	}
+
+	@media (min-width: 50em) {
+		/* TODO don't display scroll bar if not needed */
+		.storyslides-dialog {
+			height: auto;
+			width: auto;
+			max-height: 85vh;
+			max-width: 75vw;
+
+			/* TODO: Centre it properly */
+			margin-top: calc(15vh / 2);
+			margin-bottom: calc(15vh / 2);
+			margin-left: calc(25vw / 2);
+			margin-right: calc(25vw / 2);
+		}
+	}
+
+	.storyslides-dialog button.close {
+		float: right;
+		margin-top: 0.5em;
+		margin-bottom: 0.5em;
+	}
+
+	/* As the <dialog> element and it's ::backdrop aren't maturely supported
+	 * yet, we roll our own, with a nice smooth animation. */
+	#storyslides-main-content[aria-hidden="true"] {
+		opacity: 0.5;
+		transition: opacity 0.5s;
+	}
+	#storyslides-main-content { transition: opacity 0.5s; }
+
+	/*
+	 * Keyboard shortcuts table
+	 */
+
+	#storyslides-dialog-keys table {
+		margin-top: 1em;
+		margin-bottom: 1em;
+		border-collapse: collapse;
+		margin-left: auto;
+		margin-right: auto;
+	}
+
+	#storyslides-dialog-keys th,
+	#storyslides-dialog-keys td {
+		padding: 0.15em;
+		padding-left: 0.5em;
+		padding-right: 0.5em;
+	}
+
+	#storyslides-dialog-keys th {
+		background-color: var(--accent-colour);
+		color: var(--background-colour);
+	}
+
+	#storyslides-dialog-keys tr:not(:first-child) {
+		border-bottom: 0.1em solid var(--text-colour);
+	}   /* TODO DRY with table? */
+
+	#storyslides-dialog-keys td:first-child { text-align: center; }
+
+	/* Only set custom styles for <kbd> in our own UI */
+	.storyslides-ui kbd {
+		/* Looks like, but also not exactly like, buttons */
+		display: inline-block;
+		border: 0.1em dotted var(--text-colour);
+		border-radius: 0.25em;
+		padding-left: 0.25em;
+		padding-right: 0.25em;
+	}
+
+	/*
+	 * Live region
+	 */
+
+	/* The announcer usually has a class of visually-hidden. */
+	.storyslides-locked #storyslides-announcer { display: none; }
+}

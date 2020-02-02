@@ -1,0 +1,113 @@
+/*
+ * Slides mode user CSS
+ */
+
+@media screen {
+	:root {
+		/* Base colours */
+		--accent-colour: yellow;
+		--secondary-accent-colour: #0f0;
+		--background-colour: black;
+		--secondary-background-colour: white;
+		--text-colour: white;
+		--secondary-text-colour: #757575;
+
+		/* Presentation-specific colours */
+
+		/* ... */
+	}
+}
+
+@media screen {
+	/* Configuring elements in the slideshow */
+
+	html { font-family: sans-serif; }
+
+	/* UI font size is relative to --author-font-height-percent-of-slide */
+	.storyslides-ui { font-size: 0.5rem; }
+
+	#storyslides-progress div {
+		height: 1vh;
+		background-color: var(--secondary-accent-colour);
+		transition: width 1s;
+	}
+
+	/* Recommended stuff */
+
+	#author {
+		display: flex;
+		justify-content: space-between;
+		background-color: var(--background-colour);
+		color: var(--accent-colour);
+	}
+
+	.title,
+	[data-split] .part-odd {
+		background-color: var(--accent-colour);
+		color: var(--background-colour);
+	}
+
+	[data-split] .part-even {
+		background-color: var(--background-colour);
+		color: var(--accent-colour);
+	}
+
+	h1,
+	h2,
+	h3,
+	h4,
+	h5,
+	h6,
+	strong { color: var(--accent-colour); }
+
+	.title h1,
+	.title h2 { color: var(--background-colour); }
+
+	h2.slide {
+		background-color: var(--accent-colour);
+		color: var(--background-colour);
+	}
+
+	a,
+	a:visited { color: var(--text-colour); }
+
+	strong > a,
+	strong > a:visited { color: var(--accent-colour); }
+
+	/* Presentation-specific extras... */
+
+	/* FIXME would be better to just centre the thing that has left-aligned */
+	.hack20 pre { margin-left: 18%; }
+	.hack10 pre { margin-left: 6%; }
+
+	/* Thanks https://stackoverflow.com/a/489002/1485308 */
+	ol { counter-reset: item; }
+	ol li { display: block; }
+
+	ol li::before {
+		content: counter(item) ". ";
+		counter-increment: item;
+		color: var(--accent-colour);
+		font-weight: bold;
+	}
+
+	p.key {
+		font-size: 2rem;
+		border: 0.1rem solid white;
+		border-radius: 0.25em;
+		width: 1.5em;
+		height: 1.5em;
+		margin-left: auto;
+		margin-right: auto;
+		padding: 0;
+	}
+	p.key.wide { width: 5rem; }
+	p.key:not(:last-child) { margin-bottom: 1rem; }
+
+	.a-little-smaller    { font-size: 0.8rem;   }
+	.a-little-smaller-er { font-size: 0.739rem; }
+	.slightly-smaller    { font-size: 0.681rem; }
+	.slightly-smaller-er { font-size: 0.65rem;  }
+
+	.align-right { text-align: right; }
+}
