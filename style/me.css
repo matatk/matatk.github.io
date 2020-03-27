@@ -143,6 +143,24 @@ blockquote {
 	color: #6c6c6c;
 }
 
+table { border-collapse: collapse; }
+
+th,
+td {
+	padding: 0.5em;
+	padding-left: 1em;
+	padding-right: 1em;
+}
+
+th {
+	background-color: #333;
+	color: #eee;
+}
+
+td:not(:first-child) { text-align: center; }
+
+tr:nth-child(even) { background-color: #ccc; }
+
 @media screen and (min-width: 42em) {
 	#menu-vertical { display: none; }
 	#menu-horizontal { display: block; }

@@ -1,0 +1,10 @@
+---
+layout: page
+title: Web stuff tests
+---
+
+<ul>
+	{% for test in site.tests %}
+	<li><p><a href="{{ test.url }}">{{ test.title }}</a> ({{ test.date | date: "%Y-%m-%d" }})</p></li>
+	{% endfor %}
+</ul>

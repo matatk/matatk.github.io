@@ -1,0 +1,12 @@
+---
+layout: base
+---
+<h1>{{ page.title }}</h1>
+<dl class="article-meta">
+	<dt>Published</dt>
+	<dd><time pubdate>{{ page.date | date: "%Y-%m-%d" }}</time></dd>
+	{% if page.updated %}<dt>Updated</dt>
+	<dd><time>{{ page.updated }}</time></dd>{% endif %}
+</dl>
+{{ content }}
+<p><a href="/tests">List of all tests</a></p>

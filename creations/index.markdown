@@ -19,6 +19,12 @@ title: Creations
 [netBeep](http://netbeep.agrip.org.uk) *(link currently borked; sorry)*
 : My first foray into Perl, networking code, revision control, Debian packaging and Makefiles, with **many** thanks to [Craig Shelley](http://www.microtron.org.uk).
 
+<!--
+## Web tests
+
+There's a [set of HTML/browser-related tests](/tests).
+-->
+
 ## LaTeX
 
 [LUThesis](http://luthesis.blogspot.com/)

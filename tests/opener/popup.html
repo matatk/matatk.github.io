@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Pop-up page</title>
+</head>
+<body>
+	<h1>Pop-up page</h1>
+	<p>This navigates the start page.</p>
+	<p>Is <code>window.opener</code> present? <span id="have-opener"></span></p>
+	<button id="thingy">Navigate the start page</button>
+	<script>
+document.getElementById('thingy').addEventListener('click', function() {
+	window.opener.location = 'second.html'
+})
+
+document.getElementById('have-opener').textContent =
+	(window.opener !== null && window.opener !== undefined) ? 'Yes' : 'No'
+	</script>
+</body>
+</html>

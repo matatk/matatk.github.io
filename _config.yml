@@ -11,6 +11,10 @@ include:
 plugins:
   - jekyll-feed
   - jekyll-sitemap
+collections:
+  tests:
+    permalink: /tests/:title/
+    output: true
 
 # GitHub defaults
 highlighter: rouge
