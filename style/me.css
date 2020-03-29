@@ -31,10 +31,8 @@ nav a {
 
 a:focus,
 a:hover {
-	background-color: #888;
-	color: white;  /* Can't use #eee as that's <4.5:1 (3:1). */
-
-	/* FIXME: Actually white is only 3.5:1! */
+	background-color: #6c6c6c;
+	color: #eee;
 }
 
 nav summary { padding-bottom: 0.5em; }
@@ -70,7 +68,7 @@ dl.article-meta ul { margin-top: 0; }
 #menu-vertical li:last-child { padding-bottom: 1em; }
 
 main,
-footer { border-top: 0.1em solid #888; }
+footer { border-top: 0.1em solid #6c6c6c; }
 
 h1 { font-size: 2em; }
 
@@ -84,23 +82,21 @@ h6 { line-height: 1.2; }
 /* Stop gap before nested lists */
 li p { margin-bottom: 0; }
 
-/* TODO should this be in highlighting CSS only? */
-
-/* This causes some code samples to scroll horizontally; is that really good? */
+/* TODO:
+ * should this be in highlighting CSS only?
+ * This causes some code samples to scroll horizontally; is that really good? */
 pre {
+	/* white-space: pre-wrap; -- TODO not sure about this */
 	overflow: auto;
-
-	/* white-space: pre-wrap; */
-
-	/* not sure about this */
 }
 
-/* TODO (needs more research): for some reason the monospace font has a bigger
+/* TODO:
+ * (needs more research): for some reason the monospace font has a bigger
  * line-height than the surrounding text. This fixes it without making the font
- * any smaller. Thanks to Dan Nye. */
+ * any smaller. Thanks to Dan Nye.
+ *
+ * Note: the <code> elements in <pre> blocks don't get this class. */
 code.highlighter-rouge { line-height: 1; }
-
-/* Note: the <code> elements in <pre> blocks don't get this class. */
 
 /* Hide from visual users but not screen readers */
 .visually-hidden {
@@ -136,24 +132,15 @@ code.highlighter-rouge { line-height: 1; }
 
 img {
 	width: 100%;
-	box-shadow: 0.25em 0.25em #888;  /* same colour as blockquote, highlight */
+	box-shadow: 0.25em 0.25em #6c6c6c;  /* same as blockquote, highlight */
 }
 
 blockquote {
 	margin: 0;
 	padding-left: 1em;
 	padding-right: 1em;
-	border-left: 0.25em solid #888; /* same as syntax-highlighted code */
+	border-left: 0.25em solid #6c6c6c;  /* same as img, highlight */
 	color: #6c6c6c;
-
-	/* Colours chosen because:
-		- Contrast of text to background is OK by WCAG 2 Level AA.
-		- The thick border looks (about) the same colour as the text and is
-		  WCAG 2.1-compliant.
-		- Contrast betwwen <blockquote> and <body> text is greater than 2:1,
-		  so some will be able to see the difference, but if not, the sidebar
-		  and incrased margin are there.
-	 */
 }
 
 @media screen and (min-width: 42em) {
@@ -173,13 +160,13 @@ blockquote {
 }
 
 /* Widest layout:
- + Capped body text width (45em in inherited size)
- + Give body at least 0.5em left+right margins.
- + Float home page picture.
- + Max padding for menu items.
- Viewport size in [r]ems: (45 + 1) * 1.2 = 55.2 */
-
-/* TODO: check if the above line is correct - isn't rems the body font size? */
+ *   + Capped body text width (45em in inherited size)
+ *   + Give body at least 0.5em left+right margins.
+ *   + Float home page picture.
+ *   + Max padding for menu items.
+ * Viewport size in [r]ems: (45 + 1) * 1.2 = 55.2
+ *
+ * TODO: check if the above line is correct - isn't rems the body font size? */
 @media screen and (min-width: 55.2em) {
 	body {
 		margin: auto;
@@ -198,31 +185,31 @@ blockquote {
 }
 
 @media (prefers-color-scheme: dark) {
-	/* Thanks https://css-tricks.com/dark-modes-with-css/ */
-
-	/* and http://www.mattlag.com/scripting/hexcolorinverter.php */
-
-	/* and https://developer.paciellogroup.com/resources/contrastanalyser/ */
-
+	/* Thanks https://css-tricks.com/dark-modes-with-css/
+	 * and http://www.mattlag.com/scripting/hexcolorinverter.php
+	 * and https://developer.paciellogroup.com/resources/contrastanalyser/ */
 	body {
 		background-color: #333;
 		color: #eee;
 	}
 
-	/* The inverse of #888, used for borders above, is #777. Howecer
-	 * #777 on #333 (the background colour) has insufficient contrast,
-	 * so we'll just keep #888. */
+	/* The following two are the same as highlight */
+	img { box-shadow: 0.25em 0.25em #9b9b9b; }
+	blockquote { color: #9b9b9b; }
 
-	blockquote { color: #939393; }
-
-	/* #7fff7f; - Bit-flip inverse looks quite nice */
-
-	/* #ff80ff; - Lightness inverse matches the theme */
+	/*
+	 * #7fff7f; - Bit-flip inverse looks quite nice
+	 * #ff80ff; - Lightness inverse matches the theme
+	 */
 	a { color: #7fff7f; }
 
 	a:focus,
-	a:hover {
-		/* Use light-mode background as above */
-		color: black;  /* This is actually WCAG-OK and white isn't! */
+	a:hover { color: #eee; }
+
+	th {
+		background-color: #eee;
+		color: #333;
 	}
+
+	tr:nth-child(even) { background-color: #555; }
 }
