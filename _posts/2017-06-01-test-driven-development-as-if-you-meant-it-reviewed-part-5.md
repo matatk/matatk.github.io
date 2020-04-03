@@ -8,7 +8,7 @@ tags:
 extra-style: syntax
 ---
 
-{% include series.html %}
+{% include series.html -%}
 
 This article was written with and is [also published by](http://markwithall.com/programming/2017/06/01/test-driven-development-as-if-you-meant-it-reviewed-part-v.html) Mark Withall.
 

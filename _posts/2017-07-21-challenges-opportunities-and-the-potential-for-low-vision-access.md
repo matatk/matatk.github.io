@@ -11,4 +11,4 @@ I posted about this on the TPG 'blog. Here's the abstract...
 
 [Read more about "Challenges, opportunities and the potential for low-vision access" on the TPG 'blog](https://developer.paciellogroup.com/blog/2017/07/challenges-opportunities-and-the-potential-for-low-vision-access/)
 
-{% include series.html %}
+{% include series.html -%}

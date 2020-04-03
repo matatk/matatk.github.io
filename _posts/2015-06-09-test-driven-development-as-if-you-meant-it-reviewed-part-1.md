@@ -5,7 +5,7 @@ series: tddaiymi-reviewed-series
 tags: programming tdd
 ---
 
-{% include series.html %}
+{% include series.html -%}
 
 This article was written with and is [also published by](http://markwithall.com/programming/2015/06/09/test-driven-development-as-if-you-meant-it-reviewed-part-i.html) Mark Withall.
 

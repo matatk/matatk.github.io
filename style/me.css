@@ -48,19 +48,6 @@ ul ul { list-style-type: square; }  /* default: circle - which isn't clear */
 ol ol { list-style-type: lower-alpha; }
 ol ol ol { list-style-type: lower-roman; }
 
-dl.article-meta dt,
-dl.article-meta dd {
-	display: inline;
-	margin: 0;
-}
-
-dl.article-meta dt:not(:first-child)::before {
-	content: "\A";
-	white-space: pre;
-}
-dl.article-meta dt::after { content: ":"; }
-dl.article-meta ul { margin-top: 0; }
-
 #menu-horizontal { display: none; }
 #menu-horizontal ul { display: flex; }
 #menu-horizontal li { flex-grow: 1; }

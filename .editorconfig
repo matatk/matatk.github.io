@@ -1,7 +1,7 @@
 # http://EditorConfig.org
 root = true
 
-[{*.c,*.cpp,*.js,Makefile,*.py,*.rs,*.sh,*.vim}]
+[{*.html,*.js,Makefile}]
 charset = utf-8
 end_of_line = lf
 indent_style = tab

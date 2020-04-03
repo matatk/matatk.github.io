@@ -2,18 +2,17 @@
 layout: base
 ---
 <h1>{{ page.title }}</h1>
-<dl class="article-meta">
-	<dt>Published</dt>
-	<dd><time pubdate>{{ page.date | date: "%Y-%m-%d" }}</time></dd>
-	{% if page.updated %}<dt>Updated</dt>
-	<dd><time>{{ page.updated }}</time></dd>{% endif %}
-	<dt>Tags</dt>
-	<dd>{{ page.tags | array_to_sentence_string }}</dd>
-</dl>
+{% include published-and-updated.html -%}
 {{ content }}
-<dl class="article-meta">
-	<dt>Previous</dt>
-	<dd>{% if page.previous %}<a href="{{ page.previous.url }}">{{ page.previous.title }}</a>{% else %}(none){% endif %}</dd>
-	<dt>Next</dt>
-	<dd>{% if page.next %}<a href="{{ page.next.url }}">{{ page.next.title }}</a>{% else %}(none){% endif %}</dd>
-</dl>
+<h2>Tags</h2>
+<p>
+	{%- for tag in page.tags -%}
+		{%- if forloop.last == true -%}
+			<span> and </span>
+		{%- endif -%}
+		<a href="/articles/#{{ tag }}">{{ tag }}</a>
+		{%- if forloop.last == false and forloop.rindex != 2 -%}
+			<span>, </span>
+		{%- endif -%}
+	{%- endfor -%}
+</p>

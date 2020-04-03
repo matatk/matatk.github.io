@@ -11,4 +11,4 @@ I posted about this on the TPG 'blog. Here's the abstract...
 
 [Read more about "How invert brightness can improve accessibility and help us use our devices" on the TPG 'blog](https://developer.paciellogroup.com/blog/2017/12/how-invert-brightness-can-improve-accessibility-and-help-us-use-our-devices/)
 
-{% include series.html %}
+{% include series.html -%}

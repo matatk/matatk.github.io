@@ -11,4 +11,4 @@ I posted about this on the TPG 'blog. Here's the abstract...
 
 [Read more about "Colour deficit help" on the TPG 'blog](https://developer.paciellogroup.com/blog/2018/03/colour-deficit-help/)
 
-{% include series.html %}
+{% include series.html -%}

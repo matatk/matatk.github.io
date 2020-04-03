@@ -3,15 +3,18 @@
 	<head>
 		<meta charset="utf-8">
 		<title>{{ page.title }}&mdash;Matthew Tylee Atkinson</title>
-		{% feed_meta %}
+		{%- feed_meta -%}
 		<link rel="stylesheet" type="text/css" href="/style/me.css">
-		{% for css in page.extra-style %}<link rel="stylesheet" type="text/css" href="/style/{{ css }}.css">{% endfor %}
+		{%- for css in page.extra-style -%}
+		<link rel="stylesheet" type="text/css" href="/style/{{ css }}.css">
+		{%- endfor -%}
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<meta name="author" content="Dr Matthew Tylee Atkinson Ph.D.">
 		<meta name="description" content="Personal web site and 'blog">
-		<meta name="keywords"
-			content="accessibility,programming,computing,blog">
-		{% for js in page.script %}<script type="text/javascript" src="{{ js }}"></script>{% endfor %}
+		<meta name="keywords" content="accessibility,programming,computing,blog">
+		{%- for js in page.script -%}
+		<script type="text/javascript" src="{{ js }}"></script>
+		{%- endfor -%}
 		<script src="/script/ga.js"></script>
 	</head>
 	<body>
@@ -41,7 +44,7 @@
 			</div>
 		</nav>
 		<main role="main">
-{{ content }}
+{{ content -}}
 		</main>
 		<footer role="contentinfo">
 			<p>Copyright 2012&ndash;2020 Tylee Atkinson</p>

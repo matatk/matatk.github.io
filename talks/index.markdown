@@ -3,9 +3,13 @@ layout: page
 title: Talks
 ---
 
+## Game Accessibility: Low Vision
+
+["Game Accessibility: Low Vision" story and slides](2019/game-accessibility-low-vision/) was presented at the [RNIB Accessibility Gaming Workshop](/articles/rnib-accessibility-gaming-workshop).
+
 ## Adaptive accessibility
 
-[Slides for "Adaptive Accessibility"](2019/web-games/) (mobile optimisation in-progress) were presented at the [W3C Workshop on Web Games](https://www.w3.org/2018/12/games-workshop/). You may also be interested in...
+["Adaptive Accessibility" story and slides](2019/web-games/) was presented at the [W3C Workshop on Web Games](https://www.w3.org/2018/12/games-workshop/). You may also be interested in...
 
  * Overview of [Accessibility at the W3C Workshop on Web Games](https://developer.paciellogroup.com/blog/2019/07/accessibility-at-the-w3c-workshop-on-web-games/) on The Paciello Group 'blog.
  * Our workshop [Position paper: Adaptive Accessibility](https://www.w3.org/2018/12/games-workshop/papers/web-games-adaptive-accessibility.html)
@@ -13,7 +17,7 @@ title: Talks
 
 ## Landmarks
 
-[Slides for "Landmarks"](2019/landmarks/) (mobile optimisation in-progress) were presented at...
+["Landmarks" story and slides](2019/landmarks/) was presented at...
 
  * [London Accessibility Meet-up #26, May 2019 (video)](https://www.youtube.com/watch?v=urgZm-k8KMk&t=1h23m27s).
 

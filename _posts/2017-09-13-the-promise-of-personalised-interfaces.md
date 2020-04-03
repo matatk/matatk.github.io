@@ -11,4 +11,4 @@ I posted about this on the TPG 'blog. Here's the abstract...
 
 [Read more about "The promise of personalised interfaces" on the TPG 'blog](https://developer.paciellogroup.com/blog/2017/09/the-promise-of-personalised-interfaces/)
 
-{% include series.html %}
+{% include series.html -%}

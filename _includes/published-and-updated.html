@@ -1,0 +1,4 @@
+<p>Published: <time pubdate>{{ page.date | date: "%Y-%m-%d" }}</time></p>
+{%- if page.updated -%}
+<p>Last updated: <time>{{ page.updated }}</time></p>
+{%- endif %}
