@@ -15,4 +15,4 @@ More on the workshop...
 * [About the workshop on the RNB's site](https://www.rnib.org.uk/sight-loss-advice/reading-home-and-leisure/television-radio-and-film/television-radio-and-film-news/accessibility-gaming-workshop)
 * [My presentation's story and slides](http://matatk.agrip.org.uk/talks/2019/game-accessibility-low-vision/)
 
-You may also be interested in the [Game accessibility and the Web](/articles/game-accessibility-and-the-web/) article I wrote for 24 Accessibility.
+*You may also be interested in the [Game accessibility and the Web](/articles/game-accessibility-and-the-web/) article I wrote for 24 Accessibility.*

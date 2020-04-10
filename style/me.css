@@ -43,6 +43,8 @@ nav ul {
 	padding: 0;
 }
 
+dt { font-weight: bold; }
+
 ul ul { list-style-type: square; }  /* default: circle - which isn't clear */
 
 ol ol { list-style-type: lower-alpha; }

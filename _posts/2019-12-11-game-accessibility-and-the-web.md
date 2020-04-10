@@ -8,4 +8,4 @@ I am proper chuffed [pleasantly surprised] to have had the opportunity to contri
 
 [Read more about "Game accessibility and the Web" at 24 Accessibility](https://www.24a11y.com/2019/game-accessibility-and-the-web/)
 
-You may also be interested in the story and slides I presented at the [RNIB Accessibility Gaming Workshop](/articles/rnib-accessibility-gaming-workshop).
+*You may also be interested in the story and slides I presented at the [RNIB Accessibility Gaming Workshop](/articles/rnib-accessibility-gaming-workshop).*
