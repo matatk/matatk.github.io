@@ -71,21 +71,22 @@ h6 { line-height: 1.2; }
 /* Stop gap before nested lists */
 li p { margin-bottom: 0; }
 
-/* TODO:
- * should this be in highlighting CSS only?
+/* TODO FIXME: should this be in highlighting CSS only?
  * This causes some code samples to scroll horizontally; is that really good? */
 pre {
 	/* white-space: pre-wrap; -- TODO not sure about this */
 	overflow: auto;
 }
 
-/* TODO:
- * (needs more research): for some reason the monospace font has a bigger
- * line-height than the surrounding text. This fixes it without making the font
- * any smaller. Thanks to Dan Nye.
+/* For some reason the monospace font has a bigger line-height than the
+ * surrounding text. This fixes it without making the font any smaller. Thanks
+ * to Dan Nye.
  *
  * Note: the <code> elements in <pre> blocks don't get this class. */
 code.highlighter-rouge { line-height: 1; }
+
+/* The default monospace font (at least on Mac and Windows) is quite small */
+code { font-size: 1.3em; }
 
 /* Hide from visual users but not screen readers */
 .visually-hidden {
