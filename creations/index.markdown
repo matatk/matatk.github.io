@@ -13,6 +13,12 @@ title: Creations
 
 ### Small Software
 
+[Web Game Accessibility Explorations](https://github.com/matatk/web-game-accessibility-explorations)
+: Exploring the possibilities for providing semantic information from games compiled for the web to players' assistive technologies. For more info, consult the article [Game accessibility and the Web](/articles/game-accessibility-and-the-web/).
+
+[AudioChart](http://matatk.agrip.org.uk/audiochart/)
+: Experimenting with exploring charts on web pages using sound and the keyboard.
+
 [tinker apps](http://matatk.github.com/tinker/)
 : A collection of single-page tools to scratch itches and help me learn development techniques.
 
