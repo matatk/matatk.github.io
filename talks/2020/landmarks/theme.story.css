@@ -1,0 +1,51 @@
+/*
+ * Story mode user CSS
+ */
+
+@media screen and (prefers-color-scheme: light) {
+	:root {
+		/* Base colours */
+		--accent-colour: yellow;
+		--secondary-accent-colour: black;
+		--background-colour: white;
+		--secondary-background-colour: black;
+		--text-colour: black;
+		--secondary-text-colour: #757575;
+
+		/* Presentation-specific colours */
+
+		/* ... */
+	}
+}
+
+@media screen and (prefers-color-scheme: dark) {
+	a { color: #8f8fff; }
+	a:visited { color: #ff8fff; }
+
+	:root {
+		/* Base colours */
+		--accent-colour: yellow;
+		--secondary-accent-colour: white;
+		--background-colour: #222;
+		--secondary-background-colour: white;
+		--text-colour: #ddd;
+		--secondary-text-colour: #757575;
+
+		/* Presentation-specific colours */
+
+		/* ... */
+	}
+}
+
+@media screen {
+	:root {
+		--body-width: 45rem;
+		--base-font-size: 1.5rem;  /* Also used for the intro screens */
+	}
+
+	html { font-family: var(--story-mode-font-family); }
+
+	/* Presentation-specific extras... */
+
+	/* ... */
+}

@@ -1,0 +1,60 @@
+/*
+ * StorySlides internal shared CSS
+ */
+
+/*
+ * Utilities
+ */
+
+/* This just makes everything make sense */
+* { box-sizing: border-box; }
+
+/*
+*:focus {
+	outline: 0.1em solid var(--accent-colour);
+	outline-offset: 0.5em;
+}
+*/
+
+/* TODO move? */
+@media (hover: hover) and (pointer: fine) {
+	.storyslides-ui .mobile-only { display: none; }
+}
+
+.visually-hidden {
+	position: absolute !important;
+	clip: rect(1px, 1px, 1px, 1px);
+	padding: 0 !important;
+	border: 0 !important;
+	height: 1px !important;
+	width: 1px !important;
+	overflow: hidden;
+	white-space: nowrap;
+}
+
+/*
+ * General button styling
+ */
+
+.storyslides-ui button {
+	font-size: inherit;
+	padding: 0.25em;
+	border: 0.1em solid var(--text-colour);
+	border-radius: 0.5em;
+	background-color: var(--background-colour);
+	color: var(--text-colour);
+	border-color: var(--text-colour);
+	box-shadow: 0 0 0 0.1em var(--background-colour);
+}
+
+/* On desktop we can have wider borders */
+@media (hover: hover) and (pointer: fine) {
+	/* TODO fold into the above? seems better for mobile */
+	.storyslides-ui button { padding: 0.5em; }
+}
+
+.storyslides-ui button:focus,
+.storyslides-ui button:hover {
+	background-color: var(--text-colour);
+	color: var(--background-colour);
+}

@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+	<head>
+		<meta charset="UTF-8">
+		<title>Landmarks</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="mobile-web-app-capable" content="yes">
+		<style>
+/* Basic slides mode settings: These have to be set here so they're easy to
+   access by the code or shared across modes. */
+:root {
+	--author-font-height-percent-of-slide: 8;
+	--author-aspect-ratio: calc(16 / 9);
+	--story-mode-font-family: Georgia, serif;
+	/* Edit theme.(story|slides).css to change most colours and settings */
+}
+		</style>
+		<!-- Story Slides CSS -->
+		<link href="story-slides.common.css" rel="stylesheet">
+		<link href="story-slides.intro.css" rel="stylesheet">
+		<link href="story-slides.slides.css" rel="stylesheet">
+		<link href="story-slides.story.css" rel="stylesheet">
+		<!-- Your themes -->
+		<link href="theme.common.css" rel="stylesheet">
+		<link href="theme.slides.css" rel="stylesheet">
+		<link href="theme.story.css" rel="stylesheet">
+	</head>
+	<body tabindex="-1">
+		<!-- StorySlides main content and slide- and story-mode UI -->
+		<div id="storyslides-main-content" hidden>
+			<div id="storyslides-slides-container">
+
+		<div class="slide full padded bottom title">
+			<h1>Landmarks</h1>
+			<p id="author">
+			<span>Matthew Tylee Atkinson</span><span class="story"><br/></span><span> @matatk</span><span class="story"> on Twitter</span>
+			</p>
+			<div class="story">
+				<p>Hi, I'm Matthew. By day, I help people make web sites and apps accessible, with The Paciello Group. By night, I help make random other things accessible :-).</p>
+				<p>This is a talk about landmark regions, a technique that can make your web pages much easier to navigate. You may've heard of landmarks before, but I wanted to step back and tell the story of how they came about, as this helps us to understand what they're for and how much they rock.</p>
+			</div>
+		</div>
+
+		<div class="full slide middle centre title">
+			<p class="story">When navigating about the web, we often have two important questions in mind&hellip;</p>
+			<h2 data-pause>
+				<span>What's on the page?<br class="slides"></span>
+				<span>How can I get there?</span>
+			</h2>
+			<p class="story">Several different ways to address these questions have been created over the years, probably the most fundamental and well-recognised being&hellip;</p>
+		</div>
+
+		<h2 class="full slide middle centre title">Headings</h2>
+
+		<div class="slide full middle centre">
+			<p class="story">In the beginning, websites used just headings, lists and links to give them structure. For example, the EROS (Extremely Reliable Operating System) home page has a simple layout with some paragraphs of text as its content, and headings, lists and links for navigation.</p>
+			<img src="images/eros-os.png" alt="The EROS (Extremely Reliable Operating System) home page">
+			<p class="story"><em>This verison of the EROS home page is actually from 2005, so its minimalism comes from being a proper Computer Sciencey site in the best tradition&mdash;and if you're into Operating System design, <a href="https://en.wikipedia.org/wiki/EROS_(microkernel)">EROS</a> had many really interesting security and general design features.</em></p>
+		</div>
+
+		<div class="slide middle centre">
+			<p class="story">People using a keyboard or screen reader could use a few keys to navigate&hellip;</p>
+
+			<div class="slides" data-pause>
+				<p class="slides key">&uarr;</p>
+				<p class="slides key">&darr;</p>
+				<p class="slides key wide">Tab</p>
+			</div>
+			<ul class="story">
+				<li><p>The <kbd>&uarr;</kbd> key to scroll up, or announce the previous element.</p></li>
+				<li><p>The <kbd>&darr;</kbd> key to scroll down, or announce the next element.</p></li>
+				<li><p>The <kbd>Tab</kbd> key to move between interactive elements (links, buttons, form controls).</p></li>
+			</ul>
+
+			<p class="story">Screen readers provide additional shortcuts, such as <kbd>H</kbd> to skip to the next heading (and <kbd>Shift</kbd>+<kbd>H</kbd> to skip back).</p>
+		</div>
+
+		<div class="slide full middle centre">
+			<p class="story">Screen reader users can also bring up a dialog listing the headings found on a page, and their levels, and navigate between them this way, too. You can move around the list in the dialog and choose to go straight to a specific heading.</p>
+			<img src="images/eros-os-headings.png" alt="Screen reader dialog listing headings on the EROS OS home page">
+			<p class="story">This sort of keyboard navigation is fundamental, works well and is still vital to exploring content, but&hellip;</p>
+		</div>
+
+		<div class="full slide middle centre title">
+			<h2>Sites evolved</h2>
+			<p class="story">The web has more capabilities and is more complex now, having evolved in different ways&hellip;</p>
+		</div>
+
+		<div class="slide full middle centre">
+			<p class="story">One way in which sites have evolved is in terms of visual design. For example, The Paciello Group's home page has simple content, but a spatial visual design that immediately communicates the structure of the page: it's clear that there's a main central section, which draws the visitor's attention, and some ancilliary information down at the bottom.</p>
+			<img src="images/tpg.png" alt="The Paciello Group home page">
+		</div>
+
+		<div class="slide full middle centre">
+			<p class="story">Content-focused pages may have a large volume of information on them. Here's the Wikipedia article on colour perception deficit, or colour-blindness, as an example&hellip;</p>
+			<img src="images/wikipedia-article.png" alt="Overview of the Wikipedia article on colour perception deficit">
+		</div>
+
+		<div class="slide full middle centre">
+			<p class="story">There are a lot of headings here, but they match the structure of the article, so are both helpful and necessary for fine-grained navigation around it.</p>
+			<img src="images/wikipedia-article-headings.png" alt="Screen reader dialog showing some of the heading hierarchy for the Wikipedia article">
+		</div>
+
+		<div class="slide full middle centre">
+			<p class="story">If we zoom into the top of the page, though, the visual design indicates that there are some actions that can be accomplished that are not just about reading the article&hellip;</p>
+			<img src="images/wikipedia-article-cropped.png" alt="Zoomed view of the top of the Wikipedia article on colour perception deficit">
+		</div>
+
+		<div class="slide full middle centre">
+			<p class="story">Actions that can be performed include&hellip;</p>
+			<ul class="story">
+				<li>Searching Wikipedia.</li>
+				<li>Viewing the history or metadata around the article.</li>
+				<li>Navigating about Wikipedia as a whole.</li>
+			</ul>
+			<img src="images/wikipedia-article-cropped-highlights.png" alt="Zoomed view of the top of the Wikipedia article, with highlighting around the regions of the page corresponding to the actions discussed">
+		</div>
+
+		<div class="slide full middle centre">
+			<p class="story">We also use the web for different things, including highly interactive tasks such as online shopping.</p>
+			<img src="images/shopping.png" alt="Online shopping site, showing a selection of apples">
+			<p class="story">Headings can help us navigate here, but what if we wanted to move directly between the product search results and our shopping basket, for example?</p>
+		</div>
+
+		<div class="slide full light">
+			<p class="story">There are full-featured web-apps for other tasks too, such as communications suites, whose interfaces may include several different panes for folder navigation, contacts, message lists and content.</p>
+			<p class="story">This screengrab happens to be of Google Wave. I really miss it; not so much the UI, but how elegantly it handled group communications. Anyway, the screengrab is somewhat low-res, so may seem blurry, which is interesting becuase if you can see the image, even though it's a bit blurry, you may still be able to discern the different areas of the UI quite quickly.</p>
+			<img src="images/google-wave.png" alt="Google Wave communications web-app. I miss Google Wave!">
+			<p class="story">The next innovation in navigation that I want to talk about helped alleviate several more of the challenges we've considered&hellip;</p>
+		</div>
+
+		<div class="full slide middle centre title">
+			<h2>Skip links</h2>
+			<p class="story">Skip links are links provided by the web author, placed by convention at the top of the page. Their purpose is to take you directly to the main content. Whilst you might want to explore any navigational content towards the start of the page on your first few visits, if you are familiar with the site, it can save a great deal of time to skip the navigation when it's not needed.</p>
+			<p class="story">It's really important to consider that whilst it might not take long to <em>glance</em> at the navigational links, it could take you quite some time to read through them all&mdash;and that's exactly what a screen reader does.</p>
+		</div>
+
+		<div class="slide full middle centre">
+			<p class="story">Here's a run-down of a skip link in use on <a href="https://www.bbc.co.uk/sport/get-inspired/47977024">a BBC Sports news story page</a>&hellip;</p>
+			<p class="story">We begin at the top of the article's page, which features global and local navigation links, a sidebar and the start of the article's content.</p>
+			<img src="images/bbc-marathon-1.png" alt="Stage 1, a BBC sport news article, which happens to be about fun facts relating to the London marathon.">
+		</div>
+
+		<div class="slide full middle centre">
+			<p class="story">Upon the first press of the <kbd>Tab</kbd> key, the skip link becomes visible.</p>
+			<img src="images/bbc-marathon-2.png" alt="Stage 2, on the first press of the Tab key, the skip to content link is focused and made visible.">
+		</div>
+
+		<div class="slide full middle centre">
+			<p class="story">Following the link moves the focus to the start of the article, missing out all the navigational links.</p>
+			<img src="images/bbc-marathon-3.png" alt="Stage 3, activating the link takes the focus to the start of the article content, skipping over the navigational structures.">
+		</div>
+
+		<!-- TODO nested data-pause doesn't work -->
+		<div class="slide centre middle">
+			<h2>Skip links are awesome</h2>
+			<div data-pause>
+				<p>Easily discoverable<span class="story">&mdash;by convention they're always at the top of the page.</span></p>
+				<p>Avoid repeated content</p>
+				<p><strong>Save your visitors' time</strong><span class="story">&mdash;<a href="https://www.bbc.co.uk/sport/get-inspired/47977024">try reading through the navigation links with a screen reader</a>: they're all important and helpful, but someone who's familar with them and just wants to get to the article can save so much time by skipping them.</span></p>
+			</div>
+		</div>
+
+		<!-- TODO central, not centred -->
+		<div class="slide centre middle">
+			<h2>But</h2>
+			<p class="story">Skip links do have some limitations; they're&hellip;</p>
+			<div data-pause>
+				<p>Only at the top (or where the author put them)<span class="story">&mdash;you can't access them from anywhere.</span></p>
+				<p>Unable to give a full overview<span class="story"> of the content&mdash;they only let you skip over, or to, what the page author prescribed.</span></p>
+				<p>Not quite so useful in app-like settings</p>
+			</div>
+		</div>
+
+		<div class="full slide middle centre title">
+			<p class="story">There is a solution to these problems, though, and that is of course&hellip;</p>
+			<h2>Landmark regions</h2>
+		</div>
+
+		<div class="slide centre middle" data-pause>
+			<p class="story">Landmark regions are&hellip;</p>
+			<p>Signposts to broad areas of the page<span class="story">.</span></p>
+			<p><strong>Non-visual</strong> complement to visual design<span class="story">&mdash;they don't change the appearance of a page; they let you impart the same structural information that the visual design does to people who may not be able to perceive it.</span></p>
+			<p><strong>Random access</strong><span class="story">&mdash;you can move between landmarks wherever you are on the page.</span></p>
+			<p>Part of the <a href="https://www.w3.org/TR/wai-aria-1.1/">W3C's Accessible Rich Internet Application (ARIA) standards</a><span class="story">. ARIA was created to help authors express, and browsers expose, the information that assistive technologies need to convey more complex user interfaces and interactions in web-apps. Support for ARIA, including landmark regions, across browsers and assistive technologies is mature.</span></p>
+		</div>
+
+		<div class="slide full centre middle">
+			<p class="story">We can use landmarks to call out the areas of a page, for example here again is The Paciello Group home page we considered before.</p>
+			<img src="images/tpg-signposts.png" alt="The Paciello Group home page with visually-apparent page areas called out in speech bubbles">
+			<div class="story">
+				<p>Looking at this page visually quickly gives you the impression that the main areas are:</p>
+				<ul>
+					<li>Navigation, which happens to be at the top.</li>
+					<li>The &quot;main bit&quot;, in the middle.</li>
+					<li>An area that's probably contact information and other stuff, at the bottom.</li>
+				</ul>
+				<p>That "other stuff" part is really key here&mdash;if you're a person who browses visually, you get all that info from just a glance, but if you can't see the screen at all, there's no such overview; you just have read through all of the content.</p>
+			</div>
+		</div>
+
+		<div class="slide full centre middle">
+			<p class="story">How would a screen reader present this overview to your visitors? Well you can cycle through the regions on the page, or skip directly to the main region using a shortcut key, but you can also bring up a dialog in the same way as with headings&hellip;</p>
+			<img src="images/tpg-landmarks-sr.png" alt="Landmark regions reported by a screen reader on The Paciello Group home page">
+			<p class="story">As it happens, the landmark structure on TPG's home page includes a &quot;banner&quot; area that contains the logo as well as the &quot;navigation&quot; region with links; this is a fairly common structure. Also of note is that landmark regions, like headings, can have a tree-like structure, as they can be nested.</p>
+		</div>
+
+		<div class="full slide middle">
+			<p class="story">But how does the screen reader get to know about these landmark regions on the page?</p>
+			<ol data-pause>
+				<li>Your <span class="story">content's </span>mark-up indicates the landmarks<span class="story">&mdash;they will often correspond to the areas called out by the page's visual design.</span></li>
+				<li>The browser <span class="story">recognises and </span>exposes them<span class="story"> to&hellip;</span></li>
+				<li>Assistive Technologies<span class="story">, which</span> present them<span class="story"> to the user, and provide keyboard navigation shortcuts too.</span></li>
+			</ol>
+		</div>
+
+		<div class="full slide middle centre title">
+			<p class="story">As a page author, you may be asking&hellip;</p>
+
+			<h2>How do I provide landmarks?</h2>
+			<p class="story">The following examples show how to provide a landmark region for search functionality, the main content, footer and then other bits too.</p>
+		</div>
+
+		<div class="slide">
+			<h2>Search box</h2>
+			<p class="story">A conventional way to mark up a search UI is using a textbox, and a button labelled "Search", both wrapped in a <code>&lt;div&gt;</code> element.</p>
+			<div data-pause>
+				<div data-markdown><!--
+				```html
+				<div>
+					<input type="text" ...>
+					<button>Search</button>
+				</div>
+				```
+				--></div>
+			</div>
+		</div>
+
+		<div class="slide">
+			<h2>Search box<span class="story"> with landmark</span></h2>
+			<p class="story">A helpful landmark region can be added simply, by setting the <code>role</code> attribute on the container <code>&lt;div&gt;</code> element to a value of "search".</p>
+			<div data-markdown><!--
+			```html
+			<div role="search">
+				<input type="text" ...>
+				<button>Search</button>
+			</div>
+			```
+			--></div>
+		</div>
+
+		<div class="slide">
+			<h2>Main content</h2>
+			<p class="story"><a href="https://twitter.com/stevefaulkner">Steve Faulkner</a> did some research and found that there are some common ways people mark up the container of the page's main content. They may use a <code>&lt;div&gt;</code> element with an <code>id</code> of "content".</p>
+			<div data-pause>
+				<div data-markdown><!--
+				```html
+				<div id="content">
+					.
+					.
+					.
+				</div>
+				```
+				--></div>
+			</div>
+		</div>
+
+		<div class="slide">
+			<h2>Main content<span class="story">: popular <code>id</code> value</span></h2>
+			<p class="story">However, using an <code>id</code> of "main" is even more popular.</p>
+			<div data-markdown><!--
+			```html
+			<div id="main">
+				.
+				.
+				.
+			</div>
+			```
+			--></div>
+		</div>
+
+		<div class="slide">
+			<h2>Main content<span class="story"> with landmark</span></h2>
+			<p class="story">To have this container recognised as the &quot;main&quot; landmark, simply add a <code>role</code> attribute with a value of "main".</p>
+			<div data-markdown><!--
+			```html
+			<div id="main" role="main">
+				.
+				.
+				.
+			</div>
+			```
+			--></div>
+		</div>
+
+		<div class="slide full"> <!-- TODO .centre and .middle not needed -->
+			<img src="images/Highlander_1986,poster.jpg" alt="Highlander film poster">
+			<p class="story">However, as with immortals from Highlander, there can only be one <code>&lt;main&gt;</code> element per page, so the code could be simplified&hellip;</p>
+		</div>
+
+		<div class="slide">
+			<h2>Main content<span class="story"> identified only by landmark role</span></h2>
+			<p class="story">You could just use the <code>role</code> attribute instead of the <code>id</code> value to identify the main content, and key your CSS off the <code>role</code> attribute only.</p>
+			<div data-markdown><!--
+			```html
+			<div role="main">
+				.
+				.
+				.
+			</div>
+			```
+			--></div>
+		</div>
+
+		<!-- TODO this is on a light background in slides mode but not story -->
+		<div class="slide light">
+			<p class="story">But there's an even simpler and cleaner way, courtessy of HTML5&hellip;</p>
+			<img src="images/HTML5_Logo.svg" alt="">
+		</div>
+
+		<div class="slide">
+			<h2>Main content<span class="story">: HTML5 version</span></h2>
+			<p class="story">HTML5 introduced the <code>&lt;main&gt;</code> element, which brings with it an implicit "main" landmark.</p>
+			<div data-markdown><!--
+			```html
+			<main>
+				.
+				.
+				.
+			</div>
+			```
+			--></div>
+		</div>
+
+		<div class="slide middle centre">
+			<p><strong>*</strong> <span class="story">now I was actually fibbing a bit before in order to squeeze in a nerdy reference, becuase </span><a href="https://html.spec.whatwg.org/multipage/grouping-content.html#the-main-element">actually there can be more than one<span class="story"> <code>&lt;main&gt;</code> element</span>,<br class="slides"><span data-pause><span>if the others are hidden.</span></span></a></p>
+		</div>
+
+		<div class="slide">
+			<h2>Main content<span class="story">: summary</span></h2>
+			<p class="story">In summary&hellip;</p>
+			<div data-pause>
+				<div data-markdown><!--
+				`<div role="main">`
+				--></div>
+				<p>is the same, semantically, as<span class="story"> just</span></p>
+				<div data-markdown><!--
+				`<main>`
+				--></div>
+			</div>
+		</div>
+
+		<div class="slide">
+			<h2>Recap: how does the landmark help?</h2>
+			<ul>
+				<li><span class="story">If you're using a screen reader, you'll be able to </span><span class="slides">You can </span>jump to it using keybaord shortcuts<span class="story">.</span></li>
+				<li><span class="story">When you enter the region, screen</span><span class="slides">Screen</span> readers will announce something like "main" or perhaps "main region"<span class="story">.</span></li>
+			</ul>
+			<p class="story">It's important to bear in mind that the exact announcement varies with screen reader software, and your visitor's settings&mdash;the main thing you need to concentrate on is providing the appropriate structural cues; it's up to the user how to receive them and navigate based on them.</p>
+		</div>
+
+		<div class="slide ever-so-slightly-smaller">
+			<h2>Footer</h2>
+			<p class="story">A similar story as above applies when marking up your footer content&hellip;</p>
+			<div data-pause>
+				<div data-markdown><!--
+				`<div class="footer">`
+				--></div>
+				<p>could become</p>
+				<div data-markdown><!--
+				`<div role="contentinfo">`
+				--></div>
+				<p>or, more simply</p>
+				<div data-markdown><!--
+				`<footer>`
+				--></div>
+			</div>
+		</div>
+
+		<div class="slide middle centre">
+			<h2>HTML5 Automagicalness</h2>
+			<p class="story">HTML5 provides a number of elements that bring implicit landmark regions with them.</p>
+		</div>
+
+		<!-- TODO not that accessible when in slide (live-region) mode? -->
+		<div class="slide middle slightly-smaller">
+			<table>
+				<tr><th>Element</th><th>Landmark region role</th></tr>
+				<tr><td><code>&lt;header&gt;</code></td><td><code>banner</code><strong><sup>1</sup></strong></td></tr>
+				<tr><td><code>&lt;nav&gt;</code></td><td><code>navigation</code></td></tr>
+				<tr><td><code>&lt;main&gt;</code></td><td><code>main</code></td></tr>
+				<tr><td><code>&lt;section&gt;</code></td><td><code>region</code><strong><sup>2</sup></strong></td></tr>
+				<tr><td><code>&lt;form&gt;</code></td><td><code>form</code><strong><sup>2</sup></strong></td></tr>
+				<tr><td><code>&lt;aside&gt;</code></td><td><code>complementary</code></td></tr>
+				<tr><td><code>&lt;footer&gt;</code></td><td><code>contentinfo</code><strong><sup>1</sup></strong></td></tr>
+			</table>
+			<div data-pause>
+				<ol class="align-right">
+					<li><span class="story">only considered landmark regions </span>if scoped to the <code>&lt;body&gt;</code> element, i.e. page-global<span class="story">.</span></li>
+					<li><span class="story">only considered landmark regions </span>if labelled<span class="story">.</span></li>
+				</ol>
+			</div>
+		</div>
+
+		<div class="slide slightly-smaller-er">
+			<h2>Labelling landmarks</h2>
+			<p class="story">Labelling landmarks allows you to differentiate them, and further explain their purpose. Some HTML5 elements are actually only recognised <em>as</em> landmarks if they have a label&mdash;this is good because it avoids there being way too many landmarks on the page and overwhelming the user with them.</p>
+			<p class="story">Say you have a <code>&lt;section&gt;</code> element that contains a paragraph&hellip;</p>
+			<div data-pause>
+				<div data-markdown><!--
+				```html
+				<section>
+					<p>blah</p>
+				</section>
+				```
+				--></div>
+				<p><span class="story">That </span>isn't<span class="story"> recognised as</span> a landmark, but <span class="slides">this</span><span class="story">a <code>&lt;section&gt;</code> containing a heading (an <code>&lt;h2&gt;</code> of "Penguins" in this case), with an <code>aria-labelledby</code> attribute that points to the heading by referencing it's <code>id</code></span> is<span class="story"> considered a landmark</span>:</p>
+				<div data-markdown><!--
+				```html
+				<section aria-labelledby="penguins-header">
+					<h2 id="penguins-header">Penguins</h2>
+					<p>blah</p>
+				</section>
+				```
+				--></div>
+				<!-- TODO: note about visual here first? Decided not to as it makes this section longer and fits nicely later anyway. -->
+			</div>
+		</div>
+
+		<div class="slide full middle centre a-little-smaller">
+			<div class="slides">
+				<div data-markdown><!--
+				```html
+				<section aria-labelledby="penguins-header">
+					<h2 id="penguins-header">Penguins</h2>
+					<p>blah</p>
+				</section>
+				```
+				--></div>
+			</div>
+			<div data-pause>
+				<div>
+					<p><span class="story">In this case, </span>Screen readers may say</p>
+					<strong>"Penguins, region"</strong>
+					<p class="story">when entering the region (or listing it in the dialog mentioned before).</p>
+				</div>
+			</div>
+		</div>
+
+		<h2 class="full slide middle centre" data-split>
+			<span class="bottom">Golden<span class="story">&nbsp;</span></span>
+			<span class="top">Rules</span>
+		</h2>
+
+		<div class="slide middle centre">
+			<p class="big"><span class="story">I've got </span>
+			<strong>5</strong>
+			<span class="story"> golden rules for you&hellip;</span></p>
+		</div>
+
+		<div class="slide middle centre">
+			<h3 class="big"><span class="story">Golden Rule </span>1</h3>
+		</div>
+
+		<div class="slide middle centre">
+			<p><strong>Landmarks<span class="slides">:</span></strong> <span class="story">should be used to provide an </span>overview<span class="story"> of the content.</span></p>
+			<p><strong>Headings<span class="slides">:</span></strong> <span class="story">should be used to provide the </span>fine-grained navigation<span class="story">.</span></p>
+		</div>
+
+		<div class="slide full middle centre">
+			<p class="story">Let's go back to the Wikipedia article and the different regions we discussed before&hellip;</p>
+			<img src="images/wikipedia-article-callouts.png" alt="Wikipedia article on colour perception deficit with three main landmark regions called out">
+			<p class="story">Let's call the regions&hellip;</p>
+			<ul class="story">
+				<li>Search</li>
+				<li>The article</li>
+				<li>Navigation</li>
+			</ul>
+		</div>
+
+		<div class="slide full middle centre">
+			<p class="story">In contrast to the three visually-apparent regions, there are tens of headings.</p>
+			<img src="images/wikipedia-article-headings.png" alt="Repeat of the image of part of the heading tree for the Wikipedia article">
+			<p class="story">The complexity of the headings contrasts with the relatively simpler landmark region structure. This is ideal, because landmarks are there to give an overview of what's on the page, and headings are for the fine-grained navigation around the content, and must reflect its structure.</p>
+		</div>
+
+		<div class="slide middle centre">
+			<h3 class="big"><span class="story">Golden Rule </span>2</h3>
+		</div>
+
+		<div class="slide middle centre">
+			<p>Use relatively <strong>few</strong> landmarks&hellip;</p>
+			<p>&hellip;but cover <strong>all</strong> of the content on the page.</p>
+			<p class="story">This ensures that all of the content on the page has a home&mdash;that there's nothing outside of a landmark region that could be missed&mdash;but the overview is as concise as can be.</p>
+		</div>
+
+		<div class="slide middle centre">
+			<h3 class="big"><span class="story">Golden Rule </span>3</h3>
+		</div>
+
+		<div class="slide middle centre">
+			<p>
+				<span>If you've got <strong>more than one</strong> of the same type of landmark on a page,</span>
+				<span data-pause>
+					<span>
+						use labels to <strong>differentiate</strong> them.
+					</span>
+				</span>
+			</p>
+		</div>
+
+		<div class="slide middle hack20 a-little-smaller">
+			<p class="story">Imagine we have two navigation landmarks on a page, provided by two <code>&lt;nav&gt;</code> elements. Without delving into their content, it's not clear what the purpose of each of them is, though it may be obvious from the visual design of the page.</p>
+			<div data-markdown><!--
+			```html
+			<nav>
+				. . .
+			</nav>
+
+			<nav>
+				. . .
+			</nav>
+			```--></div>
+		</div>
+
+		<div class="slide middle hack20 a-little-smaller">
+			<p class="story">Labels can be provided to make the different purposes of the navigation regions clear. We can give one <code>&lt;nav&gt;</code> element an <code>aria-label</code> attribute value of "Site" and the other one a value of "Page", for example.</p>
+			<div data-markdown><!--
+			```html
+			<nav aria-label="Site">
+				. . .
+			</nav>
+
+			<nav aria-label="Page">
+				. . .
+			</nav>
+			```--></div>
+		</div>
+
+		<div class="slide middle centre">
+			<p>Screen readers may say</p>
+			<div data-pause>
+				<strong>"Site, navigation"</strong>
+				<div>
+					<p>and</p>
+					<strong>"Page, navigation"</strong>
+				</div>
+			</div>
+		</div>
+
+		<div class="slide middle centre">
+			<p>But, <span class="story">using visually-apparent headings for labelling the regions is </span>better<span class="story">, because they can be helpful to more users, particularly anyone who finds reading difficult, or for whom the visual layout may be unclear.</span>&hellip;</p>
+		</div>
+
+		<div class="slide middle a-little-smaller">
+			<div class="story">
+				<p>You can provide visual labels by:</p>
+				<ul>
+					<li>placing visually-apparent headings in each <code>&lt;nav&gt;</code> element;</li>
+					<li>giving each heading an <code>id</code>;</li>
+					<li>linking the <code>&lt;nav&gt;</code> elements to the headings by setting <code>aria-labelledby</code> attributes on the <code>&lt;nav&gt;</code> elements to point to the <code>id</code> values of the headings.</li>
+				</ul>
+			</div>
+			<div data-markdown><!--
+			```html
+			<nav aria-labelledby="nav-global-header">
+				<h2 id="nav-global-header">Site</h2>
+				. . .
+			</nav>
+
+			<nav aria-labelledby="nav-local-header">
+				<h2 id="nav-local-header">Page</h2>
+				. . .
+			</nav>
+			```--></div>
+			<p class="story">As we've only made a visual change here, the screen reader would the same things ("Site, navigation" and "Page, navigation").</p>
+		</div>
+
+		<!-- TODO: make this 5 instead of 4 and add a previous one about visual labels being better? Decided not to becuase that's a general principle, so have alluded to that in the story text. -->
+		<div class="slide middle centre">
+			<h3 class="big"><span class="story">Golden Rule </span>4</h3>
+		</div>
+
+		<div class="slide middle centre">
+			<p>There's <strong>no need to include the type</strong><br class="slides">of the landmark region <strong>in its label</strong>.</p>
+		</div>
+
+		<div class="slide middle centre hack20">
+			<p class="story">Given a <code>&lt;nav&gt;</code> element with an <code>aria-label</code> of "Site"&hellip;</p>
+			<div data-markdown><!--
+			```html
+			<nav aria-label="Site">
+				. . .
+			</nav>
+			```--></div>
+			<div data-pause>
+				<div>
+					<p>Screen readers may say</p>
+					<strong>"Site, navigation"</strong>
+				</div>
+			</div>
+		</div>
+
+		<div class="slide middle centre ten">
+			<p class="story">However, if the type of the region is included in the <code>aria-label</code> attribute's value&hellip;</p>
+			<div data-markdown><!--
+			```html
+			<nav aria-label="Site Navigation">
+				. . .
+			</nav>
+			```--></div>
+			<div data-pause>
+				<div>
+					<p>Screen readers may say</p>
+					<strong>"Site Navigation, navigation"</strong>
+				</div>
+				<p class="story">&hellip;which is probably not what you want :-).</p>
+			</div>
+		</div>
+
+		<div class="slide middle centre">
+			<h3 class="big"><span class="story">Golden Rule </span>5</h3>
+		</div>
+
+		<div class="slide middle centre">
+			<p>Generally <strong>avoid</strong> using the<br class="slides"><strong><code>aria-roledescription</code></strong><br class="slides">attribute</p>
+		</div>
+
+		<div class="slide middle centre">
+			<p class="big slides">&#x23EA;</p>
+			<p class="story">Ok, let's rewind slightly&hellip;</p>
+		</div>
+
+		<div class="full slide middle centre hack10 a-little-smaller-er">
+			<p class="story">What's the <code>aria-roledescription</code> attribute? It lets you override how a <code>role</code> is announced by screen readers. Let's imagine a <code>&lt;main&gt;</code> element with a role description of "Slartibartfast"&hellip;</p>
+			<div data-markdown><!--
+			```html
+			<main aria-roledescription="Slartibartfast">
+				. . .
+			</main>
+			```--></div>
+			<div data-pause>
+				<div>
+					<p>Screen readers may say</p>
+					<strong>"Slartibartfast"</strong>
+					<p><span class="story">when entering this region, or listing it in the dialog mentioned before&mdash;</span>i.e. <strong>not</strong> "main"<span class="story">.</span></p>
+				</div>
+			</div>
+		</div>
+
+		<div class="full slide middle centre hack10 a-little-smaller-er">
+			<p class="story">However, providing role descriptions can be pretty helpful in specific circumstances. Let's consider a web-app that's a slide show viewer. We have a <code>&lt;section&gt;</code> element labelled by a heading that says "Reasons landmarks rock" and an <code>aria-roledescription</code> of "Slide"&hellip;</p>
+			<div data-markdown><!--
+			```html
+			<section
+			 aria-labelledby="head"
+			 aria-roledescription="Slide">
+			    <h2 id="head">Reasons landmarks rock</h2>
+				. . .
+			</section>
+			```--></div>
+			<div data-pause>
+				<div>
+					<p>Screen readers may say</p>
+					<strong>"Reasons landmarks rock, Slide"</strong>
+					<p class="story">which is quite nice!</p>
+				</div>
+			</div>
+		</div>
+
+		<div class="slide full middle centre">
+			<p><strong>With great power<span class="slides">&hellip;</span></strong><span class="story"><strong>, comes great responsibility</strong> though! There are some serious challenges that using this attribute can create for your visitors&hellip;</span></p>
+			<div data-pause>
+				<p>Subverting users' expectations<span class="story"> by changing the way that standard regions they've come to expect to find are announced, raising inconsistencies across sites and sowing the seeds of confusion.</span></p>
+				<p>Creating challenges for localisation<span class="story">, ranging from simply forgetting to localise your role descriptions because they're non-obvious, to making it technically harder to do so because they're attribute values as opposed to content contained within elements.</span></p>
+			</div>
+			<p class="story">The <a href="https://www.w3.org/TR/wai-aria-1.1/#aria-roledescription">specification section on <code>aria-roledescription</code></a> gives more info and examples of other ways you might use&mdash;and should be careful using&mdash;the attribute.</p>
+		</div>
+
+		<div class="slide full" data-pause>
+			<h2 class="story">Landmarks for everyone</h2>
+			<p class="story">Now you know how to provide landmark regions in a really helpful way, and how they can be so clear and time-saving for people using screen readers. But surely landmarks could be helpful for everyone, so what about keyboard-only users?</p>
+			<img src="images/piano-keyboard.jpg" alt="A piano keyboard (I couldn't find a nice picture of a computer keyboard)">
+		</div>
+
+		<div class="slide full">
+			<p class="story">&hellip;and what about mouse users?</p>
+			<img src="images/mouse.jpg" alt="A cute fluffy mouse">
+		</div>
+
+		<div class="slide full">
+			<p class="story">There have been some long-running discussions with browser vendors on providing ways for people to explore the landmarks on the page, even without assistive technology. For example, there's a <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=670928">Firefox bug</a> on the issue&hellip;</p>
+			<img src="images/browser-bug-firefox.png" alt="Bug 670928: HTML5 element and WAI-ARIA landmark roles easily navigable in Firefox">
+		</div>
+
+		<div class="slide full">
+			<p class="story">&hellip;and likewise, <a href="https://bugs.chromium.org/p/chromium/issues/detail?id=704698">one for Chromium</a>, upon which Chrome is based&hellip;</p>
+			<img src="images/browser-bug-chromium.png" alt="Chromium issue 704698: provide keyboard navigation for landmarks/sections">
+		</div>
+
+		<div class="full slide middle centre title">
+			<p class="story">But also, is there a way that you, as a web developer, can check your site's landmark structure and experiment with improving on it? It'll be great if browsers do decide to implement all of the above (currently there are a number of questions that need to be answered, preferably through consensus in the industry, before that happens, but we're hopeful). For now, though, you can use the "Landmarks" browser extension&hellip;</p>
+
+			<h2>Landmarks extension demo</h2>
+			<div class="story">
+				<p>This is a browser extension that I maintain that provides keyboard-only access to landmarks, and developer tools for inspecting and refining them. Let's check it out&hellip;</p>
+				<p><em>At this point, the <a href="http://matatk.agrip.org.uk/landmarks/">Landmarks browser extension</a> would be demonstrated. The demo shows how to use it to navigate pages, and also, for developers, how to use the DevTools part of the extension to check how landmark regions are marked up, and add/edit them with updates reflected by the extension in real-time.</em></p>
+				<p><em>Here's the outline for the demo&hellip;</em></p>
+				<ul>
+					<li><em>Visit the <a href="wow.html">demo World of Wombats page</a>.</em></li>
+					<li><em>Check out the landmarks on the page, via the keyboard and the sidebar.</em></li>
+					<li><em>Note that the two navigation regions are not differentiated.</em></li>
+					<li><em>Open the Landmarks DevTools panel.</em></li>
+					<li><em>Use it to observe how the <code>main</code> region is labelled.</em></li>
+					<li><em>Add an <code>id</code> to the page title.</em></li>
+					<li><em>Use the page title to label the first <code>navigation</code> region.</em></li>
+					<li><em>Add a heading for the "On this page&hellip;" navigation links.</em></li>
+					<li><em>Use the newly-added local heading to label the second <code>navigation</code> region.</em></li>
+				</ul>
+			</div>
+		</div>
+
+		<div class="slide">
+			<h2>Examples</h2>
+			<ul>
+				<li>
+					<a href="wow.html">World of Wombats (live demo version, not fully labelled)</a>
+					<p class="story">This version of the page lacks some of the landmarks/labels that the &quot;full&quot; version below has, and is used to demonstrate the Landmarks browser extension.</p>
+				</li>
+				<li><a href="wow-full.html">World of Wombats (fully labelled)</a></li>
+			</ul>
+		</div>
+
+		<div class="slide">
+			<h2>Resources</h2>
+			<ul>
+				<li><a href="https://www.w3.org/TR/2017/NOTE-wai-aria-practices-1.1-20171214/examples/landmarks/index.html">W3C ARIA Landmarks Example</a></li>
+				<li><a href="https://developer.paciellogroup.com/blog/2015/09/easy-content-organisation-with-html5/">Easy content organisation with HTML5</a></li>
+				<li><a href="http://matatk.agrip.org.uk/landmarks">Landmarks browser extension</a></li>
+				<!-- TODO: really relevant?
+				<li><a href="https://chrispederick.com/work/web-developer/">Web Developer extension</a> (headings etc.)</li>
+				-->
+				<li><a href="https://addons.mozilla.org/en-GB/firefox/addon/a11y-outline/">a11y-outline extension</a> (also shows headings)</li>
+			</ul>
+		</div>
+
+		<div class="slide a-little-smaller-er">
+			<h3>Thanks to&hellip;</h3>
+			<ul>
+				<li><strong>David Todd:</strong> original Firefox Landmarks extension author</li>
+				<li><strong>Steve Faulkner:</strong> inspiration, and the <code>&lt;main&gt;</code> element</li>
+				<li><strong>The Paciello Group:</strong> HTML5 support development time</li>
+				<li><strong>Mark Withall:</strong> test-driven development advice</li>
+				<li><strong>Carolyn MacLeod:</strong> much constructive feedback</li>
+				<li><strong>Dan Nye, Jeff Home:</strong> web development advice</li>
+				<li>Everyone who filed <strong>issues</strong>, gave <strong>feedback</strong> or wrote <strong>posts</strong></li>
+				<li>The Stack Overflow, Mozilla BugZilla &amp; MDN Web Docs, Chromium-Extensions group and GitHub communities</li>
+			</ul>
+		</div>
+
+		<div class="slide a-little-smaller">
+			<h3>Image acknowledgements</h3>
+			<ul>
+				<li><a href="https://en.wikipedia.org/wiki/File:Google_Wave.png">Google Wave screengrab</a> via Wikipedia &copy; Google; fair use</li>
+				<li><a href="https://en.wikipedia.org/wiki/File:Highlander_1986,poster.jpg">Highlander promotional poster</a> via Wikipedia &copy; Highlander Productions; fair use</li>
+				<li><a href="https://www.flickr.com/photos/45350291@N05/4169884234">Piano keyboard</a> &copy; Rachel Patterson; CC BY-NC-ND 2.0</li>
+				<li><a href="https://www.flickr.com/photos/munch999/126242454">Mouse</a> &copy; munch999; CC BY-NC-SA 2.0</li>
+				<li><a href="https://commons.wikimedia.org/wiki/File:Vombatus_ursinus_-Maria_Island_National_Park.jpg">Wombat</a> &copy; JJ Harrison; CC BY-SA 3.0</li>
+			</ul>
+		</div>
+
+		<div class="slide full centre title" data-split="75% 25%">
+			<h2 class="bottom">
+				<span class="slides">Thanks for listening</span>
+				<span class="story">Thanks for reading</span>
+			</h2>
+			<p>Any questions?</p>
+			<p class="story">If so, <a href="https://twitter.com/matatk">contact me on Twitter</a>.</p>
+		</div>
+
+		<div class="slide">
+			<h2>How much do you shrink?</h2>
+			<p>The <a href="https://www.bbc.co.uk/sport/get-inspired/47977024">BBC Sport article</a> referenced earlier mentioned that: the average runner shrinks 1.25cm during a marathon, due to spine compression. We all get shorter throughout the day, too, but the amount varies.</p>
+		</div>
+			</div>
+
+			<!-- StorySlides UI -->
+			<div id="storyslides-top-ui" class="storyslides-ui">
+				<!-- This gets moved to the top of the page -->
+				<div class="slides mobile-only">
+					<button id="storyslides-button-menu">Menu</button>
+					<button class="slides" id="storyslides-button-previous" aria-label="Previous"><span>&larr;</span></button>
+				</div>
+				<div class="story">
+					<button id="storyslides-button-mode-slides" aria-describedby="storyslides-mode-slides-key storyslides-mode-slides-explainer">Switch to slides mode</button>
+					<span id="storyslides-mode-slides-key">or press <kbd>Escape</kbd></span>
+					<div id="storyslides-mode-slides-explainer-container">
+						<p id="storyslides-mode-slides-explainer">Slides mode displays each slide one at a time, as they would be projected for the audience. The extra information present in story mode is not displayed. Keyboard shortcuts or buttons can be used to move between slides.</p>
+						<button class="mobile-only close">Close</button>
+					</div>
+				</div>
+			</div>
+
+			<!-- This stays here, as makes sense in the DOM order -->
+			<div class="storyslides-ui slides">
+				<button class="mobile-only" id="storyslides-button-next" aria-label="Next"><span>&rarr;</span></button>
+				<div id="storyslides-progress"><div></div></div>
+			</div>
+		</div>
+
+		<!-- StorySlides screens/dialogs -->
+		<div class="storyslides-ui">
+			<div id="storyslides-screen-errors" hidden>
+				<h1>Content errors detected</h1>
+				<p>An error, or errors, were detected in your presentation's content&mdash;open the browser console for more info.</p>
+			</div>
+
+			<div id="storyslides-screen-loading" hidden>
+				<p>Loading&hellip;</p>
+			</div>
+
+			<div id="storyslides-screen-intro" hidden>
+				<h1 id="storyslides-screen-intro-heading" tabindex="-1"></h1>
+				<fieldset>
+					<legend>Read presentation as&hellip;</legend>
+					<div id="storyslides-grid">
+						<h2>Story</h2>
+						<div id="storyslides-desc-story">
+							<!-- <p>Story mode gives you everything that was on the slides, plus what was said <em>about</em> the slides.</p> -->
+							<p>The real content of a talk is often not in the slides, but in what's said around them. Story mode shows you not only what was projected, but the explanation behind it too.</p>
+						</div>
+						<button id="storyslides-choose-story" aria-describedby="storyslides-desc-story">Story (recommended)</button>
+
+						<h2>Slides</h2>
+						<div id="storyslides-desc-slides">
+							<p>Slides mode shows you just the slides as presented.</p>
+						</div>
+						<button id="storyslides-choose-slides" aria-describedby="storyslides-desc-slides storyslides-desc-help">Slides</button>
+					</div>
+				</fieldset>
+			</div>
+
+			<div id="storyslides-dialog-keys" role="dialog" tabindex="-1" aria-labelledby="storyslides-dialog-keys-title" class="storyslides-dialog" hidden>
+				<h1 id="storyslides-dialog-keys-title">Slides mode help</h1>
+				<p class="mobile-only">Tap either the left or right third of the screen to move to the previous or next slide. If you have a keyboard attached, you can use the following shortcuts.</p>
+				<table>
+					<tr>
+						<th><p>Key</p></th>
+						<th><p>Action</p></th>
+					</tr>
+					<tr>
+						<td><kbd>S</kbd></td>
+						<td><p>Switch to story mode.</p></td>
+					</tr>
+					<tr>
+						<td><kbd>L</kbd></td>
+						<td><p>Lock the current slide: disable all navigation keys, so if you're using a screen reader, you can explore the current slide with your virtual cursor.</p></td>
+					</tr>
+					<tr>
+						<td><kbd>F</kbd></td>
+						<td><p>Toggle full-screen slide view<span class="mobile-only"> (not supported on iPhone)</span>.</p></td>
+					</tr>
+					<tr>
+						<td><kbd>&rarr;</kbd> <kbd>&darr;</kbd> <kbd>Page&nbsp;Down</kbd></td>
+						<td><p>Next slide.</p></td>
+					</tr>
+					<tr>
+						<td><kbd>&larr;</kbd> <kbd>&uarr;</kbd> <kbd>Page&nbsp;Up</kbd></td>
+						<td><p>Previous slide.</p></td>
+					</tr>
+					<tr>
+						<td><kbd>Escape</kbd></td>
+						<td>
+							<ul>
+								<li><p><strong>In slides mode:</strong> disable the current slide lock (no effect otherwise).</p></li>
+								<li><p><strong>In story mode:</strong> go to slides mode.</p></li>
+							</ul>
+						</td>
+					</tr>
+					<tr>
+						<td><kbd>P</kbd></td>
+						<td><p>If you're running a screen reader, announce the current slide progress as a percentage.</p></td>
+					</tr>
+					<tr>
+						<td><kbd>O</kbd></td>
+						<td><p>If you're running a screen reader, announce the current slide number and the total number of slides.</p></td>
+					</tr>
+					<tr>
+						<td><kbd aria-hidden="true">?</kbd><span class="visually-hidden">question mark</span> <kbd>h</kbd></td>
+						<td><p>Toggle this help dialog</p></td>
+					</tr>
+				</table>
+				<button class="close">Close</button>
+			</div>
+
+			<div id="storyslides-dialog-menu" role="dialog" tabindex="-1" aria-labelledby="storyslides-dialog-menu-heading" class="storyslides-dialog" hidden>
+				<h1 id="storyslides-dialog-menu-heading">View and Info</h1>
+				<button id="storyslides-button-mode-story" aria-describedby="storyslides-mode-story-explainer">Switch to story mode</button>
+				<button id="storyslides-button-fullscreen">Full-screen</button>
+				<button id="storyslides-button-help-keys">Help</button>
+				<p id="storyslides-mode-story-explainer">Story mode allows you to read the presentation as a document, rather than a collection of separate slides, and includes extra background information on the content.</p>
+				<button class="close">Close</button>
+			</div>
+		</div>
+
+		<p id="storyslides-browser-support-note">This presentation does not support Internet Explorer, sorry. Please use Firefox, Chrome, Opera or Edge.</p>
+
+		<div id="storyslides-announcer" role="log" aria-live="assertive" class="visually-hidden"></div>
+
+		<script src="vendor/marked-0.7.0.js"></script>
+		<script src="vendor/inert-2.1.1.js"></script>
+		<script src="vendor/screenfull-4.2.1.js"></script>
+		<script src="story-slides.js"></script>
+	</body>
+</html>
