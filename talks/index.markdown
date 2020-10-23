@@ -3,6 +3,10 @@ layout: page
 title: Talks
 ---
 
+## Innovative adaptation, personalization and assistive technologies
+
+["Innovative adaptation, personalization and assistive technologies"](2020/innovative-adaptations/) was a [breakout session run at W3C TPAC 2020](https://www.w3.org/2020/10/TPAC/breakout-schedule.html#adaptation).
+
 ## Landmarks (2020)
 
 ["Landmarks" story and slides (2020)](2020/landmarks/) was presented at [a11yTOConf 2020](https://conf.a11yto.com/).

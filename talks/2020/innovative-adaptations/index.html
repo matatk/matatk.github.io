@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta content="width=device-width" name="viewport" />
+		<title>Innovative adaptation, personalization and assistive technologies</title>
+		<link rel="stylesheet" href="Templates/TPAC-2020-slides.css" />
+		<script src="Templates/shower.js" type="text/javascript"></script>
+		<style>
+.popover {
+	background-color: white;
+	padding: 0.5em;
+	border: 0.1em solid black;
+	border-radius: 0.5em;
+}
+
+.daltonization {
+	display: flex;
+	justify-content: space-evenly;
+}
+.daltonization figure {
+	width: 30%;
+}
+
+.side-by-side {
+	display: flex;
+	justify-content: space-evenly;
+}
+.side-by-side img {
+	width: 25%;
+}
+
+.ticks-and-crosses img {
+	display: inline-block;
+	width: 19%;
+}
+		</style>
+	</head>
+	<body class="shower fade-in">
+
+		<section class="comment">
+			<h1>Meta</h1>
+			<ul>
+				<li><p><a href="https://www.w3.org/2020/10/26-adaptation-minutes.html">Minutes from the presentation and discussion</a></p></li>
+				<li><p><a href="https://www.w3.org/2020/10/TPAC/innovative_adaptation_personalization_and_assistive_technologies.html">Presentation video recording</a></p></li>
+				<li><p><a href="https://www.w3.org/2020/10/TPAC/breakout-schedule.html#adaptation">TPAC breakout session and scheduling information</a></p></li>
+				<li><p><a href="#errata">Errata</a></p></li>
+			</ul>
+		</section>
+
+		<div class="progress">
+			<!-- Remove this element if you don't want a progress bar -->
+		</div>
+
+		<section class="slide cover clear" id="start" aria-label="slide">
+			<h1 style="font-size: 1.4rem;">Innovative adaptation, personalization and assistive technologies</h1>
+			<address style="font-size: 1.1rem;">Matthew Tylee Atkinson</address>
+		</section>
+
+		<section class="slide" id="about-me" aria-label="slide">
+			<h2>Welcome</h2>
+			<p>My name is Matthew. I am an accessibility consultant with <a href="https://www.paciellogroup.com/">The Paciello Group</a> and a member of W3C's <a href="https://www.w3.org/WAI/APA/">Accessible Platform Architectures (APA) Working Group</a>.</p>
+			<p>My pronouns are: he &amp; him.</p>
+			<p>If you like, feel free to include yours in your Zoom name (there's a rename function).</p>
+		</section>
+
+		<section class="slide" id="about-irc" aria-label="slide">
+			<h2>Zoom (and IRC)</h2>
+			<p>If you'd like to say something, please use the <strong>zoom chat</strong>, or the <strong>raise hand</strong> function.</p>
+			<p>Our W3C host, plus my colleague from APA, Joshue O'Connor, will monitor the chat</p>
+			<p>We'll be taking minutes on IRC, but you don't need to join the IRC channel.</p>
+			<p>Please use <strong>zoom chat</strong>, or <strong>raise hand</strong> to talk, rather than IRC if you can.</p>
+			<p>Can anyone familiar with W3C <strong>scribe for us</strong> please?</p>
+		</section>
+
+		<section class="slide" id="about-overview" aria-label="slide">
+			<h2>Overview</h2>
+			<h3 class="next">Scene-setting (about 20 minutes)</h3>
+			<ul>
+				<li class="next">Background</li>
+				<li class="next">Assistive technologies</li>
+				<li class="next">Adaptations</li>
+				<li class="next">Human capabilities</li>
+			</ul>
+			<h3 class="next">Discussion</h3>
+			<ul>
+				<li class="next">Suggested discussion questions</li>
+			</ul>
+		</section>
+
+		<section class="slide" id="background" aria-label="slide">
+			<h2>Background</h2>
+			<h3 class="next">Challenges we are aiming to address</h3>
+			<ul>
+				<li class="next"><strong>Awareness</strong> of access needs</li>
+				<li class="next"><strong>Discoverability</strong> of help on offer
+					<ul>
+						<li class="next">e.g. <a href="https://support.apple.com/en-gb/HT209517">iOS Magnifier</a>&mdash;super-helpful, but low awareness in my experience</li>
+					</ul>
+				</li>
+				<li class="next">Increased <strong>personalization</strong> of the system to meet the user's needs</li>
+			</ul>
+			<!-- <p class="next">Focusing on minor-to-moderate accessibility barriers, but adaptations can be of use to a wide range of people.</p> -->
+		</section>
+
+		<section class="slide" id="ats" aria-label="slide">
+			<h2>Assistive technologies</h2>
+			<ul>
+				<li class="next">Hardware/software, often designed for a particular access need
+					<ul>
+						<li class="next">Screen reader</li>
+						<li class="next">Screen magnifier</li>
+						<li class="next">Alternative keyboard, or switch input</li>
+						<li class="next">Alternative user interface
+							<ul>
+								<li>e.g. <a href="https://github.com/AlwaysInMind/aim-web-app">AlwaysInMind web app</a></li>
+							</ul>
+						</li>
+						<li class="next">Different interaction modality
+							<ul>
+								<li>e.g. <a href="https://www.w3.org/2020/10/TPAC/breakout-schedule.html#voice-agents">TPAC session: Voice Agents</a></li>
+							</ul>
+						</li>
+					</ul>
+				</li>
+				<li class="next">Often make <strong>significant</strong> changes to output or input</li>
+			</ul>
+		</section>
+
+		<section class="slide" id="zoom-scroll" aria-label="slide">
+			<h3>Zooming content normally</h3>
+			<img src="images/zoom-scroll.png" class="fit" alt="Representation of full-screen magnification. The user is zoomed into a specific area of the overall screen. They must pan around the “real” screen to find content and interface controls to operate.">
+			<p class="place b">2D scrolling&mdash;distracting enough&hellip;</p>
+		</section>
+
+		<section class="slide" id="zoom-zoom-scroll-scroll" aria-label="slide">
+			<h3>Zooming content whilst using a screen magnifier</h3>
+			<img src="images/zoom-zoom-scroll-scroll.png" class="fit" alt="Representation of trying to access “full-page” (2D) zoomed web content whilst also using full-screen magnification. The user has to pan around the web content, which is within a window that, in turn, is within the “real” screen, which the user also has to pan around. This creates two levels of 2D scrolling, which is hard, and tiring, to navigate successfully.">
+			<p class="place b next">2D parallax scrolling: increased physical and cognitive load.</p>
+		</section>
+
+		<section class="slide" id="adaptations" aria-label="slide">
+			<h2>Adaptations</h2>
+			<ul>
+				<li class="next">Generally more focused, often small, changes
+					<ul>
+						<li class="next">Font size setting (in OS, or browser)</li>
+						<li class="next">Responsive layouts</li>
+						<li class="next">Using text-to-speech (TTS) to read a single paragraph on a page, or a draft email</li>
+						<li class="next">Visually highlighting key characters or objects in a game</li>
+						<li class="next">Muting background music, but not speech/sounds</li>
+						<li class="next">&hellip;</li>
+					</ul>
+				</li>
+				<li class="next">Often make <strong>small</strong> changes to output or input</li>
+			</ul>
+		</section>
+
+		<section class="slide" id="dynamic-type" aria-label="slide">
+			<h3>Mobile large font support</h3>
+			<div class="side-by-side">
+				<img src="images/type-default.png" alt="iOS Accessibility settings screen with default font size">
+				<img src="images/type-large.png" alt="iOS Accessibility settings screen with a large font size. Fewer options are visible on-screen, and their entries in the list have wrapped onto two lines.">
+			</div>
+		</section>
+
+		<section class="slide" id="dynamic-type-challenges" aria-label="slide">
+			<h3>Challenges of mobile large font support</h3>
+			<ul>
+				<li class="next">Clipping! Unfortunately renders a number of apps unusable.</li>
+				<li class="next">Scrolling</li>
+				<li class="next">Hard to implement (hence the clipping)
+					<ul>
+						<li class="next">Declarative approaches like <a href="https://flutter.dev/">Flutter</a> and <a href="https://developer.apple.com/xcode/swiftui/">SwiftUI</a> may help</li>
+					</ul>
+				</li>
+			</ul>
+		</section>
+
+		<section class="slide" id="supple" aria-label="slide">
+			<h3>Automated interface adaptation: SUPPLE</h3>
+			<ul>
+				<li class="next">Different users have different devices, capabilities and preferences.</li>
+				<li class="next">Thus there's no one interface to fit all users and situations.</li>
+				<li class="next">If the UI is expressed in an abstract way (think datatypes over widgets),</li>
+				<li class="next">and the user's capabilities and preferences are known,</li>
+				<li class="next">the optimal UI for a given situation can be found.</li>
+				<li class="next">Multiple constraints (device; impairments; &hellip;) can be considered at once</li>
+			</ul>
+		</section>
+
+		<section class="slide" id="supple-plats" aria-label="slide">
+			<img class="fit" src="images/supple-demo-plats.png" alt="An interface for a simple application renderedautomatically by SUPPLEfor a touch panel, an HTMLbrowser, a PDA, a desktop computer and a WAP phone.">
+			<p class="place b l popover">Excerpt from <a href="http://www.eecs.harvard.edu/~kgajos/papers/2008/kgajos-nectar08.pdf">SUPPLE AAAI 2008 paper (PDF)</a></p>
+		</section>
+
+		<section class="slide" id="supple-prefs" aria-label="slide">
+			<img class="fit" src="images/supple-demo-prefs.png" alt="The Microsoft Word 2003 Print dialog, reproduced with SUPPLE in default form (left) and for someone with a dexterity impairment (right)">
+			<p class="place t l popover">Excerpt from <a href="http://www.eecs.harvard.edu/~kgajos/papers/2008/kgajos-nectar08.pdf">SUPPLE AAAI 2008 paper (PDF)</a></p>
+		</section>
+
+		<section class="slide" id="supple-links" aria-label="slide">
+			<h3>Further information on SUPPLE</h3>
+			<ul>
+				<li class="next"><a href="http://www.eecs.harvard.edu/~kgajos/research/supple/">The SUPPLE project home page</a></li>
+				<li class="next"><a href="http://www.eecs.harvard.edu/~kgajos/papers/2008/kgajos-nectar08.pdf">SUPPLE AAAI 2008 paper (PDF)</a></li>
+				<li class="next"><a href="https://news.cs.washington.edu/2019/04/15/allen-school-researchers-earn-most-impact-paper-award-at-iui-2019-for-supple-interface-rendering-system/">Retrospective recognition for SUPPLE</a></li>
+			</ul>
+		</section>
+
+		<section class="slide" id="daltonization" aria-label="slide">
+			<h3>Daltonization</h3>
+			<div class="daltonization">
+				<figure>
+					<img src="images/Ishihara_Plate_3.jpg" alt="An Ishihara plate in standard configuration, displaying the number 29">
+					<figcaption>Initial</figcaption>
+				</figure>
+				<figure>
+					<img src="images/Ishihara_Plate_3-Deuteranopia.jpg" alt="The same plate with colors adapted so it shoudl be more legible to someone with deuteranopia">
+					<figcaption>Assisting deuteranopia</figcaption>
+				</figure>
+				<figure>
+					<img src="images/Ishihara_Plate_3-Protanopia.jpg" alt="The same plate with colors adapted so it shoudl be more legible to someone with protanopia">
+					<figcaption>Assisting protanopia</figcaption>
+				</figure>
+			</div>
+			<p>from <a href="https://github.com/joergdietrich/daltonize">GitHub: joergdietrich/daltonize</a></p>
+		</section>
+
+		<section class="slide" id="daltonization-links" aria-label="slide">
+			<h3>Further information on Daltonization</h3>
+			<ul>
+				<li class="next"><a href="https://web.archive.org/web/20201016193114/http://www.daltonize.org/">Daltonize.org [archived]</a></li>
+				<li class="next"><a href="https://github.com/joergdietrich/daltonize">GitHub: joergdietrich/daltonize</a></li>
+				<li class="next">
+					Has been implemented in mainstream OSes
+					<ul>
+						<li class="next"><a href="https://support.apple.com/en-gb/HT207025">Use display and text size preferences&hellip; (Apple)</a></li>
+						<li class="next"><a href="https://support.google.com/accessibility/android/answer/6151850">Colour correction (Android accessibility Help)</a></li>
+					</ul>
+				</li>
+				<li class="next"><a href="https://www.reddit.com/r/ColorBlind/comments/4alde5/are_the_android_colour_correction_options_wrong/">Anecdotal concerns around efficacy and tuning</a>
+					<ul>
+						<li class="next">Aesthetics</li>
+						<li class="next">Tuning</li>
+						<li class="next">Research</li>
+					</ul>
+				</li>
+			</ul>
+		</section>
+
+		<section class="slide" id="invert-brightness-1">
+			<img src="images/tpg-01-normal.png" class="fit" alt="TPG page about Colour Contrast Analyser, with normal, blue colour scheme and dark text an a light background">
+		</section>
+
+		<section class="slide" id="invert-brightness-2">
+			<img src="images/tpg-02-colours.png" class="fit" alt="TPG page about Colour Contrast Analyser with inverted colours, making the blues orange, the background dark and the text light">
+		</section>
+
+		<section class="slide" id="invert-brightness-3">
+			<img src="images/tpg-03-brightness.png" class="fit" alt="TPG page about Colour Contrast Analyser with inverted brightness, keeping the blue colour scheme, but making the background dark and the text light">
+		</section>
+
+		<section class="slide" id="invert-brightness-4">
+			<h3>"Dark mode" media query</h3>
+			<p><code class="next">prefers-color-scheme: light|dark</code></p>
+			<p class="next"><strong>Good</strong></p>
+			<ul>
+				<li class="next">Out-of-the-box adaptation</li>
+				<li class="next">Easily discoverable (system setting&mdash;it just works!)</li>
+			</ul>
+			<p class="next"><strong>Bad</strong></p>
+			<ul>
+				<li class="next">Depends on the web content author</li>
+				<li class="next">It just works (some prefer the choice as to when to employ it)</li>
+			</ul>
+		</section>
+
+		<section class="slide" id="w3c-personalization-1" aria-label="slide">
+			<img src="images/personalization-1.png" class="fit" alt="wikiHow page on how to make a good cup of tea">
+			<p class="place b popover"><a href="https://www.w3.org/2020/10/TPAC/apa-personalization.html">W3C Personalization</a></p>
+		</section>
+
+		<section class="slide" id="w3c-personalization-2" aria-label="slide">
+			<img src="images/personalization-2.png" class="fit" alt="wikiHow page on how to make a good cup of tea, but with extraneous content removed, main content re-formatted, and symbols inserted to aid understanding of the concepts">
+			<p class="place b popover"><a href="https://www.w3.org/2020/10/TPAC/apa-personalization.html">W3C Personalization</a></p>
+		</section>
+
+		<section class="slide" id="gpii" aria-label="slide">
+			<img src="images/gpii.png" class="fit" alt="Global Public Inclusive Infrastructure (GPII) home page">
+			<p class="place b popover"><a href="https://gpii.net/">GPII</a></p>
+		</section>
+
+		<section class="slide" id="human-capabilities" aria-label="slide">
+			<h2>Human capabilities</h2>
+			<ul>
+				<li class="next">How should our preferences be expressed?
+					<ul>
+						<li class="next">Favourite font size?
+							<ul>
+								<li class="next">Computer?</li>
+								<li class="next">Phone?</li>
+								<li class="next">TV?</li>
+							</ul>
+						</li>
+						<li class="next">Visual acuity?
+							<ul>
+								<li class="next">Inform a font size suggestion per platform</li>
+							</ul>
+						</li>
+					</ul>
+				</li>
+				<li class="next"><a href="https://repository.lboro.ac.uk/articles/conference_contribution/The_potential_of_adaptive_interfaces_as_an_accessibility_aid_for_older_web_users/9403556">The potential of adaptive interfaces as an accessibility aid for older web users</a> (Sus-IT project)</li>
+			</ul>
+		</section>
+
+		<section class="slide" id="discussion" aria-label="slide">
+			<h2>Discussion&hellip;</h2>
+			<ul>
+				<li class="next">Do you know of <strong>other adaptations</strong>?</li>
+				<li class="next">How can we make <strong>content</strong> more adaptive?</li>
+				<li class="next">How can we make <strong>browsers</strong> more adaptive?</li>
+				<!-- Expose landmarks out-of-the-box? -->
+				<!-- More than this, though: general approach to adaptivity -->
+				<li class="next">Are there related community <strong>groups</strong>?</li>
+				<li class="next">Are there any related <strong>specifications</strong>?</li>
+			</ul>
+		</section>
+
+		<section class="slide final clear" id="end" aria-label="slide">
+			<h2>Conclusion</h2>
+			<ol>
+				<li class="next">Thank you for attending!</li>
+				<li class="next">Further questions?
+					<ul>
+						<li class="next"><a href="https://www.w3.org/WAI/APA/">Accessible Platform Architectures (APA) Working Group home page</a></li>
+						<li class="next"><a href="https://twitter.com/matatk/">Contact me on Twitter</a></li>
+					</ul>
+				</li>
+			</ol>
+		</section>
+
+		<section class="slide" id="errata" aria-label="slide">
+			<h2>Errata</h2>
+			<p>In the session, I mentioned a figure of ~10% incidence of color perception deficit amongst males. It was pointed out by someone in the audience (I didn't catch your name; sorry) that that figure is for Caucasian males, and that it is around 0.5% for females.</p>
+			<p>I was able to find some publicly available data on the incidence of different forms of color perception deficit across populations in the <a href="https://en.wikipedia.org/wiki/Color_blindness#Epidemiology">Epidemiology section of Wikipedia's article "Color blindness"</a>.</p>
+		</section>
+	</body>
+</html>
