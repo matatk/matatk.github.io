@@ -3,6 +3,12 @@ layout: page
 title: Talks
 ---
 
+## Landmarks (2020)
+
+["Landmarks" story and slides (2020)](2020/landmarks/) was presented at [a11yTOConf 2020](https://conf.a11yto.com/).
+
+<!-- TODO: Update a11yTO URL when it's a past event. -->
+
 ## Game Accessibility: Low Vision
 
 ["Game Accessibility: Low Vision" story and slides](2019/game-accessibility-low-vision/) was presented at the [RNIB Accessibility Gaming Workshop](/articles/rnib-accessibility-gaming-workshop).
@@ -15,9 +21,11 @@ title: Talks
  * Our workshop [Position paper: Adaptive Accessibility](https://www.w3.org/2018/12/games-workshop/papers/web-games-adaptive-accessibility.html)
  * [Technical details on what was covered at the workshop](/articles/w3c-workshop-on-web-games/) (post on this site).
 
-## Landmarks
+## Landmarks (2019)
 
-["Landmarks" story and slides](2019/landmarks/) was presented at...
+**Please note there's a newer version of this talk (above).**
+
+["Landmarks" story and slides (2019)](2019/landmarks/) was presented at...
 
  * [London Accessibility Meet-up #26, May 2019 (video)](https://www.youtube.com/watch?v=urgZm-k8KMk&t=1h23m27s).
 
