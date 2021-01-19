@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>Position and width - flexbox - with landmarks</title>
+		<script src="position-and-width.js"></script>
+		<link rel="stylesheet" href="position-and-width.css">
+		<style>
+.arrange {
+	display: flex;
+	flex-direction: column;
+	height: 100vh;
+}
+
+.box {
+	background: #3a3;
+	height: 20%;
+	width: 100%;
+}
+
+.box + .box { margin-top: 0.5rem; }
+		</style>
+	</head>
+	<body>
+		<div id="help">
+			<ul class="readout">
+				<li>box bounds <code>left</code> <span id="left"></span></li>
+				<li>box bounds <code>width</code> <span id="width"></span></li>
+				<li><code>window.innerWidth</code> <span id="inner-width"></span></li>
+				<li><code>documentElement.clientWidth</code> <span id="client-width"></span></li>
+			</ul>
+			<details>
+				<summary>Problem description</summary>
+				<p>A dashed border is drawn around the centre box when the page loads, and is re-positioned by an event handler when the viewport is resized.</p>
+				<p>Try toggling your OS's &quot;show scroll bars&quot; setting and showing/hiding the DevTools. Depending on OS, toggle setting and DevTools' position, the following can happen&mdash;but when the viewport is subsequently resized, they start working as expected again:</p>
+				<ul>
+					<li><p>The border doesn't match up with the centre box's position.</p></li>
+					<li><p>The element inspector reports that the centre box's width doesn't change, but <code>getBoundingClientRect()</code> does.</p></li>
+					<li><p>The vertical scrollbar is not rendered, but <code>documentElement.clientWidth</code> reports as if it is.</p></li>
+				</ul>
+				<p>Further: code running in an extension's content script <em>always</em> receives the incorrect values at first, but does also get correct values after a viewport resize (if you have the <a href="http://matatk.agrip.org.uk/landmarks/">Landmarks extension</a> you can check that on this page). <a href="flexbox.html">Version of this page without added landmarks</a>.</p>
+				<p><strong>These problems occur in Firefox 85, Chrome 88, Edge 88 (though only the extensions part seems to be a problem when Flexbox is used) and Safari 14, on macOS and Windows (I've not tested Linux, nor HIDPI display modes). Additional test case: <a href="grid-landmarks.html">CSS Grid (with landmarks)</a>.</strong></p>
+				<p><a href="../position-and-width/">Full problem details</a></p>
+			</details>
+		</div>
+
+		<div id="border"></div>
+
+		<div class="arrange">
+			<div role="region" aria-label="Test landmark" class="box"></div>
+			<div role="region" aria-label="Test landmark" class="box"></div>
+			<div role="region" aria-label="Test landmark" class="box" id="centre"></div>
+			<div role="region" aria-label="Test landmark" class="box"></div>
+			<div role="region" aria-label="Test landmark" class="box"></div>
+		</div>
+	</body>
+</html>
