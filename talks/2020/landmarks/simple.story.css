@@ -1,0 +1,78 @@
+/*
+ * Simple theme
+ * Story mode (and introduction screen)
+ *
+ * The story-mode content will be placed in a centred column of the width
+ * specified below. The base font size will be set to the below. Also...
+ *
+ *  - Line spacing is 1.5 by default for readability.
+ *
+ *  - Images are sized, preserving aspect ratio, to take up as much width as
+ *    they can (i.e. either the body width, or containing <figure> width).
+ *    Their height is capped (via code and CSS) at their width, so that tall
+ *    images don't take over too much space. (If you have an image that's very
+ *    tall and you want to render it as such, you could use a CSS class to make
+ *    an exception for it.)
+ *
+ *  - An 0.5em space gap is added betwen images and <figcaption>s.
+ *
+ *  - <iframe>s are sized so they take 100% of the body width, and a height
+ *    that assumes they should be displayed in 16:9 ratio.
+ */
+
+@media screen {
+	:root {
+		--body-width: 45rem;  /* Used in multiple places in the theme */
+	}
+}
+
+html {
+	font-family: Georgia, serif;
+	font-size: 1.5rem;
+	line-height: 1.5;
+}
+
+/* Images are sized to be drawn as widely as possible. Their heights are then
+ * capped so that tall images don't take up too much vertical room. (This can't
+ * be done by specifying the height in vh because that stops the images from
+ * being zoom-able.) */
+img {
+	display: block;
+	width: 100%;
+	max-height: var(--rendered-width);  /* updated by code */
+	object-fit: contain;
+}
+
+img + figcaption,
+figcaption + img { margin-top: 0.5em; }
+
+iframe {
+	width: 100%;
+	height: calc(var(--body-width) / (16 / 9));
+}
+
+@media print {
+	/* By default, make images 'not too big' */
+	img {
+		display: block;
+		width: 40%;
+		max-height: var(--rendered-width);  /* updated by code */
+		object-fit: contain;
+		margin: auto;
+	}
+
+	/* Not sure how to centre <iframe>s */
+	iframe {
+		width: 50%;
+		height: calc(50% / (16 / 9));
+	}
+}
+
+/*
+ * Extras that apply when printed too
+ */
+
+figcaption a { overflow-wrap: break-word; }
+
+/* Thanks https://fvsch.com/object-fit-decoration/ :-) */
+img.border { filter: drop-shadow(0 0 0.1em var(--text-colour, var(--text-color))); }

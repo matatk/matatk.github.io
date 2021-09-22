@@ -1,0 +1,28 @@
+/*
+ * Simple theme
+ * Shared (Story and Slides mode) stuff
+ */
+
+@media screen {
+	table {
+		border-collapse: collapse;
+		margin-left: auto;
+		margin-right: auto;
+	}
+
+	th,
+	td {
+		padding: 0.15rem;
+		padding-left: 0.5rem;
+		padding-right: 0.5rem;
+	}
+
+	th {
+		background-color: var(--accent-colour, var(--accent-color));
+		color: var(--background-colour, var(--background-color));
+	}
+
+	/* FIXME: this is exposing implementation details. The correct fix is to
+	 * either have an accent in story mode or, erm, something else. */
+	.mode-story th { color: var(--text-colour, var(--text-color)); }
+}

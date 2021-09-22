@@ -1,0 +1,55 @@
+/*
+ * Slides mode user CSS
+ */
+
+@media screen {
+	:root {
+		/* Base colours */
+		--accent-colour: yellow;
+		--secondary-accent-colour: #0f0;
+		--background-colour: black;
+		--secondary-background-colour: white;
+		--text-colour: white;
+		--secondary-text-colour: #757575;
+
+		/* Size and aspect ratio */
+		--slide-font-height-percent-of-slide: 8;
+		--slide-aspect-ratio: calc(16 / 9);
+
+		/* Gap around the slides */
+		--slide-padding-vertical: 0.25rem;
+		--slide-padding-horizontal: 1rem;
+	}
+}
+
+@media screen {
+	/* Presentation-specific extras... */
+
+	p.key {
+		font-size: 2rem;
+		border: 0.1rem solid white;
+		border-radius: 0.25em;
+		width: 1.5em;
+		height: 1.5em;
+		margin-left: auto;
+		margin-right: auto;
+		padding: 0;
+		text-align: center;
+	}
+	p.key.wide { width: 5rem; }
+	p.key:not(:last-child) { margin-bottom: 1rem; }
+
+	.ever-so-slightly-smaller  { font-size: 0.95rem;  } /* is used */
+	.a-little-smaller          { font-size: 0.8rem;   } /* is used */
+	.a-little-smaller-er       { font-size: 0.72rem;  } /* is used */
+	.slightly-smaller          { font-size: 0.66rem;  } /* with no-padding */
+	.slightly-smaller-er       { font-size: 0.63rem;  } /* is used */
+
+	.align-right { text-align: right; }
+
+	.slide.light { background-color: var(--secondary-background-colour); }
+
+	.big { font-size: 5rem; }
+
+	.slide.title a { color: black; }
+}

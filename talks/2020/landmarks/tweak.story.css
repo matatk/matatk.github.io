@@ -11,10 +11,6 @@
 		--secondary-background-colour: black;
 		--text-colour: black;
 		--secondary-text-colour: #757575;
-
-		/* Presentation-specific colours */
-
-		/* ... */
 	}
 }
 
@@ -30,22 +26,5 @@
 		--secondary-background-colour: white;
 		--text-colour: #ddd;
 		--secondary-text-colour: #757575;
-
-		/* Presentation-specific colours */
-
-		/* ... */
 	}
-}
-
-@media screen {
-	:root {
-		--body-width: 45rem;
-		--base-font-size: 1.5rem;  /* Also used for the intro screens */
-	}
-
-	html { font-family: var(--story-mode-font-family); }
-
-	/* Presentation-specific extras... */
-
-	/* ... */
 }
