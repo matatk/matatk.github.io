@@ -237,27 +237,6 @@ This software is provided by the copyright holders and contributors “as is” 
 
 
 	//
-	// Functions that rely on state
-	//
-
-	// NOTE: These two are here to avoid code being imported both ways between
-	//       story/slides and shared.
-
-	function updateActiveSlide(options) {
-		options.state.currentIndex = options.newIndex;
-		updateProgress(
-			options.state.slides,
-			options.state.currentIndex,
-			options.state.initialTitle,
-			options.restoringPreviousState !== true);
-	}
-
-	function progressPercent(state) {
-		return Math.round(((state.currentIndex + 1) / state.numSlides) * 100)
-	}
-
-
-	//
 	// Functions that do not rely on state
 	//
 
@@ -275,15 +254,6 @@ This software is provided by the copyright holders and contributors “as is” 
 		setTimeout(() => announcer.innerText = '', 1000);
 	}
 
-	function applicationifyBody() {
-		document.body.setAttribute('role', 'application');
-		document.body.focus();  // encourage SRs to use application mode
-	}
-
-	function unApplicationifyBody() {
-		document.body.removeAttribute('role');
-	}
-
 	function getMode() {
 		const saved = window.sessionStorage.getItem(storageKeyMode);
 		if (saved !== null) validateMode(saved);
@@ -294,51 +264,10 @@ This software is provided by the copyright holders and contributors “as is” 
 		window.sessionStorage.setItem(storageKeyMode, validateMode(mode));
 	}
 
-	function updateProgress(slides, currentIndex, initialTitle, addToHistory) {
-		debug('updateProgress():', currentIndex, initialTitle, 'add to history?', addToHistory);
-		// TODO: The author could've removed the progress indicator.
-		const progress = document.querySelector('#story-slides-progress > div');
-		if (progress) {
-			const percent = progressPercent(slides);
-			progress.style.width = `${Math.round(percent)}%`;
-		}
-
-		const slideNumber = currentIndex + 1;
-		const hash = `#slide-${slideNumber}`;
-
-		document.title = `Slide ${slideNumber} - ${initialTitle}`;
-
-		const statePusher = () => {
-			if (window.location.hash) {
-				if (window.location.hash !== hash) {
-					debug('adding new history entry');
-					window.history.pushState({ index: currentIndex }, document.title, hash);
-				}
-			} else {
-				debug('replacing current history entry');
-				window.history.replaceState({ index: currentIndex }, document.title, hash);
-			}
-		};
-
-		if (addToHistory) {
-			if (window.history.state) {
-				// Check that the current state isn't for the same index (which
-				// would be the case if we switched modes) first.
-				if (window.history.state.index !== currentIndex) {
-					statePusher();
-				} else {
-					debug('not adding to history as already on this slide');
-				}
-			} else {
-				statePusher();
-			}
-		}
-	}
-
 	// NOTE: Only exported for testing
 	function checkSetActiveSlideOptions(options) {
-		const required = [ 'newIndex', 'state' ];
-		const allowed = [ 'restoringPreviousState', 'triggeredByScroll' ];
+		const required = [ 'newNumber', 'state' ];
+		const allowed = [ 'force', 'hash', 'triggeredByScroll' ];
 		const requiredOrAllowed = required.concat(allowed);
 
 		if (!options) throw Error('no options passed')
@@ -361,6 +290,79 @@ This software is provided by the copyright holders and contributors “as is” 
 		return options
 	}
 
+	function debugOptionsToString(options) {
+		const debug = [];
+		for (const key of Object.keys(options)) {
+			debug.push(`${key}: ${options[key]}`);
+		}
+		return debug.join('; ')
+	}
+
+	// FIXME: Move to story? Is this ever needed in slides mode?
+	function slideNumberFromElement(element) {
+		const isSlide = (candidate) => candidate.classList.contains('slide');
+		let found = element;
+		while (found !== document.body && !isSlide(found)) {
+			found = found.parentElement;
+		}
+		if (found === document.body) return null
+		return Number(found.getAttribute('data-slide-number'))
+	}
+
+	function progressPercent(currentSlideNumber, numberOfSlides) {
+		return Math.round((currentSlideNumber / numberOfSlides) * 100)
+	}
+
+
+	//
+	// Functions that rely on state
+	//
+
+	// NOTE: These two are here to avoid code being imported both ways between
+	//       story/slides and shared.
+
+	// Update state, slides progress bar (if present) and history stack
+	function updateActiveSlide(options) {
+		debug('updateActiveSlide():', debugOptionsToString(options));
+
+		// NOTE: The author could've removed the progress indicator.
+		const progress = document.querySelector('#story-slides-progress > div');
+		if (progress) {
+			const percent = progressPercent(options.newNumber, options.state.numSlides);
+			progress.style.width = `${Math.round(percent)}%`;
+		}
+
+		const hash = options.hash ?? `#${options.newNumber}`;
+		document.title = `Slide ${options.newNumber} - ${options.state.initialTitle}`;
+
+		if (window.history.state) {
+			if (window.history.state.slideNumber === options.newNumber) {
+				if (options.force) {
+					debug('forced to update same-slide history entry');
+					window.history.replaceState(
+						{ slideNumber: options.newNumber }, document.title, hash);
+				} else {
+					debug('not adding same slide to history');
+				}
+			} else {
+				debug('existing history.state: adding new entry');
+				window.history.pushState(
+					{ slideNumber: options.newNumber }, document.title, hash);
+			}
+		} else {
+			debug('no history.state: updating entry');
+			window.history.replaceState(
+				{ slideNumber: options.newNumber }, document.title, hash);
+		}
+
+		if (options.state.currentSlideNumber) {
+			debug('setting previous slide number to', options.state.currentSlideNumber);
+			options.state.previousSlideNumber = options.state.currentSlideNumber;
+		}
+		debug('setting current slide number to', options.newNumber);
+		options.state.currentSlideNumber = options.newNumber;
+	}
+
 
 	//
 	// Private functions
@@ -372,7 +374,1638 @@ This software is provided by the copyright holders and contributors “as is” 
 		throw new Error(`Mode '${mode}' isn't valid`)
 	}
 
-	/*! @license DOMPurify 2.3.1 | (c) Cure53 and other contributors | Released under the Apache license 2.0 and Mozilla Public License 2.0 | github.com/cure53/DOMPurify/blob/2.3.1/LICENSE */
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	/**
+	 * This work is licensed under the W3C Software and Document License
+	 * (http://www.w3.org/Consortium/Legal/2015/copyright-software-and-document).
+	 */
+
+	(function () {
+	  // Return early if we're not running inside of the browser.
+	  if (typeof window === 'undefined') {
+	    return;
+	  }
+
+	  // Convenience function for converting NodeLists.
+	  /** @type {typeof Array.prototype.slice} */
+	  var slice = Array.prototype.slice;
+
+	  /**
+	   * IE has a non-standard name for "matches".
+	   * @type {typeof Element.prototype.matches}
+	   */
+	  var matches = Element.prototype.matches || Element.prototype.msMatchesSelector;
+
+	  /** @type {string} */
+	  var _focusableElementsString = ['a[href]', 'area[href]', 'input:not([disabled])', 'select:not([disabled])', 'textarea:not([disabled])', 'button:not([disabled])', 'details', 'summary', 'iframe', 'object', 'embed', '[contenteditable]'].join(',');
+
+	  /**
+	   * `InertRoot` manages a single inert subtree, i.e. a DOM subtree whose root element has an `inert`
+	   * attribute.
+	   *
+	   * Its main functions are:
+	   *
+	   * - to create and maintain a set of managed `InertNode`s, including when mutations occur in the
+	   *   subtree. The `makeSubtreeUnfocusable()` method handles collecting `InertNode`s via registering
+	   *   each focusable node in the subtree with the singleton `InertManager` which manages all known
+	   *   focusable nodes within inert subtrees. `InertManager` ensures that a single `InertNode`
+	   *   instance exists for each focusable node which has at least one inert root as an ancestor.
+	   *
+	   * - to notify all managed `InertNode`s when this subtree stops being inert (i.e. when the `inert`
+	   *   attribute is removed from the root node). This is handled in the destructor, which calls the
+	   *   `deregister` method on `InertManager` for each managed inert node.
+	   */
+
+	  var InertRoot = function () {
+	    /**
+	     * @param {!Element} rootElement The Element at the root of the inert subtree.
+	     * @param {!InertManager} inertManager The global singleton InertManager object.
+	     */
+	    function InertRoot(rootElement, inertManager) {
+	      _classCallCheck(this, InertRoot);
+
+	      /** @type {!InertManager} */
+	      this._inertManager = inertManager;
+
+	      /** @type {!Element} */
+	      this._rootElement = rootElement;
+
+	      /**
+	       * @type {!Set<!InertNode>}
+	       * All managed focusable nodes in this InertRoot's subtree.
+	       */
+	      this._managedNodes = new Set();
+
+	      // Make the subtree hidden from assistive technology
+	      if (this._rootElement.hasAttribute('aria-hidden')) {
+	        /** @type {?string} */
+	        this._savedAriaHidden = this._rootElement.getAttribute('aria-hidden');
+	      } else {
+	        this._savedAriaHidden = null;
+	      }
+	      this._rootElement.setAttribute('aria-hidden', 'true');
+
+	      // Make all focusable elements in the subtree unfocusable and add them to _managedNodes
+	      this._makeSubtreeUnfocusable(this._rootElement);
+
+	      // Watch for:
+	      // - any additions in the subtree: make them unfocusable too
+	      // - any removals from the subtree: remove them from this inert root's managed nodes
+	      // - attribute changes: if `tabindex` is added, or removed from an intrinsically focusable
+	      //   element, make that node a managed node.
+	      this._observer = new MutationObserver(this._onMutation.bind(this));
+	      this._observer.observe(this._rootElement, { attributes: true, childList: true, subtree: true });
+	    }
+
+	    /**
+	     * Call this whenever this object is about to become obsolete.  This unwinds all of the state
+	     * stored in this object and updates the state of all of the managed nodes.
+	     */
+
+
+	    _createClass(InertRoot, [{
+	      key: 'destructor',
+	      value: function destructor() {
+	        this._observer.disconnect();
+
+	        if (this._rootElement) {
+	          if (this._savedAriaHidden !== null) {
+	            this._rootElement.setAttribute('aria-hidden', this._savedAriaHidden);
+	          } else {
+	            this._rootElement.removeAttribute('aria-hidden');
+	          }
+	        }
+
+	        this._managedNodes.forEach(function (inertNode) {
+	          this._unmanageNode(inertNode.node);
+	        }, this);
+
+	        // Note we cast the nulls to the ANY type here because:
+	        // 1) We want the class properties to be declared as non-null, or else we
+	        //    need even more casts throughout this code. All bets are off if an
+	        //    instance has been destroyed and a method is called.
+	        // 2) We don't want to cast "this", because we want type-aware optimizations
+	        //    to know which properties we're setting.
+	        this._observer = /** @type {?} */null;
+	        this._rootElement = /** @type {?} */null;
+	        this._managedNodes = /** @type {?} */null;
+	        this._inertManager = /** @type {?} */null;
+	      }
+
+	      /**
+	       * @return {!Set<!InertNode>} A copy of this InertRoot's managed nodes set.
+	       */
+
+	    }, {
+	      key: '_makeSubtreeUnfocusable',
+
+
+	      /**
+	       * @param {!Node} startNode
+	       */
+	      value: function _makeSubtreeUnfocusable(startNode) {
+	        var _this2 = this;
+
+	        composedTreeWalk(startNode, function (node) {
+	          return _this2._visitNode(node);
+	        });
+
+	        var activeElement = document.activeElement;
+
+	        if (!document.body.contains(startNode)) {
+	          // startNode may be in shadow DOM, so find its nearest shadowRoot to get the activeElement.
+	          var node = startNode;
+	          /** @type {!ShadowRoot|undefined} */
+	          var root = undefined;
+	          while (node) {
+	            if (node.nodeType === Node.DOCUMENT_FRAGMENT_NODE) {
+	              root = /** @type {!ShadowRoot} */node;
+	              break;
+	            }
+	            node = node.parentNode;
+	          }
+	          if (root) {
+	            activeElement = root.activeElement;
+	          }
+	        }
+	        if (startNode.contains(activeElement)) {
+	          activeElement.blur();
+	          // In IE11, if an element is already focused, and then set to tabindex=-1
+	          // calling blur() will not actually move the focus.
+	          // To work around this we call focus() on the body instead.
+	          if (activeElement === document.activeElement) {
+	            document.body.focus();
+	          }
+	        }
+	      }
+
+	      /**
+	       * @param {!Node} node
+	       */
+
+	    }, {
+	      key: '_visitNode',
+	      value: function _visitNode(node) {
+	        if (node.nodeType !== Node.ELEMENT_NODE) {
+	          return;
+	        }
+	        var element = /** @type {!Element} */node;
+
+	        // If a descendant inert root becomes un-inert, its descendants will still be inert because of
+	        // this inert root, so all of its managed nodes need to be adopted by this InertRoot.
+	        if (element !== this._rootElement && element.hasAttribute('inert')) {
+	          this._adoptInertRoot(element);
+	        }
+
+	        if (matches.call(element, _focusableElementsString) || element.hasAttribute('tabindex')) {
+	          this._manageNode(element);
+	        }
+	      }
+
+	      /**
+	       * Register the given node with this InertRoot and with InertManager.
+	       * @param {!Node} node
+	       */
+
+	    }, {
+	      key: '_manageNode',
+	      value: function _manageNode(node) {
+	        var inertNode = this._inertManager.register(node, this);
+	        this._managedNodes.add(inertNode);
+	      }
+
+	      /**
+	       * Unregister the given node with this InertRoot and with InertManager.
+	       * @param {!Node} node
+	       */
+
+	    }, {
+	      key: '_unmanageNode',
+	      value: function _unmanageNode(node) {
+	        var inertNode = this._inertManager.deregister(node, this);
+	        if (inertNode) {
+	          this._managedNodes['delete'](inertNode);
+	        }
+	      }
+
+	      /**
+	       * Unregister the entire subtree starting at `startNode`.
+	       * @param {!Node} startNode
+	       */
+
+	    }, {
+	      key: '_unmanageSubtree',
+	      value: function _unmanageSubtree(startNode) {
+	        var _this3 = this;
+
+	        composedTreeWalk(startNode, function (node) {
+	          return _this3._unmanageNode(node);
+	        });
+	      }
+
+	      /**
+	       * If a descendant node is found with an `inert` attribute, adopt its managed nodes.
+	       * @param {!Element} node
+	       */
+
+	    }, {
+	      key: '_adoptInertRoot',
+	      value: function _adoptInertRoot(node) {
+	        var inertSubroot = this._inertManager.getInertRoot(node);
+
+	        // During initialisation this inert root may not have been registered yet,
+	        // so register it now if need be.
+	        if (!inertSubroot) {
+	          this._inertManager.setInert(node, true);
+	          inertSubroot = this._inertManager.getInertRoot(node);
+	        }
+
+	        inertSubroot.managedNodes.forEach(function (savedInertNode) {
+	          this._manageNode(savedInertNode.node);
+	        }, this);
+	      }
+
+	      /**
+	       * Callback used when mutation observer detects subtree additions, removals, or attribute changes.
+	       * @param {!Array<!MutationRecord>} records
+	       * @param {!MutationObserver} self
+	       */
+
+	    }, {
+	      key: '_onMutation',
+	      value: function _onMutation(records, self) {
+	        records.forEach(function (record) {
+	          var target = /** @type {!Element} */record.target;
+	          if (record.type === 'childList') {
+	            // Manage added nodes
+	            slice.call(record.addedNodes).forEach(function (node) {
+	              this._makeSubtreeUnfocusable(node);
+	            }, this);
+
+	            // Un-manage removed nodes
+	            slice.call(record.removedNodes).forEach(function (node) {
+	              this._unmanageSubtree(node);
+	            }, this);
+	          } else if (record.type === 'attributes') {
+	            if (record.attributeName === 'tabindex') {
+	              // Re-initialise inert node if tabindex changes
+	              this._manageNode(target);
+	            } else if (target !== this._rootElement && record.attributeName === 'inert' && target.hasAttribute('inert')) {
+	              // If a new inert root is added, adopt its managed nodes and make sure it knows about the
+	              // already managed nodes from this inert subroot.
+	              this._adoptInertRoot(target);
+	              var inertSubroot = this._inertManager.getInertRoot(target);
+	              this._managedNodes.forEach(function (managedNode) {
+	                if (target.contains(managedNode.node)) {
+	                  inertSubroot._manageNode(managedNode.node);
+	                }
+	              });
+	            }
+	          }
+	        }, this);
+	      }
+	    }, {
+	      key: 'managedNodes',
+	      get: function get() {
+	        return new Set(this._managedNodes);
+	      }
+
+	      /** @return {boolean} */
+
+	    }, {
+	      key: 'hasSavedAriaHidden',
+	      get: function get() {
+	        return this._savedAriaHidden !== null;
+	      }
+
+	      /** @param {?string} ariaHidden */
+
+	    }, {
+	      key: 'savedAriaHidden',
+	      set: function set(ariaHidden) {
+	        this._savedAriaHidden = ariaHidden;
+	      }
+
+	      /** @return {?string} */
+	      ,
+	      get: function get() {
+	        return this._savedAriaHidden;
+	      }
+	    }]);
+
+	    return InertRoot;
+	  }();
+
+	  /**
+	   * `InertNode` initialises and manages a single inert node.
+	   * A node is inert if it is a descendant of one or more inert root elements.
+	   *
+	   * On construction, `InertNode` saves the existing `tabindex` value for the node, if any, and
+	   * either removes the `tabindex` attribute or sets it to `-1`, depending on whether the element
+	   * is intrinsically focusable or not.
+	   *
+	   * `InertNode` maintains a set of `InertRoot`s which are descendants of this `InertNode`. When an
+	   * `InertRoot` is destroyed, and calls `InertManager.deregister()`, the `InertManager` notifies the
+	   * `InertNode` via `removeInertRoot()`, which in turn destroys the `InertNode` if no `InertRoot`s
+	   * remain in the set. On destruction, `InertNode` reinstates the stored `tabindex` if one exists,
+	   * or removes the `tabindex` attribute if the element is intrinsically focusable.
+	   */
+
+
+	  var InertNode = function () {
+	    /**
+	     * @param {!Node} node A focusable element to be made inert.
+	     * @param {!InertRoot} inertRoot The inert root element associated with this inert node.
+	     */
+	    function InertNode(node, inertRoot) {
+	      _classCallCheck(this, InertNode);
+
+	      /** @type {!Node} */
+	      this._node = node;
+
+	      /** @type {boolean} */
+	      this._overrodeFocusMethod = false;
+
+	      /**
+	       * @type {!Set<!InertRoot>} The set of descendant inert roots.
+	       *    If and only if this set becomes empty, this node is no longer inert.
+	       */
+	      this._inertRoots = new Set([inertRoot]);
+
+	      /** @type {?number} */
+	      this._savedTabIndex = null;
+
+	      /** @type {boolean} */
+	      this._destroyed = false;
+
+	      // Save any prior tabindex info and make this node untabbable
+	      this.ensureUntabbable();
+	    }
+
+	    /**
+	     * Call this whenever this object is about to become obsolete.
+	     * This makes the managed node focusable again and deletes all of the previously stored state.
+	     */
+
+
+	    _createClass(InertNode, [{
+	      key: 'destructor',
+	      value: function destructor() {
+	        this._throwIfDestroyed();
+
+	        if (this._node && this._node.nodeType === Node.ELEMENT_NODE) {
+	          var element = /** @type {!Element} */this._node;
+	          if (this._savedTabIndex !== null) {
+	            element.setAttribute('tabindex', this._savedTabIndex);
+	          } else {
+	            element.removeAttribute('tabindex');
+	          }
+
+	          // Use `delete` to restore native focus method.
+	          if (this._overrodeFocusMethod) {
+	            delete element.focus;
+	          }
+	        }
+
+	        // See note in InertRoot.destructor for why we cast these nulls to ANY.
+	        this._node = /** @type {?} */null;
+	        this._inertRoots = /** @type {?} */null;
+	        this._destroyed = true;
+	      }
+
+	      /**
+	       * @type {boolean} Whether this object is obsolete because the managed node is no longer inert.
+	       * If the object has been destroyed, any attempt to access it will cause an exception.
+	       */
+
+	    }, {
+	      key: '_throwIfDestroyed',
+
+
+	      /**
+	       * Throw if user tries to access destroyed InertNode.
+	       */
+	      value: function _throwIfDestroyed() {
+	        if (this.destroyed) {
+	          throw new Error('Trying to access destroyed InertNode');
+	        }
+	      }
+
+	      /** @return {boolean} */
+
+	    }, {
+	      key: 'ensureUntabbable',
+
+
+	      /** Save the existing tabindex value and make the node untabbable and unfocusable */
+	      value: function ensureUntabbable() {
+	        if (this.node.nodeType !== Node.ELEMENT_NODE) {
+	          return;
+	        }
+	        var element = /** @type {!Element} */this.node;
+	        if (matches.call(element, _focusableElementsString)) {
+	          if ( /** @type {!HTMLElement} */element.tabIndex === -1 && this.hasSavedTabIndex) {
+	            return;
+	          }
+
+	          if (element.hasAttribute('tabindex')) {
+	            this._savedTabIndex = /** @type {!HTMLElement} */element.tabIndex;
+	          }
+	          element.setAttribute('tabindex', '-1');
+	          if (element.nodeType === Node.ELEMENT_NODE) {
+	            element.focus = function () {};
+	            this._overrodeFocusMethod = true;
+	          }
+	        } else if (element.hasAttribute('tabindex')) {
+	          this._savedTabIndex = /** @type {!HTMLElement} */element.tabIndex;
+	          element.removeAttribute('tabindex');
+	        }
+	      }
+
+	      /**
+	       * Add another inert root to this inert node's set of managing inert roots.
+	       * @param {!InertRoot} inertRoot
+	       */
+
+	    }, {
+	      key: 'addInertRoot',
+	      value: function addInertRoot(inertRoot) {
+	        this._throwIfDestroyed();
+	        this._inertRoots.add(inertRoot);
+	      }
+
+	      /**
+	       * Remove the given inert root from this inert node's set of managing inert roots.
+	       * If the set of managing inert roots becomes empty, this node is no longer inert,
+	       * so the object should be destroyed.
+	       * @param {!InertRoot} inertRoot
+	       */
+
+	    }, {
+	      key: 'removeInertRoot',
+	      value: function removeInertRoot(inertRoot) {
+	        this._throwIfDestroyed();
+	        this._inertRoots['delete'](inertRoot);
+	        if (this._inertRoots.size === 0) {
+	          this.destructor();
+	        }
+	      }
+	    }, {
+	      key: 'destroyed',
+	      get: function get() {
+	        return (/** @type {!InertNode} */this._destroyed
+	        );
+	      }
+	    }, {
+	      key: 'hasSavedTabIndex',
+	      get: function get() {
+	        return this._savedTabIndex !== null;
+	      }
+
+	      /** @return {!Node} */
+
+	    }, {
+	      key: 'node',
+	      get: function get() {
+	        this._throwIfDestroyed();
+	        return this._node;
+	      }
+
+	      /** @param {?number} tabIndex */
+
+	    }, {
+	      key: 'savedTabIndex',
+	      set: function set(tabIndex) {
+	        this._throwIfDestroyed();
+	        this._savedTabIndex = tabIndex;
+	      }
+
+	      /** @return {?number} */
+	      ,
+	      get: function get() {
+	        this._throwIfDestroyed();
+	        return this._savedTabIndex;
+	      }
+	    }]);
+
+	    return InertNode;
+	  }();
+
+	  /**
+	   * InertManager is a per-document singleton object which manages all inert roots and nodes.
+	   *
+	   * When an element becomes an inert root by having an `inert` attribute set and/or its `inert`
+	   * property set to `true`, the `setInert` method creates an `InertRoot` object for the element.
+	   * The `InertRoot` in turn registers itself as managing all of the element's focusable descendant
+	   * nodes via the `register()` method. The `InertManager` ensures that a single `InertNode` instance
+	   * is created for each such node, via the `_managedNodes` map.
+	   */
+
+
+	  var InertManager = function () {
+	    /**
+	     * @param {!Document} document
+	     */
+	    function InertManager(document) {
+	      _classCallCheck(this, InertManager);
+
+	      if (!document) {
+	        throw new Error('Missing required argument; InertManager needs to wrap a document.');
+	      }
+
+	      /** @type {!Document} */
+	      this._document = document;
+
+	      /**
+	       * All managed nodes known to this InertManager. In a map to allow looking up by Node.
+	       * @type {!Map<!Node, !InertNode>}
+	       */
+	      this._managedNodes = new Map();
+
+	      /**
+	       * All inert roots known to this InertManager. In a map to allow looking up by Node.
+	       * @type {!Map<!Node, !InertRoot>}
+	       */
+	      this._inertRoots = new Map();
+
+	      /**
+	       * Observer for mutations on `document.body`.
+	       * @type {!MutationObserver}
+	       */
+	      this._observer = new MutationObserver(this._watchForInert.bind(this));
+
+	      // Add inert style.
+	      addInertStyle(document.head || document.body || document.documentElement);
+
+	      // Wait for document to be loaded.
+	      if (document.readyState === 'loading') {
+	        document.addEventListener('DOMContentLoaded', this._onDocumentLoaded.bind(this));
+	      } else {
+	        this._onDocumentLoaded();
+	      }
+	    }
+
+	    /**
+	     * Set whether the given element should be an inert root or not.
+	     * @param {!Element} root
+	     * @param {boolean} inert
+	     */
+
+
+	    _createClass(InertManager, [{
+	      key: 'setInert',
+	      value: function setInert(root, inert) {
+	        if (inert) {
+	          if (this._inertRoots.has(root)) {
+	            // element is already inert
+	            return;
+	          }
+
+	          var inertRoot = new InertRoot(root, this);
+	          root.setAttribute('inert', '');
+	          this._inertRoots.set(root, inertRoot);
+	          // If not contained in the document, it must be in a shadowRoot.
+	          // Ensure inert styles are added there.
+	          if (!this._document.body.contains(root)) {
+	            var parent = root.parentNode;
+	            while (parent) {
+	              if (parent.nodeType === 11) {
+	                addInertStyle(parent);
+	              }
+	              parent = parent.parentNode;
+	            }
+	          }
+	        } else {
+	          if (!this._inertRoots.has(root)) {
+	            // element is already non-inert
+	            return;
+	          }
+
+	          var _inertRoot = this._inertRoots.get(root);
+	          _inertRoot.destructor();
+	          this._inertRoots['delete'](root);
+	          root.removeAttribute('inert');
+	        }
+	      }
+
+	      /**
+	       * Get the InertRoot object corresponding to the given inert root element, if any.
+	       * @param {!Node} element
+	       * @return {!InertRoot|undefined}
+	       */
+
+	    }, {
+	      key: 'getInertRoot',
+	      value: function getInertRoot(element) {
+	        return this._inertRoots.get(element);
+	      }
+
+	      /**
+	       * Register the given InertRoot as managing the given node.
+	       * In the case where the node has a previously existing inert root, this inert root will
+	       * be added to its set of inert roots.
+	       * @param {!Node} node
+	       * @param {!InertRoot} inertRoot
+	       * @return {!InertNode} inertNode
+	       */
+
+	    }, {
+	      key: 'register',
+	      value: function register(node, inertRoot) {
+	        var inertNode = this._managedNodes.get(node);
+	        if (inertNode !== undefined) {
+	          // node was already in an inert subtree
+	          inertNode.addInertRoot(inertRoot);
+	        } else {
+	          inertNode = new InertNode(node, inertRoot);
+	        }
+
+	        this._managedNodes.set(node, inertNode);
+
+	        return inertNode;
+	      }
+
+	      /**
+	       * De-register the given InertRoot as managing the given inert node.
+	       * Removes the inert root from the InertNode's set of managing inert roots, and remove the inert
+	       * node from the InertManager's set of managed nodes if it is destroyed.
+	       * If the node is not currently managed, this is essentially a no-op.
+	       * @param {!Node} node
+	       * @param {!InertRoot} inertRoot
+	       * @return {?InertNode} The potentially destroyed InertNode associated with this node, if any.
+	       */
+
+	    }, {
+	      key: 'deregister',
+	      value: function deregister(node, inertRoot) {
+	        var inertNode = this._managedNodes.get(node);
+	        if (!inertNode) {
+	          return null;
+	        }
+
+	        inertNode.removeInertRoot(inertRoot);
+	        if (inertNode.destroyed) {
+	          this._managedNodes['delete'](node);
+	        }
+
+	        return inertNode;
+	      }
+
+	      /**
+	       * Callback used when document has finished loading.
+	       */
+
+	    }, {
+	      key: '_onDocumentLoaded',
+	      value: function _onDocumentLoaded() {
+	        // Find all inert roots in document and make them actually inert.
+	        var inertElements = slice.call(this._document.querySelectorAll('[inert]'));
+	        inertElements.forEach(function (inertElement) {
+	          this.setInert(inertElement, true);
+	        }, this);
+
+	        // Comment this out to use programmatic API only.
+	        this._observer.observe(this._document.body || this._document.documentElement, { attributes: true, subtree: true, childList: true });
+	      }
+
+	      /**
+	       * Callback used when mutation observer detects attribute changes.
+	       * @param {!Array<!MutationRecord>} records
+	       * @param {!MutationObserver} self
+	       */
+
+	    }, {
+	      key: '_watchForInert',
+	      value: function _watchForInert(records, self) {
+	        var _this = this;
+	        records.forEach(function (record) {
+	          switch (record.type) {
+	            case 'childList':
+	              slice.call(record.addedNodes).forEach(function (node) {
+	                if (node.nodeType !== Node.ELEMENT_NODE) {
+	                  return;
+	                }
+	                var inertElements = slice.call(node.querySelectorAll('[inert]'));
+	                if (matches.call(node, '[inert]')) {
+	                  inertElements.unshift(node);
+	                }
+	                inertElements.forEach(function (inertElement) {
+	                  this.setInert(inertElement, true);
+	                }, _this);
+	              }, _this);
+	              break;
+	            case 'attributes':
+	              if (record.attributeName !== 'inert') {
+	                return;
+	              }
+	              var target = /** @type {!Element} */record.target;
+	              var inert = target.hasAttribute('inert');
+	              _this.setInert(target, inert);
+	              break;
+	          }
+	        }, this);
+	      }
+	    }]);
+
+	    return InertManager;
+	  }();
+
+	  /**
+	   * Recursively walk the composed tree from |node|.
+	   * @param {!Node} node
+	   * @param {(function (!Element))=} callback Callback to be called for each element traversed,
+	   *     before descending into child nodes.
+	   * @param {?ShadowRoot=} shadowRootAncestor The nearest ShadowRoot ancestor, if any.
+	   */
+
+
+	  function composedTreeWalk(node, callback, shadowRootAncestor) {
+	    if (node.nodeType == Node.ELEMENT_NODE) {
+	      var element = /** @type {!Element} */node;
+	      if (callback) {
+	        callback(element);
+	      }
+
+	      // Descend into node:
+	      // If it has a ShadowRoot, ignore all child elements - these will be picked
+	      // up by the <content> or <shadow> elements. Descend straight into the
+	      // ShadowRoot.
+	      var shadowRoot = /** @type {!HTMLElement} */element.shadowRoot;
+	      if (shadowRoot) {
+	        composedTreeWalk(shadowRoot, callback);
+	        return;
+	      }
+
+	      // If it is a <content> element, descend into distributed elements - these
+	      // are elements from outside the shadow root which are rendered inside the
+	      // shadow DOM.
+	      if (element.localName == 'content') {
+	        var content = /** @type {!HTMLContentElement} */element;
+	        // Verifies if ShadowDom v0 is supported.
+	        var distributedNodes = content.getDistributedNodes ? content.getDistributedNodes() : [];
+	        for (var i = 0; i < distributedNodes.length; i++) {
+	          composedTreeWalk(distributedNodes[i], callback);
+	        }
+	        return;
+	      }
+
+	      // If it is a <slot> element, descend into assigned nodes - these
+	      // are elements from outside the shadow root which are rendered inside the
+	      // shadow DOM.
+	      if (element.localName == 'slot') {
+	        var slot = /** @type {!HTMLSlotElement} */element;
+	        // Verify if ShadowDom v1 is supported.
+	        var _distributedNodes = slot.assignedNodes ? slot.assignedNodes({ flatten: true }) : [];
+	        for (var _i = 0; _i < _distributedNodes.length; _i++) {
+	          composedTreeWalk(_distributedNodes[_i], callback);
+	        }
+	        return;
+	      }
+	    }
+
+	    // If it is neither the parent of a ShadowRoot, a <content> element, a <slot>
+	    // element, nor a <shadow> element recurse normally.
+	    var child = node.firstChild;
+	    while (child != null) {
+	      composedTreeWalk(child, callback);
+	      child = child.nextSibling;
+	    }
+	  }
+
+	  /**
+	   * Adds a style element to the node containing the inert specific styles
+	   * @param {!Node} node
+	   */
+	  function addInertStyle(node) {
+	    if (node.querySelector('style#inert-style, link#inert-style')) {
+	      return;
+	    }
+	    var style = document.createElement('style');
+	    style.setAttribute('id', 'inert-style');
+	    style.textContent = '\n' + '[inert] {\n' + '  pointer-events: none;\n' + '  cursor: default;\n' + '}\n' + '\n' + '[inert], [inert] * {\n' + '  -webkit-user-select: none;\n' + '  -moz-user-select: none;\n' + '  -ms-user-select: none;\n' + '  user-select: none;\n' + '}\n';
+	    node.appendChild(style);
+	  }
+
+	  if (!Element.prototype.hasOwnProperty('inert')) {
+	    /** @type {!InertManager} */
+	    var inertManager = new InertManager(document);
+
+	    Object.defineProperty(Element.prototype, 'inert', {
+	      enumerable: true,
+	      /** @this {!Element} */
+	      get: function get() {
+	        return this.hasAttribute('inert');
+	      },
+	      /** @this {!Element} */
+	      set: function set(inert) {
+	        inertManager.setInert(this, inert);
+	      }
+	    });
+	  }
+	})();
+
+	//
+	// Dialog state
+	//
+
+	let currentlyOpenDialog = null;
+	let codeToRun = null;
+	let previousActiveElement = null;
+
+
+	//
+	// Dialog state management
+	//
+
+	const setRunAfterClosingDialog = (run) => codeToRun = run;
+	const isDialogOpen = () => currentlyOpenDialog !== null;
+
+	function runCodeAfterClosingDialog() {
+		if (codeToRun) {
+			codeToRun();
+			codeToRun = null;
+		}
+	}
+
+
+	//
+	// Initialisation
+	//
+
+	let dialogKeys;
+	let dialogMenu;
+	let dialogGo;
+
+	function init(activateSlideFunction) {
+		dialogKeys = document.getElementById('story-slides-dialog-keys');
+		dialogMenu = document.getElementById('story-slides-dialog-actions');
+		dialogGo = document.getElementById('story-slides-dialog-go');
+
+		const buttons = document.querySelectorAll('.story-slides-ui button.close');
+		for (const button of buttons) {
+			// NOTE: Must ensure event isn't passed, or it'll be interpreted as a
+			//       reuqest to not restore focus after closing the dialog.
+			button.addEventListener('click', () => hideOpenDialog());
+		}
+
+		document.getElementById('story-slides-go-form').addEventListener(
+			'submit', function() {
+				event.preventDefault();  // stop page reloading
+				const number = Number(
+					document.getElementById('story-slides-go-input').value);
+				if (number > 0 && number <= window.storySlidesState.numSlides) {
+					if (number !== window.storySlidesState.currentSlideNumber) {
+						hideOpenDialog(false);
+						activateSlideFunction(
+							{ newNumber: number, state: window.storySlidesState });
+					} else {
+						previousActiveElement = window.storySlidesState.currentSlide;
+						hideOpenDialog();
+					}
+				} else {
+					hideOpenDialog();
+				}
+			});
+	}
+
+
+	//
+	// Functions that rely on dialog state
+	//
+
+	function getDialog(name) {
+		const map = {
+			'go': dialogGo,
+			'keys': dialogKeys,
+			'menu': dialogMenu
+		};
+		if (!Object.keys(map).includes(name)) {
+			throw new Error(`Invalid dialog '${name}'`)
+		}
+		return map[name]
+	}
+
+	function showOrToggleDialog(name, replaceExistingDialog = false) {
+		if (currentlyOpenDialog && !replaceExistingDialog) {
+			throw new Error('showOrToggleDialog(): A dialog is open')
+		}
+		if (!currentlyOpenDialog && replaceExistingDialog) {
+			throw new Error('showOrToggleDialog(): No dialog is open')
+		}
+
+		if (!replaceExistingDialog) {
+			previousActiveElement = document.activeElement;
+		} else {
+			currentlyOpenDialog.hidden = true;
+		}
+
+		const dialog = getDialog(name);
+		if (name === 'go') {
+			document.getElementById('story-slides-slide-last').innerText =
+				window.storySlidesState.numSlides;
+			document.getElementById('story-slides-slide-current').innerText =
+				window.storySlidesState.currentSlideNumber;
+		}
+
+		// TODO: check on mobile
+		// HT maybe https://stackoverflow.com/questions/9538868/prevent-body-from-scrolling-when-a-modal-is-opened
+		// HT maybe https://css-tricks.com/prevent-page-scrolling-when-a-modal-is-open/
+		// TODO: Use https://github.com/willmcpo/body-scroll-lock
+		document.body.style.overflow = 'hidden';
+
+		dialog.scrollTop = 0;
+		dialog.hidden = false;
+		window.storySlidesState.contentAndUI.setAttribute('inert', '');
+		currentlyOpenDialog = dialog;
+
+		if (name !== 'go') {
+			dialog.focus();  // already has tabindex -1
+		} else {
+			document.getElementById('story-slides-go-input').focus();
+		}
+	}
+
+	function hideOpenDialog(restoreFocus = true) {
+		if (!currentlyOpenDialog) throw new Error('No dialog is open')
+
+		if (currentlyOpenDialog === dialogGo) {
+			document.getElementById('story-slides-go-input').value = '';
+		}
+
+		currentlyOpenDialog.hidden = true;
+		document.body.style.overflow = '';  // TODO: check on mobile
+		window.storySlidesState.contentAndUI.removeAttribute('inert');
+
+		if (restoreFocus === true) {
+			// We schedule the focusing task for "as soon as possible" after
+			// microtasks run, because the MutationObserver used by the inert
+			// polyfil inherently uses microtasks, and needs to wind down.
+			(function(element) {
+				setTimeout(function() {
+					// If we moved to slides mode, the menu button may have gone.
+					if (window.getComputedStyle(element).display === 'none') {
+						document.body.focus();
+					} else {
+						element.focus();
+					}
+				}, 0);
+			})(previousActiveElement);
+		}
+
+		previousActiveElement = null;
+		currentlyOpenDialog = null;
+
+		// We may've been asked to defer running some code (i.e. show the slide
+		// after showing the keyboard shortcuts dialog for the first time).
+		runCodeAfterClosingDialog();
+	}
+
+	/* global screenfull */
+
+	const storageKeyShortcutsShown = window.location.pathname + '.shortcuts-shown';
+
+
+	//
+	// Slides mode state
+	//
+
+	let keyHandlerModeSlides = null;  // must be set during startup
+
+
+	//
+	// Functions that rely on global state
+	//
+
+	function makeKeyHandlerModeSlides(switchToModeFunction) {
+		// There seem to be problems re-adding a document keydown handler when a
+		// screen-reader is running: the handler is often not registered, so
+		// virtual cursor navigation continues. Therefore we check here for whether
+		// we should ignore certain keys due to lock mode here, and also handle
+		// closing dialogs here too.
+		keyHandlerModeSlides = function keyHandlerModeSlides(event) {
+			if (event.isComposing || event.keyCode === 229) return
+			if (event.ctrlKey || event.metaKey) return
+
+			const state = window.storySlidesState;
+
+			switch (event.key) {
+				case 'ArrowLeft':
+				case 'ArrowUp':
+				case 'PageUp':
+					if (!locked() && !isDialogOpen()) moveToPreviousSlide(state);
+					break
+				case 'ArrowRight':
+				case 'ArrowDown':
+				case 'PageDown':
+					if (!locked() && !isDialogOpen()) {
+						revealStepOrMoveToNextSlide(state);
+					}
+					// NOTE: not supporting the space key as it's echoed by
+					//       screen-readers.
+					// FIXME: just prevent default to fix that?
+					break
+				case 'f':
+					if (!locked() && !isDialogOpen()) toggleFullscreen();
+					break
+				case 's':
+					if (!locked() && !isDialogOpen()) {
+						switchToModeFunction(state, 'story');
+					}
+					break
+				case 'g':
+					if (!locked() && !isDialogOpen()) {
+						event.preventDefault();
+						showOrToggleDialog('go');
+					}
+					break
+				case '?':
+				case 'h':
+					if (!locked() && !isDialogOpen()) showOrToggleDialog('keys');
+					break
+				case 'l':
+					if (!locked() && !isDialogOpen()) {
+						toggleSlideLock(state.currentSlide);
+					}
+					break
+				case 'Escape':
+					if (locked()) {
+						toggleSlideLock(state.currentSlide);
+					} else if (isDialogOpen()) {
+						hideOpenDialog();
+					}
+					break
+				case 'p':
+					if (!locked() && !isDialogOpen()) {
+						announce(progressPercent(state) + '%');
+					}
+					break
+				case 'o':
+					if (!locked() && !isDialogOpen()) {
+						announce(`Slide ${state.currentSlideNumber} ` +
+							`of ${state.numSlides}`);
+					}
+					break
+				case 'a':
+				case 'm':
+					if (!locked() && !isDialogOpen()) showOrToggleDialog('menu');
+			}
+		};
+	}
+
+
+	//
+	// Functions that rely on state
+	//
+
+	// Called during start-up only
+	function registerSlidesModeClickHandlers(state) {
+		if (screenfull.isEnabled) {  // not supported on iPhone
+			document
+				.getElementById('story-slides-button-fullscreen')
+				.addEventListener('click', () => {
+					if (isDialogOpen()) hideOpenDialog();
+					toggleFullscreen();
+				});
+		} else {
+			document.getElementById('story-slides-button-fullscreen').remove();
+		}
+
+		const setup = {
+			'story-slides-button-next': () => revealStepOrMoveToNextSlide(state),
+			'story-slides-button-previous': () => moveToPreviousSlide(state)
+		};
+
+		for (const id in setup) {
+			document.getElementById(id).addEventListener('click', setup[id]);
+		}
+	}
+
+	function setUpModeSlides(state, thenRun) {
+		document.addEventListener('keydown', keyHandlerModeSlides);
+		window.addEventListener('resize', slidesViewportHandler);
+		slidesViewportHandler();
+
+		state.slidesContainer.setAttribute('aria-live', 'assertive');
+		// Note: if JAWS is launched after Firefox, this doesn't work
+		//       (<https://bugzilla.mozilla.org/show_bug.cgi?id=1453673>).
+		applicationifyBody();
+
+		if (window.sessionStorage.getItem(storageKeyShortcutsShown) !== 'yes') {
+			setRunAfterClosingDialog(thenRun);
+			showOrToggleDialog('keys');
+			window.sessionStorage.setItem(storageKeyShortcutsShown, 'yes');
+		} else {
+			thenRun();
+		}
+	}
+
+	function tearDownModeSlides(state) {
+		if (state.currentSlideNumber !== null) {
+			state.currentSlide.classList.remove('active');
+		}
+
+		if (screenfull.isEnabled) {
+			screenfull.exit();  // prevents aberrations in Firefox and iOS Safari
+		}
+
+		if (isDialogOpen()) hideOpenDialog();
+
+		document.removeEventListener('keydown', keyHandlerModeSlides);
+		window.removeEventListener('resize', slidesViewportHandler);
+
+		state.slidesContainer.removeAttribute('aria-live');
+		unApplicationifyBody();
+		document.body.blur();  // otherwise SRs may try to read the entire thing
+	}
+
+	function moveToPreviousSlide(state) {
+		const num = previousSlideNumber(state.numSlides, state.currentSlideNumber);
+		activateSlideInSlidesMode({ newNumber: num, state });
+	}
+
+	function revealStepOrMoveToNextSlide(state) {
+		if (revealStepAndCheckIfReadyForNextSlide(state.currentSlide)) {
+			const num = nextSlideNumber(state.numSlides, state.currentSlideNumber);
+			if (num !== null) {
+				activateSlideInSlidesMode({ newNumber: num, state });
+			}
+		}
+	}
+
+	function activateSlideInSlidesMode(options) {
+		debug('activateSlideInSlidesMode():', debugOptionsToString(options));
+		checkSetActiveSlideOptions(options);  // done in both modes due to events
+		const { state, newNumber } = options;
+
+		if (state.currentSlideNumber !== null) {
+			state.currentSlide.classList.remove('active');
+		}
+		state.slide(newNumber).classList.add('active');
+		checkSlideForOverflow(state.slide(newNumber), newNumber);
+
+		updateActiveSlide(options);
+	}
+
+
+	//
+	// Functions that do not rely on state
+	//
+
+	function toggleSlideLock(currentSlide) {
+		if (!document.body.classList.contains('story-slides-locked')) {
+			if (isDialogOpen()) hideOpenDialog();
+			unApplicationifyBody();
+			document.body.classList.add('story-slides-locked');
+			window.alert("Slide locked. Press Escape to unlock. If you're using a screen-reader, you can now explore the slide with the virtual cursor.");
+			currentSlide.focus();
+		} else {
+			applicationifyBody();  // snap out of virtual cursor mode
+			document.body.classList.remove('story-slides-locked');
+			window.alert('Slide unlocked.');
+		}
+	}
+
+	// The author sets two CSS custom properties under the :root pseudo-class to
+	// specify slide aspect ratio and font size, such as in the following examples.
+	//
+	// --slide-font-height-percent-of-slide: 8;
+	// --slide-aspect-ratio: calc(16 / 9);
+	//
+	// It is not possible to use CSS custom properties in media queries, so we need
+	// to run some code to work out the dimensions of the slides.
+	//
+	// Based on those dimentions, the base font size is set accordingly too.
+	//
+	// Thanks https://davidwalsh.name/css-variables-javascript :-)
+	function slidesViewportHandler() {
+		const viewWidth = document.documentElement.clientWidth;
+		const viewHeight = document.documentElement.clientHeight;
+		const viewAspect = viewWidth / viewHeight;
+		// FIXME DRY with linting.js
+		const slideAspectRaw = window.getComputedStyle(document.documentElement)
+			.getPropertyValue('--slide-aspect-ratio');
+		const matches = slideAspectRaw.match(/calc\(\s*(\d+)\s*\/\s*(\d+)\s*\)/);
+		const slideAspect = matches[1] / matches[2];
+
+		let slideHeight = null;
+		let slideWidth = null;
+
+		if (viewAspect >= slideAspect) {
+			// View is wider than slide
+			// Slide height should be 100vh
+			slideHeight = viewHeight;
+			slideWidth = viewHeight * slideAspect;
+		} else {
+			// View is narrower than slide
+			// slide width should be 100vw
+			slideWidth = viewWidth;
+			slideHeight = viewWidth / slideAspect;
+		}
+
+		document.documentElement.style
+			.setProperty('--computed-slide-height', slideHeight + 'px');
+		document.documentElement.style
+			.setProperty('--computed-slide-width', slideWidth + 'px');
+
+		// On mobile browsers, these can change quite a bit, as browser UI
+		// appears and disappears.
+		const verticalMargin = (window.innerHeight - slideHeight) / 2;
+		const horizontalMargin = (window.innerWidth - slideWidth) / 2;
+
+		document.documentElement.style.setProperty(
+			'--computed-vertical-margin', (verticalMargin > 0 ? verticalMargin : 0) + 'px');
+		document.documentElement.style.setProperty(
+			'--computed-horizontal-margin', (horizontalMargin > 0 ? horizontalMargin : 0) + 'px');
+
+		// FIXME DRY with linting.js
+		// We also work out the user's chosen base font size
+		const rootFontSizePercent = window.getComputedStyle(document.documentElement)
+			.getPropertyValue('--slide-font-height-percent-of-slide');
+		const realRootFontSize = slideHeight * (rootFontSizePercent / 100);
+		document.documentElement.style
+			.setProperty('--computed-base-font-size', realRootFontSize + 'px');
+	}
+
+	function locked() {
+		return document.body.classList.contains('story-slides-locked')
+	}
+
+	function toggleFullscreen() {
+		if (screenfull.isEnabled) {
+			screenfull.toggle();
+			// On Safari on iOS it's a bit buggy and doesn't resize, even after
+			// calling slidesViewportHandler after the toggle is resolved -
+			// probably due to the animation effect.
+		} else {
+			window.alert('fullscreen mode is not available');
+		}
+	}
+
+	// If there are steps on the slide that are to be gradually revealed (more info
+	// on this at the bottom) then go through those steps before advancing to the
+	// next slide. Returns true to say "go to next slide" or false otherwise.
+	function revealStepAndCheckIfReadyForNextSlide(slide) {
+		const nextHiddenThing = slide.querySelector('[data-story-slides-step]');
+		if (nextHiddenThing) {
+			nextHiddenThing.removeAttribute('data-story-slides-step');
+			return false
+		}
+		return true
+	}
+
+	function checkSlideForOverflow(slide, number) {
+		const overflow = isOverflowing(slide);
+		if (overflow) {
+			window.alert(`Slide ${number} is overflowing by; ${JSON.stringify(overflow, null, 2)}`);
+			error('Slide is overflowing:', slide, 'by:', overflow);
+		}
+	}
+
+	// NOTE: Only exported for testing
+	function isOverflowing(element) {
+		const horizontalOverflow = element.scrollWidth - element.clientWidth;
+		const verticalOverflow = element.scrollHeight - element.clientHeight;
+		if (horizontalOverflow > 0 || verticalOverflow > 0) {
+			return {
+				'horizontal': horizontalOverflow > 0 ? horizontalOverflow : 0,
+				'vertical': verticalOverflow > 0 ? verticalOverflow : 0
+			}
+		}
+		return null
+	}
+
+	// NOTE: Only exported for testing
+	function previousSlideNumber(numSlides, currentNumber) {
+		return currentNumber > 1 ? currentNumber - 1 : numSlides
+	}
+
+	// NOTE: Only exported for testing
+	function nextSlideNumber(numSlides, currentNumber) {
+		return (currentNumber % numSlides) + 1
+	}
+
+	// NOTE: Only exported for testing
+	function applicationifyBody() {
+		document.body.setAttribute('role', 'application');
+		document.body.setAttribute('aria-label', 'Slide');
+		document.body.focus();  // encourage SRs to use application mode
+	}
+
+	// NOTE: Only exported for testing
+	function unApplicationifyBody() {
+		document.body.removeAttribute('role');
+		document.body.removeAttribute('aria-label');
+	}
+
+	//
+	// Story mode state
+	//
+
+	let keyHandlerModeStory = null;  // must be set during startup
+	let storyModeScrollTimeout = null;
+	let scrollCameFromMe = false;
+
+
+	//
+	// Functions that rely on global state
+	//
+
+	function makeKeyHandlerModeStory(switchToModeFunction) {
+		keyHandlerModeStory = function keyHandlerModeStory(event) {
+			if (event.isComposing || event.keyCode === 229) return
+			switch (event.key) {
+				case 'Escape':
+					if (isDialogOpen()) {
+						if (isDialogOpen()) hideOpenDialog();
+					} else {
+						switchToModeFunction(window.storySlidesState, 'slides');
+					}
+					break
+				case 'g':
+					if (!event.altKey) break
+					// eslint-disable-next-line no-fallthrough
+				case '©':
+					if (!isDialogOpen()) {
+						event.preventDefault();
+						showOrToggleDialog('go');
+					}
+					break
+				case '?':
+					if (!isDialogOpen()) showOrToggleDialog('keys');
+					break
+			}
+		};
+	}
+
+	function realStoryModeScrollHandler() {
+		if (scrollCameFromMe) {
+			scrollCameFromMe = false;
+		} else {
+			activateSlideInStoryMode({
+				newNumber: scanForSlideNumber() ?? 1,
+				state: window.storySlidesState,
+				triggeredByScroll: true
+			});
+		}
+	}
+
+
+	//
+	// Functions that rely on state
+	//
+
+	function activateSlideInStoryMode(options) {
+		debug('activateSlideInStoryMode():', debugOptionsToString(options));
+		checkSetActiveSlideOptions(options);  // done in both modes due to events
+		const { state, newNumber } = options;
+
+		if (!options.triggeredByScroll) {
+			// Note: screen-readers may set the focus on to elements as the user
+			//       reads and scrolls through the document using the virtual
+			//       cursor - that's not story-slides doing it :-).
+			scrollCameFromMe = true;
+			state.slide(newNumber).focus();  // needs to be done first for SRs
+			if (newNumber === 1) {
+				// Scroll to the very top if slide 1 was requested (we could have
+				// just loaded the page).
+				if (window.pageYOffset > 0) {
+					window.scrollTo(0, 0);
+				} else {
+					// We're at the top already so there's no need to scroll, so we
+					// should un-ignore the next scroll event :-).
+					scrollCameFromMe = false;
+				}
+			} else {
+				// The timeout is needed for Chrome (at least >=95)
+				setTimeout(() => state.slide(newNumber).scrollIntoView(true), 1);
+			}
+		}
+
+		updateActiveSlide(options);
+	}
+
+
+	//
+	// Functions that do not rely on state
+	//
+
+	function setUpModeStory() {
+		document.addEventListener('keydown', keyHandlerModeStory);
+		document.addEventListener('scroll', scrollHandlerStoryMode);
+	}
+
+	function tearDownModeStory() {
+		if (isDialogOpen()) hideOpenDialog();
+		document.removeEventListener('keydown', keyHandlerModeStory);
+		document.removeEventListener('scroll', scrollHandlerStoryMode);
+	}
+
+	function scrollHandlerStoryMode(event) {
+		clearTimeout(storyModeScrollTimeout);
+		storyModeScrollTimeout = setTimeout(
+			() => realStoryModeScrollHandler(), 250);
+	}
+
+	function scanForSlideNumber() {
+		// Take a point towards the middle of the screen, and work out which slide
+		// is under that point.
+		//
+		// The point being testing could be in a gap between slides. If a slide
+		// isn't found, try a starting point 10px higher up the screen.  If no
+		// slide is ever found, default to the first.
+
+		let height = window.innerHeight / 4;
+		let slideNumber = null;
+
+		do {
+			height = height - 10;
+			const found = document.elementFromPoint(window.innerWidth / 2, height);
+			slideNumber = slideNumberFromElement(found);
+		} while (!slideNumber && height > 0)
+
+		return slideNumber
+	}
+
+	//
+	// Functions that rely on global state
+	//
+
+	// NOTE: Event state is serialisable and !== Story Slides state.
+	//       The state object is { slideNumber }
+	function popState(event) {
+		debug('popState(): hl:', window.history.length, 'event.state:', event.state);
+		handlePopOrLoad(event.state);
+	}
+
+	// TODO: Presumably we will only be given states that came from our origin.
+	function handlePopOrLoad(historyState) {
+		debug('handlePopOrLoad(): hl:', window.history.length, 'historyState:', historyState);
+		if (historyState === null) {
+			debug('handlePopOrLoad(): no previous state—activate slide from hash');
+			activateSlideFromHash(window.storySlidesState);
+		} else {
+			debug('handlePopOrLoad(): have previous state');
+			activateSlide({
+				newNumber: historyState.slideNumber,  // state previously pushed
+				state: window.storySlidesState
+			});
+		}
+	}
+
+
+	//
+	// Functions that rely on state
+	//
+
+	function switchToMode(state, mode, startup) {
+		debug(`switchToMode(): ${state}`, mode, startup ? '(startup)' : '(running)');
+		if (!startup && getMode() === mode) {
+			throw new Error(`Already in ${mode} mode; not switching.`)
+		}
+
+		toggleStyleSheetsForMode(mode);
+		setMode(mode);
+
+		// TODO: This is double-checking mode
+		if (mode === 'story') {
+			if (!startup) tearDownModeSlides(state);
+			setUpModeStory();
+			handlePopOrLoad(window.history.state);
+		} else {
+			// It seems the only reliable way to make the live region work on load
+			// is to give it some time to settle before fettling the CSS that makes
+			// the slides show up.
+			const showSlide = () => setTimeout(
+				() => handlePopOrLoad(window.history.state), 1000);
+			// Notes:
+			//  - A value of 0 almost worked across browsers and SRs.
+			//  - Would be nice to do more research and testing.
+			//  - If the user switches back to story mode before this, it'll
+			//    get called twice, but that's no biggie.
+
+			// We can't call these two directly because if this is the first time
+			// the user has used slides mode this session, and the keyboard
+			// shortcuts dialog is shown, we need the slide to appear after that.
+			if (!startup) tearDownModeStory();
+			setUpModeSlides(state, showSlide);
+		}
+	}
+
+	function activateSlideFromHash(state) {
+		debug(`activateSlideFromHash(): ${state}`);
+		if (window.location.hash) {
+			// Order of precedence:
+			// - slide id
+			// - element-on-a-slide id
+			// - slide number
+			// - fall back to first slide
+
+			// NOTE: There shouldn't be an XSS vulnerability here becuase
+			//       getElementById() doesn't execute the string.
+			const found = document.getElementById(window.location.hash.slice(1));
+			if (found) {
+				if (found.classList.contains('slide')) {
+					activateSlide({
+						hash: window.location.hash,
+						newNumber: Number(found.getAttribute('data-slide-number')),
+						state
+					});
+				} else if (getMode() !== 'story') {
+					// In story mode, the browser will scroll to the element.
+					// In slides mode, we'll need to activate the slide.
+					const newNumber = slideNumberFromElement(found);
+					debug(`Element ${window.location.hash}'s slide is ${newNumber}`);
+					activateSlideInSlidesMode(
+						{ hash: window.location.hash, newNumber, state });
+				} else {
+					debug('In story mode; letting the browser focus the element');
+				}
+			} else {
+				const numberMatch = window.location.hash.match(/^#(\d+)$/);
+				const newNumber = numberMatch ? Number(numberMatch[1]) : 0;
+				if (newNumber >= 1 && newNumber <= state.numSlides) {
+					// TODO: Use state.validate() in the above check
+					activateSlide({ newNumber, state });
+				} else if (state.currentSlideNumber === null) {
+					// Out of range/invalid, and no current slide (must be booting).
+					activateSlide({ newNumber: 1, state });
+				} else {
+					// Out of range, or invalid, and we're currently on a slide.
+					// The hash has changed by this point, though. Can't delete a
+					// history entry; just have to correct the one that was created
+					// by the hash change.
+					activateSlide({
+						force: true,
+						newNumber: state.currentSlideNumber,
+						state
+					});
+					// NOTE: If the slide we were on had an ID, it's lost and
+					//       turned into the slide number. This doesn't seem like a
+					//       big dead.
+				}
+			}
+		} else {
+			activateSlide({ newNumber: 1, state });
+		}
+	}
+
+	function registerClickHandlersAndGlobalEventListeners(state) {
+		registerSlidesModeClickHandlers(state);
+
+		window.history.scrollRestoration = 'manual';
+		// TODO: needed this: https://developer.mozilla.org/en-US/docs/Web/API/Window/popstate_event ?
+		window.addEventListener('popstate', popState);
+
+		const setup = {
+			'story-slides-button-go': () => showOrToggleDialog('go', true),
+			'story-slides-button-keys': () => showOrToggleDialog('keys', true),
+			'story-slides-button-menu': () => showOrToggleDialog('menu'),
+			'story-slides-button-mode-slides': () => switchToMode(state, 'slides'),
+			'story-slides-button-mode-story': () => switchToMode(state, 'story')
+		};
+
+		for (const id in setup) {
+			document.getElementById(id).addEventListener('click', setup[id]);
+		}
+	}
+
+
+	//
+	// Functions that do not rely on state
+	//
+
+	function activateSlide(options) {
+		if (getMode() === 'story') {
+			activateSlideInStoryMode(options);
+		} else {
+			activateSlideInSlidesMode(options);
+		}
+	}
+
+	function toggleStyleSheetsForMode(mode) {
+		for (const styleSheet of document.styleSheets) {
+			if (styleSheet.href) {
+				const name = baseName(styleSheet.href);
+				const sheetMode =
+					name.endsWith('.story.css') ? 'story'
+						: name.endsWith('.slides.css') ? 'slides'
+							: null;
+				if (sheetMode) styleSheet.disabled = sheetMode !== mode;
+			}
+		}
+
+		document.documentElement.className = `mode-${mode}`;  // support transitions
+	}
+
+	// TODO test - what about local file access in other browsers?
+	function baseName(href) {
+		return href.split('/').pop()
+	}
+
+	/*! @license DOMPurify 2.3.3 | (c) Cure53 and other contributors | Released under the Apache license 2.0 and Mozilla Public License 2.0 | github.com/cure53/DOMPurify/blob/2.3.3/LICENSE */
 
 	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
@@ -617,7 +2250,7 @@ This software is provided by the copyright holders and contributors “as is” 
 	   * Version label, exposed for easier checks
 	   * if DOMPurify is up to date or not
 	   */
-	  DOMPurify.version = '2.3.1';
+	  DOMPurify.version = '2.3.3';
 
 	  /**
 	   * Array of elements that DOMPurify removed during sanitation.
@@ -801,6 +2434,12 @@ This software is provided by the copyright holders and contributors “as is” 
 	  var NAMESPACE = HTML_NAMESPACE;
 	  var IS_EMPTY_INPUT = false;
 
+	  /* Parsing of strict XHTML documents */
+	  var PARSER_MEDIA_TYPE = void 0;
+	  var SUPPORTED_PARSER_MEDIA_TYPES = ['application/xhtml+xml', 'text/html'];
+	  var DEFAULT_PARSER_MEDIA_TYPE = 'text/html';
+	  var transformCaseFunc = void 0;
+
 	  /* Keep a reference to config to pass to hooks */
 	  var CONFIG = null;
 
@@ -852,6 +2491,16 @@ This software is provided by the copyright holders and contributors “as is” 
 	    IN_PLACE = cfg.IN_PLACE || false; // Default false
 	    IS_ALLOWED_URI$$1 = cfg.ALLOWED_URI_REGEXP || IS_ALLOWED_URI$$1;
 	    NAMESPACE = cfg.NAMESPACE || HTML_NAMESPACE;
+
+	    PARSER_MEDIA_TYPE =
+	    // eslint-disable-next-line unicorn/prefer-includes
+	    SUPPORTED_PARSER_MEDIA_TYPES.indexOf(cfg.PARSER_MEDIA_TYPE) === -1 ? PARSER_MEDIA_TYPE = DEFAULT_PARSER_MEDIA_TYPE : PARSER_MEDIA_TYPE = cfg.PARSER_MEDIA_TYPE;
+
+	    // HTML tags and attributes are not case-sensitive, converting to lowercase. Keeping XHTML as is.
+	    transformCaseFunc = PARSER_MEDIA_TYPE === 'application/xhtml+xml' ? function (x) {
+	      return x;
+	    } : stringToLowerCase;
+
 	    if (SAFE_FOR_TEMPLATES) {
 	      ALLOW_DATA_ATTR = false;
 	    }
@@ -1120,6 +2769,11 @@ This software is provided by the copyright holders and contributors “as is” 
 	      leadingWhitespace = matches && matches[0];
 	    }
 
+	    if (PARSER_MEDIA_TYPE === 'application/xhtml+xml') {
+	      // Root of XHTML doc must contain xmlns declaration (see https://www.w3.org/TR/xhtml1/normative.html#strict)
+	      dirty = '<html xmlns="http://www.w3.org/1999/xhtml"><head></head><body>' + dirty + '</body></html>';
+	    }
+
 	    var dirtyPayload = trustedTypesPolicy ? trustedTypesPolicy.createHTML(dirty) : dirty;
 	    /*
 	     * Use the DOMParser API by default, fallback later if needs be
@@ -1127,7 +2781,7 @@ This software is provided by the copyright holders and contributors “as is” 
 	     */
 	    if (NAMESPACE === HTML_NAMESPACE) {
 	      try {
-	        doc = new DOMParser().parseFromString(dirtyPayload, 'text/html');
+	        doc = new DOMParser().parseFromString(dirtyPayload, PARSER_MEDIA_TYPE);
 	      } catch (_) {}
 	    }
 
@@ -1240,7 +2894,7 @@ This software is provided by the copyright holders and contributors “as is” 
 	    }
 
 	    /* Now let's check the element's type and name */
-	    var tagName = stringToLowerCase(currentNode.nodeName);
+	    var tagName = transformCaseFunc(currentNode.nodeName);
 
 	    /* Execute a hook if present */
 	    _executeHook('uponSanitizeElement', currentNode, {
@@ -1381,7 +3035,7 @@ This software is provided by the copyright holders and contributors “as is” 
 	          namespaceURI = _attr.namespaceURI;
 
 	      value = stringTrim(attr.value);
-	      lcName = stringToLowerCase(name);
+	      lcName = transformCaseFunc(name);
 
 	      /* Execute a hook if present */
 	      hookEvent.attrName = lcName;
@@ -1416,7 +3070,7 @@ This software is provided by the copyright holders and contributors “as is” 
 	      }
 
 	      /* Is `value` valid for this attribute? */
-	      var lcTag = currentNode.nodeName.toLowerCase();
+	      var lcTag = transformCaseFunc(currentNode.nodeName);
 	      if (!_isValidAttribute(lcTag, lcName, value)) {
 	        continue;
 	      }
@@ -1679,8 +3333,8 @@ This software is provided by the copyright holders and contributors “as is” 
 	      _parseConfig({});
 	    }
 
-	    var lcTag = stringToLowerCase(tag);
-	    var lcName = stringToLowerCase(attr);
+	    var lcTag = transformCaseFunc(tag);
+	    var lcName = transformCaseFunc(attr);
 	    return _isValidAttribute(lcTag, lcName, value);
 	  };
 
@@ -1749,6 +3403,8 @@ This software is provided by the copyright holders and contributors “as is” 
 	 * DO NOT EDIT THIS FILE
 	 * The code in this file is generated from files in ./src/
 	 */
+
+	var esmEntry$1 = {exports: {}};
 
 	var defaults$5 = {exports: {}};
 
@@ -2119,7 +3775,7 @@ This software is provided by the copyright holders and contributors “as is” 
 	/**
 	 * Tokenizer
 	 */
-	var Tokenizer_1 = class Tokenizer {
+	var Tokenizer_1$1 = class Tokenizer {
 	  constructor(options) {
 	    this.options = options || defaults$4;
 	  }
@@ -2966,9 +4622,9 @@ This software is provided by the copyright holders and contributors “as is” 
 	  emStrong: {
 	    lDelim: /^(?:\*+(?:([punct_])|[^\s*]))|^_+(?:([punct*])|([^\s_]))/,
 	    //        (1) and (2) can only be a Right Delimiter. (3) and (4) can only be Left.  (5) and (6) can be either Left or Right.
-	    //        () Skip other delimiter (1) #***                   (2) a***#, a***                   (3) #***a, ***a                 (4) ***#              (5) #***#                 (6) a***a
-	    rDelimAst: /\_\_[^_*]*?\*[^_*]*?\_\_|[punct_](\*+)(?=[\s]|$)|[^punct*_\s](\*+)(?=[punct_\s]|$)|[punct_\s](\*+)(?=[^punct*_\s])|[\s](\*+)(?=[punct_])|[punct_](\*+)(?=[punct_])|[^punct*_\s](\*+)(?=[^punct*_\s])/,
-	    rDelimUnd: /\*\*[^_*]*?\_[^_*]*?\*\*|[punct*](\_+)(?=[\s]|$)|[^punct*_\s](\_+)(?=[punct*\s]|$)|[punct*\s](\_+)(?=[^punct*_\s])|[\s](\_+)(?=[punct*])|[punct*](\_+)(?=[punct*])/ // ^- Not allowed for _
+	    //        () Skip orphan delim inside strong    (1) #***                (2) a***#, a***                   (3) #***a, ***a                 (4) ***#              (5) #***#                 (6) a***a
+	    rDelimAst: /^[^_*]*?\_\_[^_*]*?\*[^_*]*?(?=\_\_)|[punct_](\*+)(?=[\s]|$)|[^punct*_\s](\*+)(?=[punct_\s]|$)|[punct_\s](\*+)(?=[^punct*_\s])|[\s](\*+)(?=[punct_])|[punct_](\*+)(?=[punct_])|[^punct*_\s](\*+)(?=[^punct*_\s])/,
+	    rDelimUnd: /^[^_*]*?\*\*[^_*]*?\_[^_*]*?(?=\*\*)|[punct*](\_+)(?=[\s]|$)|[^punct*_\s](\_+)(?=[punct*\s]|$)|[punct*\s](\_+)(?=[^punct*_\s])|[\s](\_+)(?=[punct*])|[punct*](\_+)(?=[punct*])/ // ^- Not allowed for _
 	  },
 	  code: /^(`+)([^`]|[^`][\s\S]*?[^`])\1(?!`)/,
 	  br: /^( {2,}|\\)\n(?!\s*$)/,
@@ -3099,7 +4755,7 @@ This software is provided by the copyright holders and contributors “as is” 
 	  inline: inline$1
 	};
 
-	const Tokenizer$1 = Tokenizer_1;
+	const Tokenizer$2 = Tokenizer_1$1;
 	const { defaults: defaults$3 } = defaults$5.exports;
 	const { block, inline } = rules;
 	const { repeatString } = helpers;
@@ -3148,12 +4804,12 @@ This software is provided by the copyright holders and contributors “as is” 
 	/**
 	 * Block Lexer
 	 */
-	var Lexer_1 = class Lexer {
+	var Lexer_1$1 = class Lexer {
 	  constructor(options) {
 	    this.tokens = [];
 	    this.tokens.links = Object.create(null);
 	    this.options = options || defaults$3;
-	    this.options.tokenizer = this.options.tokenizer || new Tokenizer$1();
+	    this.options.tokenizer = this.options.tokenizer || new Tokenizer$2();
 	    this.tokenizer = this.options.tokenizer;
 	    this.tokenizer.options = this.options;
 	    this.tokenizer.lexer = this;
@@ -3600,7 +5256,7 @@ This software is provided by the copyright holders and contributors “as is” 
 	/**
 	 * Renderer
 	 */
-	var Renderer_1 = class Renderer {
+	var Renderer_1$1 = class Renderer {
 	  constructor(options) {
 	    this.options = options || defaults$2;
 	  }
@@ -3763,7 +5419,7 @@ This software is provided by the copyright holders and contributors “as is” 
 	 * returns only the textual part of the token
 	 */
 
-	var TextRenderer_1 = class TextRenderer {
+	var TextRenderer_1$1 = class TextRenderer {
 	  // no need for block level renderers
 	  strong(text) {
 	    return text;
@@ -3806,7 +5462,7 @@ This software is provided by the copyright holders and contributors “as is” 
 	 * Slugger generates header id
 	 */
 
-	var Slugger_1 = class Slugger {
+	var Slugger_1$1 = class Slugger {
 	  constructor() {
 	    this.seen = {};
 	  }
@@ -3853,9 +5509,9 @@ This software is provided by the copyright holders and contributors “as is” 
 	  }
 	};
 
-	const Renderer$1 = Renderer_1;
-	const TextRenderer$1 = TextRenderer_1;
-	const Slugger$1 = Slugger_1;
+	const Renderer$2 = Renderer_1$1;
+	const TextRenderer$2 = TextRenderer_1$1;
+	const Slugger$2 = Slugger_1$1;
 	const { defaults: defaults$1 } = defaults$5.exports;
 	const {
 	  unescape
@@ -3864,14 +5520,14 @@ This software is provided by the copyright holders and contributors “as is” 
 	/**
 	 * Parsing & Compiling
 	 */
-	var Parser_1 = class Parser {
+	var Parser_1$1 = class Parser {
 	  constructor(options) {
 	    this.options = options || defaults$1;
-	    this.options.renderer = this.options.renderer || new Renderer$1();
+	    this.options.renderer = this.options.renderer || new Renderer$2();
 	    this.renderer = this.options.renderer;
 	    this.renderer.options = this.options;
-	    this.textRenderer = new TextRenderer$1();
-	    this.slugger = new Slugger$1();
+	    this.textRenderer = new TextRenderer$2();
+	    this.slugger = new Slugger$2();
 	  }
 
 	  /**
@@ -4140,12 +5796,12 @@ This software is provided by the copyright holders and contributors “as is” 
 	  }
 	};
 
-	const Lexer = Lexer_1;
-	const Parser = Parser_1;
-	const Tokenizer = Tokenizer_1;
-	const Renderer = Renderer_1;
-	const TextRenderer = TextRenderer_1;
-	const Slugger = Slugger_1;
+	const Lexer$1 = Lexer_1$1;
+	const Parser$1 = Parser_1$1;
+	const Tokenizer$1 = Tokenizer_1$1;
+	const Renderer$1 = Renderer_1$1;
+	const TextRenderer$1 = TextRenderer_1$1;
+	const Slugger$1 = Slugger_1$1;
 	const {
 	  merge,
 	  checkSanitizeDeprecation,
@@ -4160,7 +5816,7 @@ This software is provided by the copyright holders and contributors “as is” 
 	/**
 	 * Marked
 	 */
-	function marked(src, opt, callback) {
+	function marked$1(src, opt, callback) {
 	  // throw error in case of non string input
 	  if (typeof src === 'undefined' || src === null) {
 	    throw new Error('marked(): input parameter is undefined or null');
@@ -4175,7 +5831,7 @@ This software is provided by the copyright holders and contributors “as is” 
 	    opt = null;
 	  }
 
-	  opt = merge({}, marked.defaults, opt || {});
+	  opt = merge({}, marked$1.defaults, opt || {});
 	  checkSanitizeDeprecation(opt);
 
 	  if (callback) {
@@ -4183,7 +5839,7 @@ This software is provided by the copyright holders and contributors “as is” 
 	    let tokens;
 
 	    try {
-	      tokens = Lexer.lex(src, opt);
+	      tokens = Lexer$1.lex(src, opt);
 	    } catch (e) {
 	      return callback(e);
 	    }
@@ -4194,9 +5850,9 @@ This software is provided by the copyright holders and contributors “as is” 
 	      if (!err) {
 	        try {
 	          if (opt.walkTokens) {
-	            marked.walkTokens(tokens, opt.walkTokens);
+	            marked$1.walkTokens(tokens, opt.walkTokens);
 	          }
-	          out = Parser.parse(tokens, opt);
+	          out = Parser$1.parse(tokens, opt);
 	        } catch (e) {
 	          err = e;
 	        }
@@ -4218,7 +5874,7 @@ This software is provided by the copyright holders and contributors “as is” 
 	    if (!tokens.length) return done();
 
 	    let pending = 0;
-	    marked.walkTokens(tokens, function(token) {
+	    marked$1.walkTokens(tokens, function(token) {
 	      if (token.type === 'code') {
 	        pending++;
 	        setTimeout(() => {
@@ -4248,11 +5904,11 @@ This software is provided by the copyright holders and contributors “as is” 
 	  }
 
 	  try {
-	    const tokens = Lexer.lex(src, opt);
+	    const tokens = Lexer$1.lex(src, opt);
 	    if (opt.walkTokens) {
-	      marked.walkTokens(tokens, opt.walkTokens);
+	      marked$1.walkTokens(tokens, opt.walkTokens);
 	    }
-	    return Parser.parse(tokens, opt);
+	    return Parser$1.parse(tokens, opt);
 	  } catch (e) {
 	    e.message += '\nPlease report this to https://github.com/markedjs/marked.';
 	    if (opt.silent) {
@@ -4268,24 +5924,24 @@ This software is provided by the copyright holders and contributors “as is” 
 	 * Options
 	 */
 
-	marked.options =
-	marked.setOptions = function(opt) {
-	  merge(marked.defaults, opt);
-	  changeDefaults(marked.defaults);
-	  return marked;
+	marked$1.options =
+	marked$1.setOptions = function(opt) {
+	  merge(marked$1.defaults, opt);
+	  changeDefaults(marked$1.defaults);
+	  return marked$1;
 	};
 
-	marked.getDefaults = getDefaults;
+	marked$1.getDefaults = getDefaults;
 
-	marked.defaults = defaults;
+	marked$1.defaults = defaults;
 
 	/**
 	 * Use Extension
 	 */
 
-	marked.use = function(...args) {
+	marked$1.use = function(...args) {
 	  const opts = merge({}, ...args);
-	  const extensions = marked.defaults.extensions || { renderers: {}, childTokens: {} };
+	  const extensions = marked$1.defaults.extensions || { renderers: {}, childTokens: {} };
 	  let hasExtensions;
 
 	  args.forEach((pack) => {
@@ -4344,7 +6000,7 @@ This software is provided by the copyright holders and contributors “as is” 
 
 	    // ==-- Parse "overwrite" extensions --== //
 	    if (pack.renderer) {
-	      const renderer = marked.defaults.renderer || new Renderer();
+	      const renderer = marked$1.defaults.renderer || new Renderer$1();
 	      for (const prop in pack.renderer) {
 	        const prevRenderer = renderer[prop];
 	        // Replace renderer with func to run extension, but fall back if false
@@ -4359,7 +6015,7 @@ This software is provided by the copyright holders and contributors “as is” 
 	      opts.renderer = renderer;
 	    }
 	    if (pack.tokenizer) {
-	      const tokenizer = marked.defaults.tokenizer || new Tokenizer();
+	      const tokenizer = marked$1.defaults.tokenizer || new Tokenizer$1();
 	      for (const prop in pack.tokenizer) {
 	        const prevTokenizer = tokenizer[prop];
 	        // Replace tokenizer with func to run extension, but fall back if false
@@ -4376,7 +6032,7 @@ This software is provided by the copyright holders and contributors “as is” 
 
 	    // ==-- Parse WalkTokens extensions --== //
 	    if (pack.walkTokens) {
-	      const walkTokens = marked.defaults.walkTokens;
+	      const walkTokens = marked$1.defaults.walkTokens;
 	      opts.walkTokens = (token) => {
 	        pack.walkTokens.call(this, token);
 	        if (walkTokens) {
@@ -4389,7 +6045,7 @@ This software is provided by the copyright holders and contributors “as is” 
 	      opts.extensions = extensions;
 	    }
 
-	    marked.setOptions(opts);
+	    marked$1.setOptions(opts);
 	  });
 	};
 
@@ -4397,32 +6053,32 @@ This software is provided by the copyright holders and contributors “as is” 
 	 * Run callback for every token
 	 */
 
-	marked.walkTokens = function(tokens, callback) {
+	marked$1.walkTokens = function(tokens, callback) {
 	  for (const token of tokens) {
 	    callback(token);
 	    switch (token.type) {
 	      case 'table': {
 	        for (const cell of token.header) {
-	          marked.walkTokens(cell.tokens, callback);
+	          marked$1.walkTokens(cell.tokens, callback);
 	        }
 	        for (const row of token.rows) {
 	          for (const cell of row) {
-	            marked.walkTokens(cell.tokens, callback);
+	            marked$1.walkTokens(cell.tokens, callback);
 	          }
 	        }
 	        break;
 	      }
 	      case 'list': {
-	        marked.walkTokens(token.items, callback);
+	        marked$1.walkTokens(token.items, callback);
 	        break;
 	      }
 	      default: {
-	        if (marked.defaults.extensions && marked.defaults.extensions.childTokens && marked.defaults.extensions.childTokens[token.type]) { // Walk any extensions
-	          marked.defaults.extensions.childTokens[token.type].forEach(function(childTokens) {
-	            marked.walkTokens(token[childTokens], callback);
+	        if (marked$1.defaults.extensions && marked$1.defaults.extensions.childTokens && marked$1.defaults.extensions.childTokens[token.type]) { // Walk any extensions
+	          marked$1.defaults.extensions.childTokens[token.type].forEach(function(childTokens) {
+	            marked$1.walkTokens(token[childTokens], callback);
 	          });
 	        } else if (token.tokens) {
-	          marked.walkTokens(token.tokens, callback);
+	          marked$1.walkTokens(token.tokens, callback);
 	        }
 	      }
 	    }
@@ -4432,7 +6088,7 @@ This software is provided by the copyright holders and contributors “as is” 
 	/**
 	 * Parse Inline
 	 */
-	marked.parseInline = function(src, opt) {
+	marked$1.parseInline = function(src, opt) {
 	  // throw error in case of non string input
 	  if (typeof src === 'undefined' || src === null) {
 	    throw new Error('marked.parseInline(): input parameter is undefined or null');
@@ -4442,15 +6098,15 @@ This software is provided by the copyright holders and contributors “as is” 
 	      + Object.prototype.toString.call(src) + ', string expected');
 	  }
 
-	  opt = merge({}, marked.defaults, opt || {});
+	  opt = merge({}, marked$1.defaults, opt || {});
 	  checkSanitizeDeprecation(opt);
 
 	  try {
-	    const tokens = Lexer.lexInline(src, opt);
+	    const tokens = Lexer$1.lexInline(src, opt);
 	    if (opt.walkTokens) {
-	      marked.walkTokens(tokens, opt.walkTokens);
+	      marked$1.walkTokens(tokens, opt.walkTokens);
 	    }
-	    return Parser.parseInline(tokens, opt);
+	    return Parser$1.parseInline(tokens, opt);
 	  } catch (e) {
 	    e.message += '\nPlease report this to https://github.com/markedjs/marked.';
 	    if (opt.silent) {
@@ -4465,23 +6121,38 @@ This software is provided by the copyright holders and contributors “as is” 
 	/**
 	 * Expose
 	 */
+	marked$1.Parser = Parser$1;
+	marked$1.parser = Parser$1.parse;
+	marked$1.Renderer = Renderer$1;
+	marked$1.TextRenderer = TextRenderer$1;
+	marked$1.Lexer = Lexer$1;
+	marked$1.lexer = Lexer$1.lex;
+	marked$1.Tokenizer = Tokenizer$1;
+	marked$1.Slugger = Slugger$1;
+	marked$1.parse = marked$1;
 
-	marked.Parser = Parser;
-	marked.parser = Parser.parse;
+	var marked_1 = marked$1;
 
-	marked.Renderer = Renderer;
-	marked.TextRenderer = TextRenderer;
+	const marked = marked_1;
+	const Lexer = Lexer_1$1;
+	const Parser = Parser_1$1;
+	const Tokenizer = Tokenizer_1$1;
+	const Renderer = Renderer_1$1;
+	const TextRenderer = TextRenderer_1$1;
+	const Slugger = Slugger_1$1;
 
-	marked.Lexer = Lexer;
-	marked.lexer = Lexer.lex;
+	esmEntry$1.exports = marked;
+	esmEntry$1.exports.parse = marked;
+	esmEntry$1.exports.Parser = Parser;
+	esmEntry$1.exports.parser = Parser.parse;
+	esmEntry$1.exports.Renderer = Renderer;
+	esmEntry$1.exports.TextRenderer = TextRenderer;
+	esmEntry$1.exports.Lexer = Lexer;
+	esmEntry$1.exports.lexer = Lexer.lex;
+	esmEntry$1.exports.Tokenizer = Tokenizer;
+	esmEntry$1.exports.Slugger = Slugger;
 
-	marked.Tokenizer = Tokenizer;
-
-	marked.Slugger = Slugger;
-
-	marked.parse = marked;
-
-	var marked_1 = marked;
+	var esmEntry = esmEntry$1.exports;
 
 	const promolgate = [
 		'top', 'middle', 'bottom',
@@ -4504,6 +6175,53 @@ This software is provided by the copyright holders and contributors “as is” 
 		return text
 	}
 
+
+	//
+	// Injecting the UI
+	//
+
+	function injectUI(fixture, topUI, bottomUI, mainUI, announcer) {
+		// Main content wraps the top UI, slides and bottom UI
+
+		const mainContent = document.createElement('div');
+		mainContent.id = 'story-slides-main-content';
+		mainContent.hidden = true;
+
+		const dummyTopUI = document.createElement('div');  // extra layer
+		dummyTopUI.innerHTML = topUI;
+
+		const slidesContainer = document.createElement('div');
+		slidesContainer.id = 'story-slides-slides-container';
+		// Bringing all children over brings <script>s too; that'll be fixed later.
+		while (fixture.childNodes.length > 0) {
+			slidesContainer.appendChild(fixture.childNodes[0]);
+		}
+
+		const dummyBottomUI = document.createElement('div');  // extra layer
+		dummyBottomUI.innerHTML = bottomUI;
+
+		// The dialogs and announcer follow, outside the main content container
+
+		const dummyMainUI = document.createElement('div');  // extra layer
+		dummyMainUI.innerHTML = mainUI;
+
+		const dummyAnnouncer = document.createElement('div');
+		dummyAnnouncer.innerHTML = announcer;
+
+		mainContent.appendChild(dummyTopUI.children[0]);
+		mainContent.appendChild(slidesContainer);
+		mainContent.appendChild(dummyBottomUI.children[0]);
+		fixture.appendChild(mainContent);
+
+		fixture.appendChild(dummyMainUI.children[0]);
+		fixture.appendChild(dummyAnnouncer.children[0]);
+
+		for (const script of fixture.querySelectorAll('script')) {
+			fixture.appendChild(script);
+		}
+	}
+
+
 	//
 	// Handling line breaks
 	//
@@ -4513,7 +6231,7 @@ This software is provided by the copyright holders and contributors “as is” 
 	// class="slides"> with <span class="story"> </span><br class="slides">
 
 	function fettleLineBreaks() {
-		const slideModeLineBreaks = document.querySelectorAll('br.slides');
+		const slideModeLineBreaks = window.storySlidesState.slidesContainer.querySelectorAll('br.slides');
 		for (const lineBreak of slideModeLineBreaks) {
 			const lineBreakSpace = document.createElement('span');
 			lineBreakSpace.classList.add('story');
@@ -4540,9 +6258,9 @@ This software is provided by the copyright holders and contributors “as is” 
 	}
 
 	function renderMarkdown() {
-		for (const container of document.querySelectorAll('[data-markdown]')) {
+		for (const container of window.storySlidesState.slidesContainer.querySelectorAll('[data-markdown]')) {
 			const markdown = stripLeadingSpace(getMarkdownFromComment(container));
-			container.innerHTML = purify.sanitize(marked_1(markdown));
+			container.innerHTML = purify.sanitize(esmEntry(markdown));
 		}
 	}
 
@@ -4557,6 +6275,18 @@ This software is provided by the copyright holders and contributors “as is” 
 	function makeSlidesProgrammaticallyFocusable(slides) {
 		for (const slide of slides) {
 			slide.setAttribute('tabindex', '-1');
+		}
+	}
+
+
+	//
+	// Explicitly numbering slides
+	//
+
+	// This removes the need to search for a slide's number.
+	function giveSlidesExplicitNumbers(slides) {
+		for (let i = 0; i < slides.length; i++) {
+			slides[i].setAttribute('data-slide-number', i + 1);
 		}
 	}
 
@@ -4624,7 +6354,7 @@ This software is provided by the copyright holders and contributors “as is” 
 	// TODO: IS IT?
 
 	function doSplits() {
-		const containers = document.querySelectorAll('[data-split]');
+		const containers = window.storySlidesState.slidesContainer.querySelectorAll('[data-split]');
 		let allOK = true;
 
 		for (const container of containers) {
@@ -4758,6 +6488,7 @@ This software is provided by the copyright holders and contributors “as is” 
 
 				if (!element.classList.contains('story')) {
 					const wrapper = document.createElement('DIV');
+					wrapper.className = 'padding-wrapper';
 
 					const classes = [];
 					if (i === 0) classes.push('padding-wrapper-first');
@@ -4774,8 +6505,9 @@ This software is provided by the copyright holders and contributors “as is” 
 						}
 					}
 
+					// Preserve order including of text nodes that may be around
+					slide.insertBefore(wrapper, element);
 					wrapper.appendChild(element);
-					slide.appendChild(wrapper);
 				} else {
 					// As per the similar note above: preserve DOM order for story
 					// mode content.
@@ -4785,9 +6517,100 @@ This software is provided by the copyright holders and contributors “as is” 
 		}
 	}
 
-	// Note: checking for overflowing slide content is done when a slide is
-	// shown, as it requires the layout to be known. Therefore that check is
-	// done above.
+
+	// Constrain image sizes for easier slides mode layout
+	//
+	// FIXME: doc
+	//
+	// FIXME: make it work with horizontal image wrappers
+	//
+	// Setting overflow other than visible addresses this:
+	//
+	//  * https://stackoverflow.com/a/36231105/1485308
+	//  * https://stackoverflow.com/a/49675259/1485308
+	//
+	// FIXME: support natural size in story mode? How about providing classes that cause it to set the image size to 50 75 100 vw/h?
+	function constrainImages() {
+		// FIXME: doc .inline-images
+		for (const image of window.storySlidesState.slidesContainer.querySelectorAll('.inline-images img')) {
+			image.classList.add('really-inline');
+			image.classList.add('natural-size');
+		}
+
+		for (const image of document.getElementsByTagName('IMG')) {
+			// Check if the image is meant to be inline (block is the default)
+			const hasPreviousRealSibling = isARealSibling(image.previousSibling);
+			const hasNextRealSibling = isARealSibling(image.nextSibling);
+			if (hasPreviousRealSibling || hasNextRealSibling) {
+				image.classList.add('really-inline');
+				image.classList.add('natural-size');
+				continue
+			}
+
+			// How large should the image be, and does it need overflow handling?
+			if (image.classList.contains('natural-size')) {
+				// On no-padding slides, we need to put the image in a wrapper so
+				// that it isn't stretched.
+				// TODO: align-self: center; doesn't seem to work, but could
+				// something similar?
+				if (image.parentElement.classList.contains('no-padding')) {
+					const wrapper = document.createElement('DIV');
+					image.parentElement.insertBefore(wrapper, image);
+					wrapper.appendChild(image);
+				}
+			} else {
+				// To stop the image overflowing, we put it in a flexbox. We also
+				// need to set the overflow property—but that needs to be on the
+				// outer-most non-slide container, and is done later.
+				const parent = image.parentElement;
+				if (!parent.classList.contains('slide')) {
+					parent.classList.add('image-wrapper');
+				}
+			}
+		}
+
+		for (const container of document.getElementsByClassName('image-wrapper')) {
+			let next = container;
+			while (!next.parentElement.classList.contains('slide')) {
+				next = next.parentElement;
+			}
+			next.classList.add('overflow-auto');
+		}
+
+		// Images to be sized naturally need to know their intrinsic width
+		for (const image of window.storySlidesState.slidesContainer.querySelectorAll('img.really-inline, img.natural-size')) {
+			// Don't set the unit here as it breaks the CSS calculation
+			image.style.setProperty('--width-px', image.width);
+		}
+	}
+
+	function isARealSibling(sibling) {
+		return sibling !== null &&
+			(sibling.nodeType === 1 ||
+				(sibling.nodeType === 3 && sibling.textContent.trim().length > 0))
+	}
+
+
+	//
+	// Wrap tables for story mode
+	//
+
+	function wrapTablesForStoryMode() {
+		for (const table of window.storySlidesState.slidesContainer.querySelectorAll('table')) {
+			const wrapper = document.createElement('DIV');
+			wrapper.className = 'table-wrapper';
+			table.parentElement.insertBefore(wrapper, table);
+			wrapper.appendChild(table);
+
+			if (table.classList.contains('wide')) {
+				wrapper.classList.add('wide');
+			}
+		}
+	}
+
+	// NOTE: checking for overflowing slide content is done when a slide is shown,
+	// as it requires the layout to be known. Therefore that check is done in
+	// slides mode.
 
 	function checkDOMNoDuplidateIds() {
 		const allIds = Array.from(document.querySelectorAll('[id]'), (e) => e.id);
@@ -4803,24 +6626,31 @@ This software is provided by the copyright holders and contributors “as is” 
 		const check = [
 			'story-slides-announcer',
 			'story-slides-button-fullscreen',
-			'story-slides-button-help-keys',
+			'story-slides-button-keys',
 			'story-slides-button-menu',
 			'story-slides-button-mode-slides',
 			'story-slides-button-mode-story',
 			'story-slides-button-next',
 			'story-slides-button-previous',
+			'story-slides-dialog-go',
+			'story-slides-dialog-go-heading',
 			'story-slides-dialog-keys',
-			'story-slides-dialog-keys-title',
-			'story-slides-dialog-menu',
+			'story-slides-dialog-keys-heading',
+			'story-slides-dialog-actions',
+			'story-slides-dialog-actions-heading',
+			'story-slides-go-description',
+			'story-slides-go-form',
+			'story-slides-go-input',
 			'story-slides-main-content',
 			'story-slides-mode-slides-explainer',
-			'story-slides-mode-slides-explainer-container',
 			'story-slides-mode-story-explainer',
-			'story-slides-progress',
+			'story-slides-progress',  // FIXME only check this one; actually don't?
 			'story-slides-screen-errors',
 			'story-slides-screen-intro',
 			'story-slides-screen-intro-heading',
 			'story-slides-screen-loading',
+			'story-slides-slide-current',
+			'story-slides-slide-last',
 			'story-slides-slides-container',
 			'story-slides-top-ui'
 		];
@@ -4852,13 +6682,14 @@ This software is provided by the copyright holders and contributors “as is” 
 
 	function checkDOMSlideContainment(slides) {
 		const container = document.getElementById('story-slides-slides-container');
-		const message = "The number of children of the slides container isn't the same as the number of slides. This could be due to putting story mode content outside of slides, having some slides outside of the slides contianer, or having other non-slide elements inside the container.";
-
 		if (slides.length !== container.children.length) {
-			error(message);
+			error("The number of children of the slides container isn't the same "
+				+ 'as the number of slides. This could be due to putting story '
+				+ 'mode content outside of slides, having some slides outside of '
+				+ 'the slides contianer, or having other non-slide elements inside '
+				+ 'the container.');
 			return false
 		}
-
 		return true
 	}
 
@@ -4915,1544 +6746,44 @@ This software is provided by the copyright holders and contributors “as is” 
 		return checkSlidesModeSettings()
 	}
 
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	/**
-	 * This work is licensed under the W3C Software and Document License
-	 * (http://www.w3.org/Consortium/Legal/2015/copyright-software-and-document).
-	 */
-
-	(function () {
-	  // Return early if we're not running inside of the browser.
-	  if (typeof window === 'undefined') {
-	    return;
-	  }
-
-	  // Convenience function for converting NodeLists.
-	  /** @type {typeof Array.prototype.slice} */
-	  var slice = Array.prototype.slice;
-
-	  /**
-	   * IE has a non-standard name for "matches".
-	   * @type {typeof Element.prototype.matches}
-	   */
-	  var matches = Element.prototype.matches || Element.prototype.msMatchesSelector;
-
-	  /** @type {string} */
-	  var _focusableElementsString = ['a[href]', 'area[href]', 'input:not([disabled])', 'select:not([disabled])', 'textarea:not([disabled])', 'button:not([disabled])', 'details', 'summary', 'iframe', 'object', 'embed', '[contenteditable]'].join(',');
-
-	  /**
-	   * `InertRoot` manages a single inert subtree, i.e. a DOM subtree whose root element has an `inert`
-	   * attribute.
-	   *
-	   * Its main functions are:
-	   *
-	   * - to create and maintain a set of managed `InertNode`s, including when mutations occur in the
-	   *   subtree. The `makeSubtreeUnfocusable()` method handles collecting `InertNode`s via registering
-	   *   each focusable node in the subtree with the singleton `InertManager` which manages all known
-	   *   focusable nodes within inert subtrees. `InertManager` ensures that a single `InertNode`
-	   *   instance exists for each focusable node which has at least one inert root as an ancestor.
-	   *
-	   * - to notify all managed `InertNode`s when this subtree stops being inert (i.e. when the `inert`
-	   *   attribute is removed from the root node). This is handled in the destructor, which calls the
-	   *   `deregister` method on `InertManager` for each managed inert node.
-	   */
-
-	  var InertRoot = function () {
-	    /**
-	     * @param {!Element} rootElement The Element at the root of the inert subtree.
-	     * @param {!InertManager} inertManager The global singleton InertManager object.
-	     */
-	    function InertRoot(rootElement, inertManager) {
-	      _classCallCheck(this, InertRoot);
-
-	      /** @type {!InertManager} */
-	      this._inertManager = inertManager;
-
-	      /** @type {!Element} */
-	      this._rootElement = rootElement;
-
-	      /**
-	       * @type {!Set<!InertNode>}
-	       * All managed focusable nodes in this InertRoot's subtree.
-	       */
-	      this._managedNodes = new Set();
-
-	      // Make the subtree hidden from assistive technology
-	      if (this._rootElement.hasAttribute('aria-hidden')) {
-	        /** @type {?string} */
-	        this._savedAriaHidden = this._rootElement.getAttribute('aria-hidden');
-	      } else {
-	        this._savedAriaHidden = null;
-	      }
-	      this._rootElement.setAttribute('aria-hidden', 'true');
-
-	      // Make all focusable elements in the subtree unfocusable and add them to _managedNodes
-	      this._makeSubtreeUnfocusable(this._rootElement);
-
-	      // Watch for:
-	      // - any additions in the subtree: make them unfocusable too
-	      // - any removals from the subtree: remove them from this inert root's managed nodes
-	      // - attribute changes: if `tabindex` is added, or removed from an intrinsically focusable
-	      //   element, make that node a managed node.
-	      this._observer = new MutationObserver(this._onMutation.bind(this));
-	      this._observer.observe(this._rootElement, { attributes: true, childList: true, subtree: true });
-	    }
-
-	    /**
-	     * Call this whenever this object is about to become obsolete.  This unwinds all of the state
-	     * stored in this object and updates the state of all of the managed nodes.
-	     */
-
-
-	    _createClass(InertRoot, [{
-	      key: 'destructor',
-	      value: function destructor() {
-	        this._observer.disconnect();
-
-	        if (this._rootElement) {
-	          if (this._savedAriaHidden !== null) {
-	            this._rootElement.setAttribute('aria-hidden', this._savedAriaHidden);
-	          } else {
-	            this._rootElement.removeAttribute('aria-hidden');
-	          }
-	        }
-
-	        this._managedNodes.forEach(function (inertNode) {
-	          this._unmanageNode(inertNode.node);
-	        }, this);
-
-	        // Note we cast the nulls to the ANY type here because:
-	        // 1) We want the class properties to be declared as non-null, or else we
-	        //    need even more casts throughout this code. All bets are off if an
-	        //    instance has been destroyed and a method is called.
-	        // 2) We don't want to cast "this", because we want type-aware optimizations
-	        //    to know which properties we're setting.
-	        this._observer = /** @type {?} */null;
-	        this._rootElement = /** @type {?} */null;
-	        this._managedNodes = /** @type {?} */null;
-	        this._inertManager = /** @type {?} */null;
-	      }
-
-	      /**
-	       * @return {!Set<!InertNode>} A copy of this InertRoot's managed nodes set.
-	       */
-
-	    }, {
-	      key: '_makeSubtreeUnfocusable',
-
-
-	      /**
-	       * @param {!Node} startNode
-	       */
-	      value: function _makeSubtreeUnfocusable(startNode) {
-	        var _this2 = this;
-
-	        composedTreeWalk(startNode, function (node) {
-	          return _this2._visitNode(node);
-	        });
-
-	        var activeElement = document.activeElement;
-
-	        if (!document.body.contains(startNode)) {
-	          // startNode may be in shadow DOM, so find its nearest shadowRoot to get the activeElement.
-	          var node = startNode;
-	          /** @type {!ShadowRoot|undefined} */
-	          var root = undefined;
-	          while (node) {
-	            if (node.nodeType === Node.DOCUMENT_FRAGMENT_NODE) {
-	              root = /** @type {!ShadowRoot} */node;
-	              break;
-	            }
-	            node = node.parentNode;
-	          }
-	          if (root) {
-	            activeElement = root.activeElement;
-	          }
-	        }
-	        if (startNode.contains(activeElement)) {
-	          activeElement.blur();
-	          // In IE11, if an element is already focused, and then set to tabindex=-1
-	          // calling blur() will not actually move the focus.
-	          // To work around this we call focus() on the body instead.
-	          if (activeElement === document.activeElement) {
-	            document.body.focus();
-	          }
-	        }
-	      }
-
-	      /**
-	       * @param {!Node} node
-	       */
-
-	    }, {
-	      key: '_visitNode',
-	      value: function _visitNode(node) {
-	        if (node.nodeType !== Node.ELEMENT_NODE) {
-	          return;
-	        }
-	        var element = /** @type {!Element} */node;
-
-	        // If a descendant inert root becomes un-inert, its descendants will still be inert because of
-	        // this inert root, so all of its managed nodes need to be adopted by this InertRoot.
-	        if (element !== this._rootElement && element.hasAttribute('inert')) {
-	          this._adoptInertRoot(element);
-	        }
-
-	        if (matches.call(element, _focusableElementsString) || element.hasAttribute('tabindex')) {
-	          this._manageNode(element);
-	        }
-	      }
-
-	      /**
-	       * Register the given node with this InertRoot and with InertManager.
-	       * @param {!Node} node
-	       */
-
-	    }, {
-	      key: '_manageNode',
-	      value: function _manageNode(node) {
-	        var inertNode = this._inertManager.register(node, this);
-	        this._managedNodes.add(inertNode);
-	      }
-
-	      /**
-	       * Unregister the given node with this InertRoot and with InertManager.
-	       * @param {!Node} node
-	       */
-
-	    }, {
-	      key: '_unmanageNode',
-	      value: function _unmanageNode(node) {
-	        var inertNode = this._inertManager.deregister(node, this);
-	        if (inertNode) {
-	          this._managedNodes['delete'](inertNode);
-	        }
-	      }
-
-	      /**
-	       * Unregister the entire subtree starting at `startNode`.
-	       * @param {!Node} startNode
-	       */
-
-	    }, {
-	      key: '_unmanageSubtree',
-	      value: function _unmanageSubtree(startNode) {
-	        var _this3 = this;
-
-	        composedTreeWalk(startNode, function (node) {
-	          return _this3._unmanageNode(node);
-	        });
-	      }
-
-	      /**
-	       * If a descendant node is found with an `inert` attribute, adopt its managed nodes.
-	       * @param {!Element} node
-	       */
-
-	    }, {
-	      key: '_adoptInertRoot',
-	      value: function _adoptInertRoot(node) {
-	        var inertSubroot = this._inertManager.getInertRoot(node);
-
-	        // During initialisation this inert root may not have been registered yet,
-	        // so register it now if need be.
-	        if (!inertSubroot) {
-	          this._inertManager.setInert(node, true);
-	          inertSubroot = this._inertManager.getInertRoot(node);
-	        }
-
-	        inertSubroot.managedNodes.forEach(function (savedInertNode) {
-	          this._manageNode(savedInertNode.node);
-	        }, this);
-	      }
-
-	      /**
-	       * Callback used when mutation observer detects subtree additions, removals, or attribute changes.
-	       * @param {!Array<!MutationRecord>} records
-	       * @param {!MutationObserver} self
-	       */
-
-	    }, {
-	      key: '_onMutation',
-	      value: function _onMutation(records, self) {
-	        records.forEach(function (record) {
-	          var target = /** @type {!Element} */record.target;
-	          if (record.type === 'childList') {
-	            // Manage added nodes
-	            slice.call(record.addedNodes).forEach(function (node) {
-	              this._makeSubtreeUnfocusable(node);
-	            }, this);
-
-	            // Un-manage removed nodes
-	            slice.call(record.removedNodes).forEach(function (node) {
-	              this._unmanageSubtree(node);
-	            }, this);
-	          } else if (record.type === 'attributes') {
-	            if (record.attributeName === 'tabindex') {
-	              // Re-initialise inert node if tabindex changes
-	              this._manageNode(target);
-	            } else if (target !== this._rootElement && record.attributeName === 'inert' && target.hasAttribute('inert')) {
-	              // If a new inert root is added, adopt its managed nodes and make sure it knows about the
-	              // already managed nodes from this inert subroot.
-	              this._adoptInertRoot(target);
-	              var inertSubroot = this._inertManager.getInertRoot(target);
-	              this._managedNodes.forEach(function (managedNode) {
-	                if (target.contains(managedNode.node)) {
-	                  inertSubroot._manageNode(managedNode.node);
-	                }
-	              });
-	            }
-	          }
-	        }, this);
-	      }
-	    }, {
-	      key: 'managedNodes',
-	      get: function get() {
-	        return new Set(this._managedNodes);
-	      }
-
-	      /** @return {boolean} */
-
-	    }, {
-	      key: 'hasSavedAriaHidden',
-	      get: function get() {
-	        return this._savedAriaHidden !== null;
-	      }
-
-	      /** @param {?string} ariaHidden */
-
-	    }, {
-	      key: 'savedAriaHidden',
-	      set: function set(ariaHidden) {
-	        this._savedAriaHidden = ariaHidden;
-	      }
-
-	      /** @return {?string} */
-	      ,
-	      get: function get() {
-	        return this._savedAriaHidden;
-	      }
-	    }]);
-
-	    return InertRoot;
-	  }();
-
-	  /**
-	   * `InertNode` initialises and manages a single inert node.
-	   * A node is inert if it is a descendant of one or more inert root elements.
-	   *
-	   * On construction, `InertNode` saves the existing `tabindex` value for the node, if any, and
-	   * either removes the `tabindex` attribute or sets it to `-1`, depending on whether the element
-	   * is intrinsically focusable or not.
-	   *
-	   * `InertNode` maintains a set of `InertRoot`s which are descendants of this `InertNode`. When an
-	   * `InertRoot` is destroyed, and calls `InertManager.deregister()`, the `InertManager` notifies the
-	   * `InertNode` via `removeInertRoot()`, which in turn destroys the `InertNode` if no `InertRoot`s
-	   * remain in the set. On destruction, `InertNode` reinstates the stored `tabindex` if one exists,
-	   * or removes the `tabindex` attribute if the element is intrinsically focusable.
-	   */
-
-
-	  var InertNode = function () {
-	    /**
-	     * @param {!Node} node A focusable element to be made inert.
-	     * @param {!InertRoot} inertRoot The inert root element associated with this inert node.
-	     */
-	    function InertNode(node, inertRoot) {
-	      _classCallCheck(this, InertNode);
-
-	      /** @type {!Node} */
-	      this._node = node;
-
-	      /** @type {boolean} */
-	      this._overrodeFocusMethod = false;
-
-	      /**
-	       * @type {!Set<!InertRoot>} The set of descendant inert roots.
-	       *    If and only if this set becomes empty, this node is no longer inert.
-	       */
-	      this._inertRoots = new Set([inertRoot]);
-
-	      /** @type {?number} */
-	      this._savedTabIndex = null;
-
-	      /** @type {boolean} */
-	      this._destroyed = false;
-
-	      // Save any prior tabindex info and make this node untabbable
-	      this.ensureUntabbable();
-	    }
-
-	    /**
-	     * Call this whenever this object is about to become obsolete.
-	     * This makes the managed node focusable again and deletes all of the previously stored state.
-	     */
-
-
-	    _createClass(InertNode, [{
-	      key: 'destructor',
-	      value: function destructor() {
-	        this._throwIfDestroyed();
-
-	        if (this._node && this._node.nodeType === Node.ELEMENT_NODE) {
-	          var element = /** @type {!Element} */this._node;
-	          if (this._savedTabIndex !== null) {
-	            element.setAttribute('tabindex', this._savedTabIndex);
-	          } else {
-	            element.removeAttribute('tabindex');
-	          }
-
-	          // Use `delete` to restore native focus method.
-	          if (this._overrodeFocusMethod) {
-	            delete element.focus;
-	          }
-	        }
-
-	        // See note in InertRoot.destructor for why we cast these nulls to ANY.
-	        this._node = /** @type {?} */null;
-	        this._inertRoots = /** @type {?} */null;
-	        this._destroyed = true;
-	      }
-
-	      /**
-	       * @type {boolean} Whether this object is obsolete because the managed node is no longer inert.
-	       * If the object has been destroyed, any attempt to access it will cause an exception.
-	       */
-
-	    }, {
-	      key: '_throwIfDestroyed',
-
-
-	      /**
-	       * Throw if user tries to access destroyed InertNode.
-	       */
-	      value: function _throwIfDestroyed() {
-	        if (this.destroyed) {
-	          throw new Error('Trying to access destroyed InertNode');
-	        }
-	      }
-
-	      /** @return {boolean} */
-
-	    }, {
-	      key: 'ensureUntabbable',
-
-
-	      /** Save the existing tabindex value and make the node untabbable and unfocusable */
-	      value: function ensureUntabbable() {
-	        if (this.node.nodeType !== Node.ELEMENT_NODE) {
-	          return;
-	        }
-	        var element = /** @type {!Element} */this.node;
-	        if (matches.call(element, _focusableElementsString)) {
-	          if ( /** @type {!HTMLElement} */element.tabIndex === -1 && this.hasSavedTabIndex) {
-	            return;
-	          }
-
-	          if (element.hasAttribute('tabindex')) {
-	            this._savedTabIndex = /** @type {!HTMLElement} */element.tabIndex;
-	          }
-	          element.setAttribute('tabindex', '-1');
-	          if (element.nodeType === Node.ELEMENT_NODE) {
-	            element.focus = function () {};
-	            this._overrodeFocusMethod = true;
-	          }
-	        } else if (element.hasAttribute('tabindex')) {
-	          this._savedTabIndex = /** @type {!HTMLElement} */element.tabIndex;
-	          element.removeAttribute('tabindex');
-	        }
-	      }
-
-	      /**
-	       * Add another inert root to this inert node's set of managing inert roots.
-	       * @param {!InertRoot} inertRoot
-	       */
-
-	    }, {
-	      key: 'addInertRoot',
-	      value: function addInertRoot(inertRoot) {
-	        this._throwIfDestroyed();
-	        this._inertRoots.add(inertRoot);
-	      }
-
-	      /**
-	       * Remove the given inert root from this inert node's set of managing inert roots.
-	       * If the set of managing inert roots becomes empty, this node is no longer inert,
-	       * so the object should be destroyed.
-	       * @param {!InertRoot} inertRoot
-	       */
-
-	    }, {
-	      key: 'removeInertRoot',
-	      value: function removeInertRoot(inertRoot) {
-	        this._throwIfDestroyed();
-	        this._inertRoots['delete'](inertRoot);
-	        if (this._inertRoots.size === 0) {
-	          this.destructor();
-	        }
-	      }
-	    }, {
-	      key: 'destroyed',
-	      get: function get() {
-	        return (/** @type {!InertNode} */this._destroyed
-	        );
-	      }
-	    }, {
-	      key: 'hasSavedTabIndex',
-	      get: function get() {
-	        return this._savedTabIndex !== null;
-	      }
-
-	      /** @return {!Node} */
-
-	    }, {
-	      key: 'node',
-	      get: function get() {
-	        this._throwIfDestroyed();
-	        return this._node;
-	      }
-
-	      /** @param {?number} tabIndex */
-
-	    }, {
-	      key: 'savedTabIndex',
-	      set: function set(tabIndex) {
-	        this._throwIfDestroyed();
-	        this._savedTabIndex = tabIndex;
-	      }
-
-	      /** @return {?number} */
-	      ,
-	      get: function get() {
-	        this._throwIfDestroyed();
-	        return this._savedTabIndex;
-	      }
-	    }]);
-
-	    return InertNode;
-	  }();
-
-	  /**
-	   * InertManager is a per-document singleton object which manages all inert roots and nodes.
-	   *
-	   * When an element becomes an inert root by having an `inert` attribute set and/or its `inert`
-	   * property set to `true`, the `setInert` method creates an `InertRoot` object for the element.
-	   * The `InertRoot` in turn registers itself as managing all of the element's focusable descendant
-	   * nodes via the `register()` method. The `InertManager` ensures that a single `InertNode` instance
-	   * is created for each such node, via the `_managedNodes` map.
-	   */
-
-
-	  var InertManager = function () {
-	    /**
-	     * @param {!Document} document
-	     */
-	    function InertManager(document) {
-	      _classCallCheck(this, InertManager);
-
-	      if (!document) {
-	        throw new Error('Missing required argument; InertManager needs to wrap a document.');
-	      }
-
-	      /** @type {!Document} */
-	      this._document = document;
-
-	      /**
-	       * All managed nodes known to this InertManager. In a map to allow looking up by Node.
-	       * @type {!Map<!Node, !InertNode>}
-	       */
-	      this._managedNodes = new Map();
-
-	      /**
-	       * All inert roots known to this InertManager. In a map to allow looking up by Node.
-	       * @type {!Map<!Node, !InertRoot>}
-	       */
-	      this._inertRoots = new Map();
-
-	      /**
-	       * Observer for mutations on `document.body`.
-	       * @type {!MutationObserver}
-	       */
-	      this._observer = new MutationObserver(this._watchForInert.bind(this));
-
-	      // Add inert style.
-	      addInertStyle(document.head || document.body || document.documentElement);
-
-	      // Wait for document to be loaded.
-	      if (document.readyState === 'loading') {
-	        document.addEventListener('DOMContentLoaded', this._onDocumentLoaded.bind(this));
-	      } else {
-	        this._onDocumentLoaded();
-	      }
-	    }
-
-	    /**
-	     * Set whether the given element should be an inert root or not.
-	     * @param {!Element} root
-	     * @param {boolean} inert
-	     */
-
-
-	    _createClass(InertManager, [{
-	      key: 'setInert',
-	      value: function setInert(root, inert) {
-	        if (inert) {
-	          if (this._inertRoots.has(root)) {
-	            // element is already inert
-	            return;
-	          }
-
-	          var inertRoot = new InertRoot(root, this);
-	          root.setAttribute('inert', '');
-	          this._inertRoots.set(root, inertRoot);
-	          // If not contained in the document, it must be in a shadowRoot.
-	          // Ensure inert styles are added there.
-	          if (!this._document.body.contains(root)) {
-	            var parent = root.parentNode;
-	            while (parent) {
-	              if (parent.nodeType === 11) {
-	                addInertStyle(parent);
-	              }
-	              parent = parent.parentNode;
-	            }
-	          }
-	        } else {
-	          if (!this._inertRoots.has(root)) {
-	            // element is already non-inert
-	            return;
-	          }
-
-	          var _inertRoot = this._inertRoots.get(root);
-	          _inertRoot.destructor();
-	          this._inertRoots['delete'](root);
-	          root.removeAttribute('inert');
-	        }
-	      }
-
-	      /**
-	       * Get the InertRoot object corresponding to the given inert root element, if any.
-	       * @param {!Node} element
-	       * @return {!InertRoot|undefined}
-	       */
-
-	    }, {
-	      key: 'getInertRoot',
-	      value: function getInertRoot(element) {
-	        return this._inertRoots.get(element);
-	      }
-
-	      /**
-	       * Register the given InertRoot as managing the given node.
-	       * In the case where the node has a previously existing inert root, this inert root will
-	       * be added to its set of inert roots.
-	       * @param {!Node} node
-	       * @param {!InertRoot} inertRoot
-	       * @return {!InertNode} inertNode
-	       */
-
-	    }, {
-	      key: 'register',
-	      value: function register(node, inertRoot) {
-	        var inertNode = this._managedNodes.get(node);
-	        if (inertNode !== undefined) {
-	          // node was already in an inert subtree
-	          inertNode.addInertRoot(inertRoot);
-	        } else {
-	          inertNode = new InertNode(node, inertRoot);
-	        }
-
-	        this._managedNodes.set(node, inertNode);
-
-	        return inertNode;
-	      }
-
-	      /**
-	       * De-register the given InertRoot as managing the given inert node.
-	       * Removes the inert root from the InertNode's set of managing inert roots, and remove the inert
-	       * node from the InertManager's set of managed nodes if it is destroyed.
-	       * If the node is not currently managed, this is essentially a no-op.
-	       * @param {!Node} node
-	       * @param {!InertRoot} inertRoot
-	       * @return {?InertNode} The potentially destroyed InertNode associated with this node, if any.
-	       */
-
-	    }, {
-	      key: 'deregister',
-	      value: function deregister(node, inertRoot) {
-	        var inertNode = this._managedNodes.get(node);
-	        if (!inertNode) {
-	          return null;
-	        }
-
-	        inertNode.removeInertRoot(inertRoot);
-	        if (inertNode.destroyed) {
-	          this._managedNodes['delete'](node);
-	        }
-
-	        return inertNode;
-	      }
-
-	      /**
-	       * Callback used when document has finished loading.
-	       */
-
-	    }, {
-	      key: '_onDocumentLoaded',
-	      value: function _onDocumentLoaded() {
-	        // Find all inert roots in document and make them actually inert.
-	        var inertElements = slice.call(this._document.querySelectorAll('[inert]'));
-	        inertElements.forEach(function (inertElement) {
-	          this.setInert(inertElement, true);
-	        }, this);
-
-	        // Comment this out to use programmatic API only.
-	        this._observer.observe(this._document.body || this._document.documentElement, { attributes: true, subtree: true, childList: true });
-	      }
-
-	      /**
-	       * Callback used when mutation observer detects attribute changes.
-	       * @param {!Array<!MutationRecord>} records
-	       * @param {!MutationObserver} self
-	       */
-
-	    }, {
-	      key: '_watchForInert',
-	      value: function _watchForInert(records, self) {
-	        var _this = this;
-	        records.forEach(function (record) {
-	          switch (record.type) {
-	            case 'childList':
-	              slice.call(record.addedNodes).forEach(function (node) {
-	                if (node.nodeType !== Node.ELEMENT_NODE) {
-	                  return;
-	                }
-	                var inertElements = slice.call(node.querySelectorAll('[inert]'));
-	                if (matches.call(node, '[inert]')) {
-	                  inertElements.unshift(node);
-	                }
-	                inertElements.forEach(function (inertElement) {
-	                  this.setInert(inertElement, true);
-	                }, _this);
-	              }, _this);
-	              break;
-	            case 'attributes':
-	              if (record.attributeName !== 'inert') {
-	                return;
-	              }
-	              var target = /** @type {!Element} */record.target;
-	              var inert = target.hasAttribute('inert');
-	              _this.setInert(target, inert);
-	              break;
-	          }
-	        }, this);
-	      }
-	    }]);
-
-	    return InertManager;
-	  }();
-
-	  /**
-	   * Recursively walk the composed tree from |node|.
-	   * @param {!Node} node
-	   * @param {(function (!Element))=} callback Callback to be called for each element traversed,
-	   *     before descending into child nodes.
-	   * @param {?ShadowRoot=} shadowRootAncestor The nearest ShadowRoot ancestor, if any.
-	   */
-
-
-	  function composedTreeWalk(node, callback, shadowRootAncestor) {
-	    if (node.nodeType == Node.ELEMENT_NODE) {
-	      var element = /** @type {!Element} */node;
-	      if (callback) {
-	        callback(element);
-	      }
-
-	      // Descend into node:
-	      // If it has a ShadowRoot, ignore all child elements - these will be picked
-	      // up by the <content> or <shadow> elements. Descend straight into the
-	      // ShadowRoot.
-	      var shadowRoot = /** @type {!HTMLElement} */element.shadowRoot;
-	      if (shadowRoot) {
-	        composedTreeWalk(shadowRoot, callback);
-	        return;
-	      }
-
-	      // If it is a <content> element, descend into distributed elements - these
-	      // are elements from outside the shadow root which are rendered inside the
-	      // shadow DOM.
-	      if (element.localName == 'content') {
-	        var content = /** @type {!HTMLContentElement} */element;
-	        // Verifies if ShadowDom v0 is supported.
-	        var distributedNodes = content.getDistributedNodes ? content.getDistributedNodes() : [];
-	        for (var i = 0; i < distributedNodes.length; i++) {
-	          composedTreeWalk(distributedNodes[i], callback);
-	        }
-	        return;
-	      }
-
-	      // If it is a <slot> element, descend into assigned nodes - these
-	      // are elements from outside the shadow root which are rendered inside the
-	      // shadow DOM.
-	      if (element.localName == 'slot') {
-	        var slot = /** @type {!HTMLSlotElement} */element;
-	        // Verify if ShadowDom v1 is supported.
-	        var _distributedNodes = slot.assignedNodes ? slot.assignedNodes({ flatten: true }) : [];
-	        for (var _i = 0; _i < _distributedNodes.length; _i++) {
-	          composedTreeWalk(_distributedNodes[_i], callback);
-	        }
-	        return;
-	      }
-	    }
-
-	    // If it is neither the parent of a ShadowRoot, a <content> element, a <slot>
-	    // element, nor a <shadow> element recurse normally.
-	    var child = node.firstChild;
-	    while (child != null) {
-	      composedTreeWalk(child, callback);
-	      child = child.nextSibling;
-	    }
-	  }
-
-	  /**
-	   * Adds a style element to the node containing the inert specific styles
-	   * @param {!Node} node
-	   */
-	  function addInertStyle(node) {
-	    if (node.querySelector('style#inert-style, link#inert-style')) {
-	      return;
-	    }
-	    var style = document.createElement('style');
-	    style.setAttribute('id', 'inert-style');
-	    style.textContent = '\n' + '[inert] {\n' + '  pointer-events: none;\n' + '  cursor: default;\n' + '}\n' + '\n' + '[inert], [inert] * {\n' + '  -webkit-user-select: none;\n' + '  -moz-user-select: none;\n' + '  -ms-user-select: none;\n' + '  user-select: none;\n' + '}\n';
-	    node.appendChild(style);
-	  }
-
-	  if (!Element.prototype.hasOwnProperty('inert')) {
-	    /** @type {!InertManager} */
-	    var inertManager = new InertManager(document);
-
-	    Object.defineProperty(Element.prototype, 'inert', {
-	      enumerable: true,
-	      /** @this {!Element} */
-	      get: function get() {
-	        return this.hasAttribute('inert');
-	      },
-	      /** @this {!Element} */
-	      set: function set(inert) {
-	        inertManager.setInert(this, inert);
-	      }
-	    });
-	  }
-	})();
-
-	//
-	// Initialisation
-	//
-
-	let dialogKeys = null;
-	let dialogMenu = null;
-	let contentAndUI = null;  // FIXME DRY with State
-
-	function init() {
-		dialogKeys = document.getElementById('story-slides-dialog-keys');
-		dialogMenu = document.getElementById('story-slides-dialog-menu');
-		contentAndUI = document.getElementById('story-slides-main-content');
-		dialogKeys.querySelector('button.close').addEventListener(
-			'click', hideOpenDialog);
-		dialogMenu.querySelector('button.close').addEventListener(
-			'click', hideOpenDialog);
-	}
-
-
-	//
-	// Dialog state
-	//
-
-	let _currentlyOpenDialog = null;
-	let _codeToRun = null;
-
-
-	//
-	// Dialog state management
-	//
-
-	const setRunAfterClosingDialog = (run) => _codeToRun = run;
-	const isDialogOpen = () => _currentlyOpenDialog !== null;
-
-	const getOpenDialog = () => _currentlyOpenDialog;
-	const setOpenDialog = (dialog) => _currentlyOpenDialog = dialog;
-
-	function runCodeAfterClosingDialog() {
-		if (_codeToRun) {
-			_codeToRun();
-			return true
-		}
-		return false
-	}
-
-
-	//
-	// Functions that rely on dialog state
-	//
-
-	function getDialog(name) {
-		const map = {
-			'keys': dialogKeys,
-			'menu': dialogMenu
-		};
-		if (!Object.keys(map).includes(name)) error(`Invalid dialog '${name}'`);
-		return map[name]
-	}
-
-	function hideOpenDialog() {
-		const dialogThatWasOpen = getOpenDialog();
-		if (dialogThatWasOpen) {
-			dialogThatWasOpen.hidden = true;
-			contentAndUI.removeAttribute('inert');
-			applicationifyBody();
-			setOpenDialog(null);
-
-			// We may've been asked to defer running some code (i.e. show the slide
-			// after showing the help dialog for the first time).
-			if (runCodeAfterClosingDialog()) setRunAfterClosingDialog(null);
-
-			return dialogThatWasOpen
-		}
-		return null
-	}
-
-	function showOrToggleDialog(name) {
-		const dialog = getDialog(name);
-		const switchToNewDialog = hideOpenDialog() !== dialog;
-		if (switchToNewDialog && dialog.hidden === true) {
-			dialog.hidden = false;
-			dialog.scrollTop = 0;
-			contentAndUI.setAttribute('inert', '');  // sets aria-hidden
-			unApplicationifyBody();
-			dialog.focus();  // already has tabindex -1
-			setOpenDialog(dialog);
-		}
-	}
-
-	/* global screenfull */
-
-	const storageKeyHelpShown = window.location.pathname + '.help-shown';
-
-
-	//
-	// Slides mode state
-	//
-
-	let keyHandlerModeSlides = null;  // must be set during startup
-
-
-	//
-	// Functions that rely on global state
-	//
-
-	function makeKeyHandlerModeSlides(switchToModeFunction) {
-		// There seem to be problems re-adding a document keydown handler when a
-		// screen-reader is running: the handler is often not registered, so
-		// virtual cursor navigation continues. Therefore we check here for whether
-		// we should ignore certain keys due to lock mode here, and also handle
-		// closing dialogs here too.
-		keyHandlerModeSlides = function keyHandlerModeSlides(event) {
-			if (event.isComposing || event.keyCode === 229) return
-			if (event.ctrlKey || event.metaKey) return
-
-			const state = window.storySlidesState;
-
-			switch (event.key) {
-				case 'ArrowLeft':
-				case 'ArrowUp':
-				case 'PageUp':
-					if (!locked() && !isDialogOpen()) moveToPreviousSlide(state);
-					break
-				case 'ArrowRight':
-				case 'ArrowDown':
-				case 'PageDown':
-					if (!locked() && !isDialogOpen()) {
-						revealStepOrMoveToNextSlide(state);
-					}
-					// NOTE: not supporting the space key as it's echoed by
-					//       screen-readers.
-					break
-				case 'f':
-					if (!locked()) toggleFullscreen();
-					break
-				case 's':
-					if (!locked()) switchToModeFunction(state, 'story');
-					break
-				case '?':
-				case 'h':
-					if (!locked()) showOrToggleDialog('keys');
-					break
-				case 'l':
-					if (!locked()) toggleSlideLock(state.currentSlide);
-					break
-				case 'Escape':
-					if (locked()) {
-						toggleSlideLock(state.currentSlide);
-					} else {
-						hideOpenDialog();
-					}
-					break
-				case 'p':
-					announce(progressPercent(state) + '%');
-					break
-				case 'o':
-					announce(
-						`Slide ${state.currentIndex + 1} of ${state.numSlides}`);
-					break
-				case 'm':  // for debugging
-					showOrToggleDialog('menu');
-			}
-		};
-	}
-
-
-	//
-	// Functions that rely on state
-	//
-
-	// Called during start-up only
-	function registerSlidesModeClickHandlers(state) {
-		if (screenfull.isEnabled) {  // not supported on iPhone
-			document
-				.getElementById('story-slides-button-fullscreen')
-				.addEventListener('click', () => {
-					hideOpenDialog();
-					toggleFullscreen();
-				});
-		} else {
-			document.getElementById('story-slides-button-fullscreen').remove();
-		}
-
-		const setup = {
-			'story-slides-button-help-keys': () => showOrToggleDialog('keys'),
-			'story-slides-button-menu': () => showOrToggleDialog('menu'),
-			'story-slides-button-next': () => revealStepOrMoveToNextSlide(state),
-			'story-slides-button-previous': () => moveToPreviousSlide(state)
-		};
-
-		for (const id in setup) {
-			document.getElementById(id).addEventListener('click', setup[id]);
-		}
-	}
-
-	function setUpModeSlides(state, thenRun) {
-		document.addEventListener('keydown', keyHandlerModeSlides);
-		window.addEventListener('resize', slidesViewportHandler);
-		slidesViewportHandler();
-
-		state.slidesContainer.setAttribute('aria-live', 'assertive');
-		// Note: if JAWS is launched after Firefox, this doesn't work
-		//       (<https://bugzilla.mozilla.org/show_bug.cgi?id=1453673>).
-		applicationifyBody();
-
-		if (window.sessionStorage.getItem(storageKeyHelpShown) !== 'yes') {
-			setRunAfterClosingDialog(thenRun);
-			showOrToggleDialog('keys');
-			window.sessionStorage.setItem(storageKeyHelpShown, 'yes');
-		} else {
-			thenRun();
-		}
-	}
-
-	function tearDownModeSlides(state) {
-		if (state.currentIndex !== null) {
-			state.slides[state.currentIndex].classList.remove('active');
-		}
-
-		if (screenfull.isEnabled) {
-			screenfull.exit();  // prevents aberrations in Firefox and iOS Safari
-		}
-
-		hideOpenDialog();
-
-		document.removeEventListener('keydown', keyHandlerModeSlides);
-		window.removeEventListener('resize', slidesViewportHandler);
-
-		state.slidesContainer.removeAttribute('aria-live');
-		unApplicationifyBody();
-		document.body.blur();  // otherwise SRs may try to read the entire thing
-	}
-
-	function moveToPreviousSlide(state) {
-		const newIndex = previousSlideNumber(state.slides, state.currentIndex);
-		setActiveSlideInSlidesMode({ newIndex: newIndex, state: state });
-	}
-
-	function revealStepOrMoveToNextSlide(state) {
-		const newIndex = revealStepAndNextSlideNumber(state.slides, state.currentIndex);
-		if (newIndex !== null) {
-			setActiveSlideInSlidesMode({ newIndex: newIndex, state: state });
-		}
-	}
-
-
-	//
-	// Functions that do not rely on state
-	//
-
-	function setActiveSlideInSlidesMode(options) {
-		const slides = options.state.slides;
-		const currentIndex = options.state.currentIndex;
-		const newIndex = options.newIndex;
-		debug('setActiveSlideInSlidesMode():', options);
-		checkSetActiveSlideOptions(options);  // done in both modes
-
-		if (currentIndex !== null) {
-			slides[currentIndex].classList.remove('active');
-		}
-		slides[newIndex].classList.add('active');
-		checkSlideForOverflow(slides, newIndex);
-
-		updateActiveSlide(options);
-	}
-
-	function toggleSlideLock(currentSlide) {
-		if (!document.body.classList.contains('story-slides-locked')) {
-			hideOpenDialog();
-			unApplicationifyBody();
-			document.body.classList.add('story-slides-locked');
-			window.alert("Slide locked. Press Escape to unlock. If you're using a screen-reader, you can now explore the slide with the virtual cursor.");
-			currentSlide.focus();
-		} else {
-			applicationifyBody();  // snap out of virtual cursor mode
-			document.body.classList.remove('story-slides-locked');
-			window.alert('Slide unlocked.');
-		}
-	}
-
-	function revealStepAndNextSlideNumber(slides, currentIndex) {
-		if (revealStepAndNextSlide(slides[currentIndex])) {
-			return nextSlideNumber(slides, currentIndex)
-		}
-		return null
-	}
-
-	// The author sets two CSS custom properties under the :root pseudo-class to
-	// specify slide aspect ratio and font size, such as in the following examples.
-	//
-	// --slide-font-height-percent-of-slide: 8;
-	// --slide-aspect-ratio: calc(16 / 9);
-	//
-	// It is not possible to use CSS custom properties in media queries, so we need
-	// to run some code to work out the dimensions of the slides.
-	//
-	// Based on those dimentions, the base font size is set accordingly too.
-	//
-	// Thanks https://davidwalsh.name/css-variables-javascript :-)
-	function slidesViewportHandler() {
-		const viewWidth = document.documentElement.clientWidth;
-		const viewHeight = document.documentElement.clientHeight;
-		const viewAspect = viewWidth / viewHeight;
-		// FIXME DRY with linting.js
-		const slideAspectRaw = window.getComputedStyle(document.documentElement)
-			.getPropertyValue('--slide-aspect-ratio');
-		const matches = slideAspectRaw.match(/calc\(\s*(\d+)\s*\/\s*(\d+)\s*\)/);
-		const slideAspect = matches[1] / matches[2];
-
-		let slideHeight = null;
-		let slideWidth = null;
-
-		if (viewAspect >= slideAspect) {
-			// View is wider than slide
-			// Slide height should be 100vh
-			slideHeight = viewHeight;
-			slideWidth = viewHeight * slideAspect;
-		} else {
-			// View is narrower than slide
-			// slide width should be 100vw
-			slideWidth = viewWidth;
-			slideHeight = viewWidth / slideAspect;
-		}
-
-		document.documentElement.style
-			.setProperty('--computed-slide-height', slideHeight + 'px');
-		document.documentElement.style
-			.setProperty('--computed-slide-width', slideWidth + 'px');
-
-		// On mobile browsers, these can change quite a bit, as browser UI
-		// appears and disappears.
-		const verticalMargin = (window.innerHeight - slideHeight) / 2;
-		const horizontalMargin = (window.innerWidth - slideWidth) / 2;
-
-		document.documentElement.style.setProperty(
-			'--computed-vertical-margin', (verticalMargin > 0 ? verticalMargin : 0) + 'px');
-		document.documentElement.style.setProperty(
-			'--computed-horizontal-margin', (horizontalMargin > 0 ? horizontalMargin : 0) + 'px');
-
-		// FIXME DRY with linting.js
-		// We also work out the user's chosen base font size
-		const rootFontSizePercent = window.getComputedStyle(document.documentElement)
-			.getPropertyValue('--slide-font-height-percent-of-slide');
-		const realRootFontSize = slideHeight * (rootFontSizePercent / 100);
-		document.documentElement.style
-			.setProperty('--computed-base-font-size', realRootFontSize + 'px');
-	}
-
-	function locked() {
-		return document.body.classList.contains('story-slides-locked')
-	}
-
-	function toggleFullscreen() {
-		if (screenfull.isEnabled) {
-			screenfull.toggle();
-			// On Safari on iOS it's a bit buggy and doesn't resize, even after
-			// calling slidesViewportHandler after the toggle is resolved -
-			// probably due to the animation effect.
-		} else {
-			window.alert('fullscreen mode is not available');
-		}
-	}
-
-	// If there are steps on the slide that are to be gradually revealed (more info
-	// on this at the bottom) then go through those steps before advancing to the
-	// next slide. Returns true to say "go to next slide" or false otherwise.
-	function revealStepAndNextSlide(slide) {
-		const nextHiddenThing = slide.querySelector('[data-story-slides-step]');
-		if (nextHiddenThing) {
-			nextHiddenThing.removeAttribute('data-story-slides-step');
-			return false
-		}
-		return true
-	}
-
-	function checkSlideForOverflow(slides, index) {
-		const overflow = isOverflowing(slides[index]);
-		if (overflow) {
-			window.alert(`Slide ${index + 1} is overflowing by; ${JSON.stringify(overflow, null, 2)}`);
-			error('Slide is overflowing:', slides[index], 'by:', overflow);
-		}
-	}
-
-	// NOTE: Only exported for testing
-	function isOverflowing(element) {
-		const horizontalOverflow = element.scrollWidth - element.clientWidth;
-		const verticalOverflow = element.scrollHeight - element.clientHeight;
-		if (horizontalOverflow > 0 || verticalOverflow > 0) {
-			return {
-				'horizontal': horizontalOverflow > 0 ? horizontalOverflow : 0,
-				'vertical': verticalOverflow > 0 ? verticalOverflow : 0
-			}
-		}
-		return null
-	}
-
-	// NOTE: Only exported for testing
-	function previousSlideNumber(slides, currentIndex) {
-		return currentIndex > 0 ? currentIndex - 1 : slides.length - 1
-	}
-
-	// NOTE: Only exported for testing
-	function nextSlideNumber(slides, currentIndex) {
-		return (currentIndex + 1) % slides.length
-	}
-
-	//
-	// Story mode state
-	//
-
-	let keyHandlerModeStory = null;  // must be set during startup
-	let storyModeScrollTimeout = null;
-	let scrollCameFromMe = false;
-
-
-	//
-	// Functions that rely on global state
-	//
-
-	function makeKeyHandlerModeStory(switchToModeFunction) {
-		keyHandlerModeStory = function keyHandlerModeStory(event) {
-			if (event.isComposing || event.keyCode === 229) return
-			if (event.key === 'Escape') {
-				switchToModeFunction(window.storySlidesState, 'slides');
-			}
-		};
-	}
-
-	// In story mode, we want to cap the max-height of images.
-	function storyViewportHandler() {
-		for (const image of window.storySlidesState.slidesContainer.querySelectorAll('img')) {
-			image.style.setProperty('--rendered-width', image.width + 'px');
-		}
-	}
-
-	function realStoryModeScrollHandler() {
-		if (!scrollCameFromMe) {
-			// Look at a point in the middle of the screen, a third of the way
-			// down, and work out which slide is under that point.
-			//
-			// The point we're testing could be between slides or, at high zoom
-			// levels or with a bouncy scroll, it could be in the top UI.
-
-			let height = window.innerHeight / 3;
-			let found = document.body;
-			const isSlide = (element) => element.classList.contains('slide');
-
-			while (!isSlide(found) && height > 0) {
-				found = document.elementFromPoint(window.innerWidth / 2, height);
-				if (!isSlide(found)) height = height - 10;
-			}
-
-			const index = isSlide(found) ?
-				findParentSlideIndex(window.storySlidesState.slides, found) : 0;
-
-			setActiveSlideInStoryMode({
-				newIndex: index,
-				state: window.storySlidesState,
-				triggeredByScroll: true
-			});
-		} else {
-			scrollCameFromMe = false;
-		}
-	}
-
-
-	//
-	// Functions that rely on state
-	//
-
-	function setActiveSlideInStoryMode(options) {
-		const state = options.state;
-		const newIndex = options.newIndex;
-		debug('setActiveSlideInStoryMode():', options);
-		checkSetActiveSlideOptions(options);  // done in both modes
-
-		if (!options.triggeredByScroll) {
-			// Note: screen-readers may set the focus on to elements as the user
-			//       reads and scrolls through the document using the virtual
-			//       cursor - that's not story-slides doing it :-).
-			scrollCameFromMe = true;
-			state.slides[newIndex].focus();  // needs to be done first for SRs
-			if (newIndex === 0) {
-				// If the page was just loaded, then we'll be at the top already
-				// and there will be no need to scroll, so we should un-ignore the
-				// next scroll event :-).
-				if (window.pageYOffset > 0) {
-					window.scrollTo(0, 0);
-				} else {
-					scrollCameFromMe = false;
-				}
-			} else {
-				state.slides[newIndex].scrollIntoView(true);
-			}
-		}
-
-		if (state.currentIndex !== newIndex) {
-			updateActiveSlide(options);
-		} else {
-			debug('not setting same current slide');
-		}
-	}
-
-
-	//
-	// Functions that do not rely on state
-	//
-
-	function setUpModeStory() {
-		document.addEventListener('keydown', keyHandlerModeStory);
-		document.addEventListener('scroll', scrollHandlerStoryMode);
-		window.addEventListener('resize', storyViewportHandler);
-		storyViewportHandler();
-	}
-
-	function tearDownModeStory() {
-		document.removeEventListener('keydown', keyHandlerModeStory);
-		document.removeEventListener('scroll', scrollHandlerStoryMode);
-		window.removeEventListener('resize', storyViewportHandler);
-	}
-
-	function scrollHandlerStoryMode(event) {
-		clearTimeout(storyModeScrollTimeout);
-		storyModeScrollTimeout = setTimeout(
-			() => realStoryModeScrollHandler(), 250);
-	}
-
-
-	//
-	// Private functions
-	//
-
-	function findParentSlideIndex(slides, element) {
-		let next = element;
-		while (!slides.includes(next)) {
-			if (next.parentElement) {
-				next = next.parentElement;
-			} else {
-				return null
-			}
-		}
-		return slides.indexOf(next)
-	}
-
-	//
-	// State
-	//
-
-	// TODO: Browsers aren't supposed to fire hashchange events when using the
-	//       History API but they seem to be - am I doing something wrong?
-	let _restoringPreviousState = false;
-
-
-	//
-	// Functions that rely on global state
-	//
-
-	function popState(event) {
-		debug('popState():', event);
-		if (event.state !== null) {
-			_restoringPreviousState = true;
-			setActiveSlide({
-				newIndex: event.state.index,  // state previously pushed
-				restoringPreviousState: true,
-				state: window.storySlidesState
-			});
-		}
-	}
-
-
-	//
-	// Functions that rely on state
-	//
-
-	function switchToMode(state, mode, startup) {
-		debug('switchToMode():', state, mode, startup);
-		if (!startup && getMode() === mode) {
-			error(`Already in ${mode} mode; not switching.`);
-			return
-		}
-
-		toggleStyleSheetsForMode(mode);
-		setMode(mode);
-
-		// TODO: This is double-checking mode
-		if (mode === 'story') {
-			if (!startup) tearDownModeSlides(state);
-			setUpModeStory();
-			setActiveSlideFromHash(state);
-		} else {
-			// It seems the only reliable way to make the live region work on load
-			// is to give it some time to settle before fettling the CSS that makes
-			// the slides show up.
-			const showSlide = () => setTimeout(
-				() => setActiveSlideFromHash(state), 1000);
-			// Notes:
-			//  - A value of 0 almost worked across browsers and SRs.
-			//  - Would be nice to do more research and testing.
-			//  - If the user switches back to story mode before this, it'll
-			//    get called twice, but that's no biggie.
-
-			// We can't call these two directly because if this is the first time
-			// the user has used slides mode this session, and the help dialog is
-			// shown, we need the slide to appear after that.
-			if (!startup) tearDownModeStory();
-			setUpModeSlides(state, showSlide);
-		}
-	}
-
-	function setActiveSlideFromHash(state) {
-		debug('setActiveSlideFromHash():', state);
-		if (_restoringPreviousState) {
-			debug('skipping - restoring previous state');
-			_restoringPreviousState = false;
-			return
-		}
-		if (window.location.hash) {
-			const match = window.location.hash.match(/^#slide-(\d+)$/);
-			if (match) {
-				const desired = Number(match[1]) - 1;
-				if (desired > -1 && desired < state.numSlides) {
-					setActiveSlide({ newIndex: desired, state: state });
-					return
-				}
-			}
-		}
-		setActiveSlide({ newIndex: 0, state: window.storySlidesState });
-	}
-
-	function registerClickHandlersAndGlobalEventListeners(state) {
-		registerSlidesModeClickHandlers(state);
-
-		window.history.scrollRestoration = 'manual';
-		window.addEventListener('popstate', popState);
-		window.addEventListener('hashchange',
-			() => setActiveSlideFromHash(state));
-
-		const setup = {
-			'story-slides-button-mode-slides': () => switchToMode(state, 'slides'),
-			'story-slides-button-mode-story': () => switchToMode(state, 'story')
-		};
-
-		for (const id in setup) {
-			document.getElementById(id).addEventListener('click', setup[id]);
-		}
-	}
-
-
-	//
-	// Functions that do not rely on state
-	//
-
-	function setActiveSlide(options) {
-		debug('setActiveSlide():', options);
-		if (getMode() === 'story') {
-			setActiveSlideInStoryMode(options);
-		} else {
-			setActiveSlideInSlidesMode(options);
-		}
-	}
-
-	function toggleStyleSheetsForMode(mode) {
-		for (const styleSheet of document.styleSheets) {
-			if (styleSheet.href) {
-				const name = baseName(styleSheet.href);
-				const sheetMode =
-					name.endsWith('.story.css') ? 'story'
-						: name.endsWith('.slides.css') ? 'slides'
-							: null;
-				if (sheetMode) styleSheet.disabled = sheetMode !== mode;
-			}
-		}
-
-		document.documentElement.className = `mode-${mode}`;  // support transitions
-	}
-
-	// TODO test - what about local file access in other browsers?
-	function baseName(href) {
-		return href.split('/').pop()
-	}
-
-	class StorySlidesState {
-		// TODO get const?
-
+	// TODO: Provide a shorter API for window.storySlidesState.slidesContainer.querySelectorAll?
+	class State {
 		constructor() {
-			this._currentIndex = null;
-			this._slides = Object.freeze(Array.from(document.getElementsByClassName('slide')));
-			this._slidesContainer = document.getElementById('story-slides-slides-container');
-			this._contentAndUI =  document.getElementById('story-slides-main-content');  // FIXME DRY
+			this._previousSlideNumber = null;  // 1-based to match how we call slides
+			this._currentSlideNumber = null;   // 1-based to match how we call slides
+			this._slides =
+				Object.freeze(Array.from(document.getElementsByClassName('slide')));
+			this._slidesContainer =
+				document.getElementById('story-slides-slides-container');
+			this._contentAndUI =
+				document.getElementById('story-slides-main-content');  // FIXME DRY
 			this._initialTitle = document.title;
 		}
 
-		get currentIndex() {
-			return this._currentIndex
+		get previousSlideNumber() {
+			return this._previousSlideNumber
+		}
+		set previousSlideNumber(newNumber) {
+			this.validateNumber(newNumber);
+			this._previousSlideNumber = newNumber;
 		}
 
-		set currentIndex(newIndex) {
-			if (newIndex >= 0 && newIndex <= this._slides.length) {
-				this._currentIndex = newIndex;
-			} else {
-				throw new Error(`Given new index ${newIndex} is out of bounds.`)
-			}
+		get currentSlideNumber() {
+			return this._currentSlideNumber
+		}
+		set currentSlideNumber(newNumber) {
+			this.validateNumber(newNumber);
+			this._currentSlideNumber = newNumber;
 		}
 
-		get slides() {
+		slide(number) {
+			this.validateNumber(number);
+			return this._slides[number - 1]
+		}
+
+		// NOTE: This should only be called by start-up content processing code
+		//       in main.js that needs to loop over all slides.
+		get rawSlides() {
 			return this._slides
 		}
 
@@ -6461,7 +6792,7 @@ This software is provided by the copyright holders and contributors “as is” 
 		}
 
 		get currentSlide() {
-			return this._slides[this._currentIndex]
+			return this._slides[this._currentSlideNumber - 1]
 		}
 
 		get slidesContainer() {
@@ -6475,174 +6806,37 @@ This software is provided by the copyright holders and contributors “as is” 
 		get contentAndUI() {
 			return this._contentAndUI
 		}
-	}
 
-	const topUI = `
-<div id="story-slides-top-ui" class="story-slides-ui">
-	<div class="slides mobile-only">
-		<button id="story-slides-button-menu">Menu</button>
-		<button class="slides" id="story-slides-button-previous" aria-label="Previous"><span>&larr;</span></button>
-	</div>
-	<div class="story">
-		<button id="story-slides-button-mode-slides" aria-describedby="story-slides-mode-slides-key story-slides-mode-slides-explainer">Switch to slides mode</button>
-		<span id="story-slides-mode-slides-key">or press <kbd>Escape</kbd></span>
-		<div id="story-slides-mode-slides-explainer-container">
-			<p id="story-slides-mode-slides-explainer">Slides mode displays each slide one at a time, as they would be projected for the audience. The extra information present in story mode is not displayed. Keyboard shortcuts or buttons can be used to move between slides.</p>
-			<button class="mobile-only close">Close</button>
-		</div>
-	</div>
-</div>`;
-
-	const bottomUI = `
-<div class="story-slides-ui slides">
-	<button class="mobile-only" id="story-slides-button-next" aria-label="Next"><span>&rarr;</span></button>
-	<div id="story-slides-progress"><div></div></div>
-</div>`;
-
-	const mainUI = `
-<div class="story-slides-ui">
-	<div id="story-slides-screen-errors" hidden>
-		<h1>Content errors detected</h1>
-		<p>An error, or errors, were detected in your presentation's content&mdash;open the browser console for more info.</p>
-	</div>
-
-	<div id="story-slides-screen-loading" hidden>
-		<p>Loading&hellip;</p>
-	</div>
-
-	<div id="story-slides-screen-intro" hidden>
-		<h1 id="story-slides-screen-intro-heading" tabindex="-1"></h1>
-		<fieldset>
-			<legend>Read presentation as&hellip;</legend>
-			<div id="story-slides-grid">
-				<h2>Story</h2>
-				<div id="story-slides-desc-story">
-					<p>The real content of a talk is often not in the slides, but in what's said around them. Story mode shows you not only what was projected, but the explanation behind it too.</p>
-				</div>
-				<button id="story-slides-choose-story" aria-describedby="story-slides-desc-story">Story (recommended)</button>
-
-				<h2>Slides</h2>
-				<div id="story-slides-desc-slides">
-					<p>Slides mode shows you just the slides as presented.</p>
-				</div>
-				<button id="story-slides-choose-slides" aria-describedby="story-slides-desc-slides story-slides-desc-help">Slides</button>
-			</div>
-		</fieldset>
-	</div>
-
-	<div id="story-slides-dialog-keys" role="dialog" tabindex="-1" aria-labelledby="story-slides-dialog-keys-title" class="story-slides-dialog" hidden>
-		<h1 id="story-slides-dialog-keys-title">Slides mode help</h1>
-		<p class="mobile-only">Tap either the left or right third of the screen to move to the previous or next slide. If you have a keyboard attached, you can use the following shortcuts.</p>
-		<table>
-			<tr>
-				<th><p>Key</p></th>
-				<th><p>Action</p></th>
-			</tr>
-			<tr>
-				<td><kbd>S</kbd></td>
-				<td><p>Switch to story mode.</p></td>
-			</tr>
-			<tr>
-				<td><kbd>L</kbd></td>
-				<td><p>Lock the current slide: disable all navigation keys, so if you're using a screen-reader, you can explore the current slide with your virtual cursor.</p></td>
-			</tr>
-			<tr>
-				<td><kbd>F</kbd></td>
-				<td><p>Toggle full-screen slide view<span class="mobile-only"> (not supported on iPhone)</span>.</p></td>
-			</tr>
-			<tr>
-				<td><kbd>&rarr;</kbd> <kbd>&darr;</kbd> <kbd>Page&nbsp;Down</kbd></td>
-				<td><p>Next slide.</p></td>
-			</tr>
-			<tr>
-				<td><kbd>&larr;</kbd> <kbd>&uarr;</kbd> <kbd>Page&nbsp;Up</kbd></td>
-				<td><p>Previous slide.</p></td>
-			</tr>
-			<tr>
-				<td><kbd>Escape</kbd></td>
-				<td>
-					<ul>
-						<li><p><strong>In slides mode:</strong> disable the current slide lock (no effect otherwise).</p></li>
-						<li><p><strong>In story mode:</strong> go to slides mode.</p></li>
-					</ul>
-				</td>
-			</tr>
-			<tr>
-				<td><kbd>P</kbd></td>
-				<td><p>If you're running a screen-reader, announce the current slide progress as a percentage.</p></td>
-			</tr>
-			<tr>
-				<td><kbd>O</kbd></td>
-				<td><p>If you're running a screen-reader, announce the current slide number and the total number of slides.</p></td>
-			</tr>
-			<tr>
-				<td><kbd aria-hidden="true">?</kbd><span class="visually-hidden">question mark</span> <kbd>h</kbd></td>
-				<td><p>Toggle this help dialog</p></td>
-			</tr>
-		</table>
-		<button class="close">Close</button>
-	</div>
-
-	<div id="story-slides-dialog-menu" role="dialog" tabindex="-1" aria-labelledby="story-slides-dialog-menu-heading" class="story-slides-dialog" hidden>
-		<h1 id="story-slides-dialog-menu-heading">View and Info</h1>
-		<button id="story-slides-button-mode-story" aria-describedby="story-slides-mode-story-explainer">Switch to story mode</button>
-		<button id="story-slides-button-fullscreen">Full-screen</button>
-		<button id="story-slides-button-help-keys">Help</button>
-		<p id="story-slides-mode-story-explainer">Story mode allows you to read the presentation as a document, rather than a collection of separate slides, and includes extra background information on the content.</p>
-		<button class="close">Close</button>
-	</div>
-</div>`;
-
-	const announcer = '<div id="story-slides-announcer" role="log" aria-live="assertive" class="visually-hidden"></div>';
-
-	function fettleHtml(fixture) {
-		// Main content wraps the top UI, slides and bottom UI
-
-		const mainContent = document.createElement('div');
-		mainContent.id = 'story-slides-main-content';
-		mainContent.hidden = true;
-
-		const dummyTopUI = document.createElement('div');  // extra layer
-		dummyTopUI.innerHTML = topUI;
-
-		const slidesContainer = document.createElement('div');
-		slidesContainer.id = 'story-slides-slides-container';
-		// Bringing all children over brings <script>s too; that'll be fixed later.
-		while (fixture.childNodes.length > 0) {
-			slidesContainer.appendChild(fixture.childNodes[0]);
+		toString() {
+			return `<${this.currentSlideNumber} of ${this.numSlides} "${this._initialTitle}" p:${this._previousSlideNumber}>`
 		}
 
-		const dummyBottomUI = document.createElement('div');  // extra layer
-		dummyBottomUI.innerHTML = bottomUI;
-
-		// The dialogs and announcer follow, outside the main content container
-
-		const dummyMainUI = document.createElement('div');  // extra layer
-		dummyMainUI.innerHTML = mainUI;
-
-		const dummyAnnouncer = document.createElement('div');
-		dummyAnnouncer.innerHTML = announcer;
-
-		mainContent.appendChild(dummyTopUI.children[0]);
-		mainContent.appendChild(slidesContainer);
-		mainContent.appendChild(dummyBottomUI.children[0]);
-		fixture.appendChild(mainContent);
-
-		fixture.appendChild(dummyMainUI.children[0]);
-		fixture.appendChild(dummyAnnouncer.children[0]);
-
-		for (const script of fixture.querySelectorAll('script')) {
-			fixture.appendChild(script);
+		// TODO: this isn't called enough
+		validateNumber(number) {
+			if (!(number >= 1 && number <= this._slides.length)) {
+				throw new Error(`Given slide number ${number} is out of bounds.`)
+			}
 		}
 	}
 
-	// Screen reader stuff...
+	var uiAnnouncer = "<div id=\"story-slides-announcer\" role=\"log\" aria-live=\"assertive\" class=\"visually-hidden\"></div>\n";
+
+	var uiBottom = "<div class=\"story-slides-ui slides\">\n\t<button class=\"mobile-only\" id=\"story-slides-button-next\" aria-label=\"Next\"><span>&rarr;</span></button>\n\t<div id=\"story-slides-progress\"><div></div></div>\n</div>\n";
+
+	var uiMain = "<div class=\"story-slides-ui\">\n\t<div id=\"story-slides-screen-errors\" hidden>\n\t\t<h1>Content errors detected</h1>\n\t\t<p>An error, or errors, were detected in your presentation's content&mdash;open the browser console for more info.</p>\n\t</div>\n\n\t<div id=\"story-slides-screen-loading\" hidden>\n\t\t<p>Loading&hellip;</p>\n\t</div>\n\n\t<div id=\"story-slides-screen-intro\" hidden>\n\t\t<h1 id=\"story-slides-screen-intro-heading\"></h1>\n\t\t<fieldset>\n\t\t\t<legend>Read presentation as&hellip;</legend>\n\t\t\t<div id=\"story-slides-grid\">\n\t\t\t\t<h2>Story</h2>\n\t\t\t\t<div id=\"story-slides-desc-story\">\n\t\t\t\t\t<p>The real content of a talk is often not in the slides, but in what's said around them. Story mode shows you not only what was projected, but the explanation behind it too.</p>\n\t\t\t\t</div>\n\t\t\t\t<button id=\"story-slides-choose-story\" aria-describedby=\"story-slides-desc-story\">Story (recommended)</button>\n\n\t\t\t\t<h2>Slides</h2>\n\t\t\t\t<div id=\"story-slides-desc-slides\">\n\t\t\t\t\t<p>Slides mode shows you just the slides as presented.</p>\n\t\t\t\t</div>\n\t\t\t\t<button id=\"story-slides-choose-slides\" aria-describedby=\"story-slides-desc-slides story-slides-desc-help\">Slides</button>\n\t\t\t</div>\n\t\t</fieldset>\n\t</div>\n\n\t<!-- FIXME: VoiceOver (Mac) says \"StorySlides mode keyboard shortcuts\" -->\n\t<div id=\"story-slides-dialog-keys\" role=\"dialog\" tabindex=\"-1\" aria-labelledby=\"story-slides-dialog-keys-heading\" class=\"story-slides-dialog\" hidden>\n\t\t<button class=\"close\" aria-label=\"Close\">&#x2715;</button>\n\t\t<h1 id=\"story-slides-dialog-keys-heading\"><span class=\"story\">Story</span><span class=\"slides\">Slides</span> mode keyboard shortcuts</h1>\n\t\t<p class=\"mobile-only\">Tap either the left or right fifth of the screen to move to the previous or next slide. If you have a keyboard attached, you can use the following shortcuts.</p>\n\t\t<table>\n\t\t\t<tr>\n\t\t\t\t<th><p>Key</p></th>\n\t\t\t\t<th><p>Action</p></th>\n\t\t\t</tr>\n\t\t\t<tr class=\"slides\">\n\t\t\t\t<td><kbd>S</kbd></td>\n\t\t\t\t<td><p>Switch to story mode.</p></td>\n\t\t\t</tr>\n\t\t\t<tr class=\"slides\">\n\t\t\t\t<td><kbd>L</kbd></td>\n\t\t\t\t<td><p>Lock the current slide: disable all navigation keys, so if you're using a screen-reader, you can explore the current slide with your virtual cursor.</p></td>\n\t\t\t</tr>\n\t\t\t<tr class=\"slides\">\n\t\t\t\t<td><kbd>F</kbd></td>\n\t\t\t\t<td><p>Toggle full-screen slide view<span class=\"mobile-only\"> (not supported on iPhone)</span>.</p></td>\n\t\t\t</tr>\n\t\t\t<tr class=\"slides\">\n\t\t\t\t<td><kbd>&rarr;</kbd> <kbd>&darr;</kbd> <kbd>Page&nbsp;Down</kbd></td>\n\t\t\t\t<td><p>Next slide.</p></td>\n\t\t\t</tr>\n\t\t\t<tr class=\"slides\">\n\t\t\t\t<td><kbd>&larr;</kbd> <kbd>&uarr;</kbd> <kbd>Page&nbsp;Up</kbd></td>\n\t\t\t\t<td><p>Previous slide.</p></td>\n\t\t\t</tr>\n\t\t\t<tr>\n\t\t\t\t<td><kbd>Escape</kbd></td>\n\t\t\t\t<td>\n\t\t\t\t\t<ul>\n\t\t\t\t\t\t<li><p><strong>In slides mode:</strong> disable the current slide lock (no effect otherwise).</p></li>\n\t\t\t\t\t\t<li><p><strong>In story mode:</strong> go to slides mode.</p></li>\n\t\t\t\t\t</ul>\n\t\t\t\t</td>\n\t\t\t</tr>\n\t\t\t<tr class=\"slides\">\n\t\t\t\t<td><kbd>P</kbd></td>\n\t\t\t\t<td><p>If you're running a screen-reader, announce the current slide progress as a percentage.</p></td>\n\t\t\t</tr>\n\t\t\t<tr class=\"slides\">\n\t\t\t\t<td><kbd>O</kbd></td>\n\t\t\t\t<td><p>If you're running a screen-reader, announce the current slide number and the total number of slides.</p></td>\n\t\t\t</tr>\n\t\t\t<tr>\n\t\t\t\t<td><kbd aria-hidden=\"true\">?</kbd><span class=\"visually-hidden\">question mark</span><span class=\"slides\"> <kbd>H</kbd></span></td>\n\t\t\t\t<td><p>Toggle this dialog.</p><p><strong>Note:</strong> the <kbd>H</kbd> shortcut is only available in slides mode.</p></td>\n\t\t\t</tr>\n\t\t\t<tr>\n\t\t\t\t<td><span class=\"story\"><kbd>Alt</kbd>+</span><kbd>G</kbd><br class=\"story\"/><span class=\"story\">(<kbd>Option</kbd>+<kbd>G</kbd> on Mac)</span></td>\n\t\t\t\t<td><p>Go to slide by number (opens a dialog for you to type in the number).</p></td>\n\t\t\t</tr>\n\t\t\t<tr class=\"slides\">\n\t\t\t\t<td><kbd>A</kbd> <kbd>M</kbd></td>\n\t\t\t\t<td><p>Open the Actions menu.</p></td>\n\t\t\t</tr>\n\t\t</table>\n\t</div>\n\n\t<div id=\"story-slides-dialog-go\" role=\"dialog\" tabindex=\"-1\" aria-labelledby=\"story-slides-dialog-go-heading\" class=\"story-slides-dialog\" hidden>\n\t\t<button class=\"close\" aria-label=\"Close\">&#x2715;</button>\n\t\t<h1 id=\"story-slides-dialog-go-heading\">Go</h1>\n\t\t<form id=\"story-slides-go-form\">\n\t\t\t<label for=\"story-slides-go-input\">Go to<span class=\"story\"> the story for</span> slide:</label>\n\t\t\t<input id=\"story-slides-go-input\" aria-describedby=\"story-slides-go-description\">\n\t\t\t<div id=\"story-slides-go-description\">\n\t\t\t\t<p><span id=\"story-slides-slide-last\"></span> slides.</p>\n\t\t\t\t<p>Current slide: <span id=\"story-slides-slide-current\"></span>.</p>\n\t\t\t</div>\n\t\t\t<div class=\"confirm-buttons\">\n\t\t\t\t<button type=\"submit\">Go</button>\n\t\t\t</div>\n\t\t</form>\n\t</div>\n\n\t<div id=\"story-slides-dialog-actions\" role=\"dialog\" tabindex=\"-1\" aria-labelledby=\"story-slides-dialog-actions-heading\" class=\"story-slides-dialog\" hidden>\n\t\t<button class=\"close\" aria-label=\"Close\">&#x2715;</button>\n\t\t<h1 id=\"story-slides-dialog-actions-heading\">Actions</h1>\n\t\t<div class=\"actions\">\n\t\t\t<button class=\"slides\" id=\"story-slides-button-fullscreen\">Full-screen</button>\n\t\t\t<button id=\"story-slides-button-keys\">Keyboard shortcuts</button>\n\t\t\t<button id=\"story-slides-button-go\">Go</button>\n\t\t\t<button class=\"story\" id=\"story-slides-button-mode-slides\" aria-describedby=\"story-slides-mode-slides-explainer\">Switch to slides mode</button>\n\t\t\t<button class=\"slides\" id=\"story-slides-button-mode-story\" aria-describedby=\"story-slides-mode-story-explainer\">Switch to story mode</button>\n\t\t</div>\n\t\t<p class=\"story\" id=\"story-slides-mode-slides-explainer\">Slides mode displays each slide one at a time, as they would be projected for the audience. The extra information present in story mode is not displayed. Keyboard shortcuts or buttons can be used to move between slides.</p>\n\t\t<p class=\"slides\" id=\"story-slides-mode-story-explainer\">Story mode allows you to read the presentation as a document, rather than a collection of separate slides, and includes extra background information on the content.</p>\n\t</div>\n</div>\n";
+
+	var uiTop = "<div id=\"story-slides-top-ui\" class=\"story-slides-ui\">\n\t<button class=\"story-or-mobile-only\" id=\"story-slides-button-menu\" aria-label=\"Actions\">&#9776;</button>\n\t<div class=\"mobile-only\">\n\t\t<button class=\"slides\" id=\"story-slides-button-previous\" aria-label=\"Previous\"><span>&larr;</span></button>\n\t</div>\n</div>\n";
+
+	// Story Slides overall things that need addressing
 
 	function prepareContentAndUI(state) {
-		// TODO catch any errors? Show error screen?
-		makeSlidesProgrammaticallyFocusable(state.slides);
-		fettleLineBreaks();
-		preparePauses(state.slides);
+		// TODO: catch any errors? Show error screen?
+		giveSlidesExplicitNumbers(state.rawSlides);
+		makeSlidesProgrammaticallyFocusable(state.rawSlides);
+		fettleLineBreaks();        // TODO uses global state via window
+		preparePauses(state.rawSlides);
+		constrainImages(state.rawSlides);
+		wrapTablesForStoryMode();  // TODO uses global state via window
 	}
 
 	function startUpInMode(state, mode) {
@@ -6655,6 +6849,7 @@ This software is provided by the copyright holders and contributors “as is” 
 	}
 
 	function windowLoaded(state, loading) {
+		debug('window loaded');
 		loading.remove();
 		const previousMode = getMode();
 		if (previousMode) {
@@ -6691,9 +6886,11 @@ This software is provided by the copyright holders and contributors “as is” 
 	}
 
 	function main() {
-		fettleHtml(document.body);
-		init();
-		window.storySlidesState = new StorySlidesState();
+		debug('starting...');
+		document.documentElement.setAttribute('data-story-slides', '');
+		injectUI(document.body, uiTop, uiBottom, uiMain, uiAnnouncer);
+		init(activateSlide);
+		window.storySlidesState = new State();
 		makeKeyHandlerModeSlides(switchToMode);
 		makeKeyHandlerModeStory(switchToMode);
 
@@ -6708,16 +6905,17 @@ This software is provided by the copyright holders and contributors “as is” 
 		// NOTE: The wrappers need to be made before split layouts are processed,
 		//       and Markdown must be converted to HTML before it can be wrapped.
 		renderMarkdown();
-		makeWrappersForPadding(window.storySlidesState.slides);
+		makeWrappersForPadding(window.storySlidesState.rawSlides);
 
 		// We want to start up in story mode
 		toggleStyleSheetsForMode('story');
 		clearBackgroundColour();
-		document.body.setAttribute('tabindex', '-1');
+		document.body.setAttribute('tabindex', '-1');  // FIXME: needed?
 		document.body.style.display = 'block';
 
-		const lintDOMResult = lintDOM(window.storySlidesState.slides);
-		const doSplitsResult = doSplits(window.storySlidesState.slides);
+		// TODO: Do this earlier as e.g. dialog init will fail if stuff missing
+		const lintDOMResult = lintDOM(window.storySlidesState.rawSlides);
+		const doSplitsResult = doSplits(window.storySlidesState.rawSlides);
 
 		if (lintSlidesResult && lintDOMResult && doSplitsResult) {
 			const loading = document.getElementById('story-slides-screen-loading');
@@ -6733,4 +6931,4 @@ This software is provided by the copyright holders and contributors “as is” 
 
 	main();
 
-}());
+})();

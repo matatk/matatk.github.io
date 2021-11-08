@@ -4,6 +4,12 @@
  */
 
 @media screen {
+	/* FIXME: doc (here and in tut?) */
+	.table-wrapper {
+		max-width: 100%;
+		overflow: auto;
+	}
+
 	table {
 		border-collapse: collapse;
 		margin-left: auto;

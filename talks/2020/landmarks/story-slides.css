@@ -11,8 +11,9 @@
 html {
 	background-color: var(--background-colour, var(--background-color));  /* needs to be on html for Safari */
 	color: var(--text-colour, var(--text-color));
-	transition-property: background-color;
-	transition-duration: var(--short-fade);
+
+	/* FIXME: this happens discretely becuase we're pulling the rug out. */
+	transition: background-color var(--short-fade);
 }
 
 /* Hide page content on startup. We keep the <html> element visible so as to
@@ -29,6 +30,7 @@ body { display: none; }
 /* TODO: move this? */
 @media (hover: hover) and (pointer: fine) {
 	.story-slides-ui .mobile-only { display: none; }
+	.mode-slides .story-slides-ui .story-or-mobile-only { display: none; }
 }
 
 .visually-hidden {
@@ -43,18 +45,146 @@ body { display: none; }
 }
 
 /*
+ * Dialog container, backdrop and essential elements
+ */
+
+/* Roll our own dialogs as <dialog> support isn't great.
+ *
+ * HT https://css-tricks.com/considerations-styling-modal/
+ *
+ * FIXME: up-to-date still?
+ * On mobile devices, we make them bigger, and use the technique
+ * described in the CSS-Tricks article:
+ * https://css-tricks.com/the-trick-to-viewport-units-on-mobile/ */
+.story-slides-dialog {
+	position: fixed;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	overflow-y: scroll;
+	margin: auto;
+	padding: 0.5em;
+	background-color: var(--background-colour, var(--background-color));
+	border: 0.25em solid var(--background-colour, var(--background-color));
+	outline: 0.1em solid var(--text-colour, var(--text-color));
+	max-height: 98%;
+	max-width: 98%;
+}
+
+@media screen and (min-width: 50rem) {
+	.story-slides-dialog { padding: 1em; }
+}
+
+.story-slides-dialog h1 { margin-top: 0; }
+
+.story-slides-dialog .confirm-buttons,
+#story-slides-go-description { text-align: right; }
+
+.story-slides-dialog button.close {
+	margin: 0.25em 0.5em 0.5em;
+	padding: 0.5em;
+	border: none;
+	position: fixed;
+	top: 0;
+	right: 0;
+}
+
+/* As the <dialog> element and it's ::backdrop aren't maturely supported
+ * yet, we roll our own, with a nice smooth animation. */
+#story-slides-main-content[aria-hidden="true"] {
+	opacity: 50%;
+	transition: opacity var(--short-fade);
+}
+#story-slides-main-content { transition: opacity var(--short-fade); }
+
+/* Stop headings being too big (on small screens this is a big deal) */
+.story-slides-dialog > :first-child { margin-top: 0; }
+
+/*
+ * Specific dialog (and part) sizing
+ */
+
+/* Actions menu dialog */
+
+#story-slides-dialog-actions { width: 20em; }
+
+#story-slides-dialog-actions > .actions {
+	display: flex;
+	flex-direction: column;
+	gap: 0.25em;
+}
+
+@media screen and (min-width: 50rem) {
+	#story-slides-dialog-actions { width: auto; }
+
+	#story-slides-dialog-actions > .actions {
+		flex-direction: row;
+		gap: 0.5em;
+	}
+
+	#story-slides-dialog-actions button { white-space: nowrap; }
+}
+
+/* Go dialog */
+
+#story-slides-dialog-go { width: 20em; }
+#story-slides-go-input { width: 3em; }
+
+/* Keys dialog */
+
+#story-slides-dialog-keys { width: 40em; }
+
+/*
+ * Keyboard shortcuts table
+ */
+
+#story-slides-dialog-keys table {
+	margin: 1em auto;
+	border-collapse: collapse;
+}
+
+#story-slides-dialog-keys th,
+#story-slides-dialog-keys td {
+	padding: 0.15em;
+	padding-left: 0.5em;
+	padding-right: 0.5em;
+}
+
+#story-slides-dialog-keys th {
+	background-color: var(--accent-colour, var(--accent-color, var(--text-colour, var(--text-color))));
+	color: var(--background-colour, var(--background-color));
+}
+
+#story-slides-dialog-keys tr:not(:first-child) {
+	border-bottom: 0.1em solid var(--text-colour, var(--text-color));
+}   /* TODO DRY with table? */
+
+#story-slides-dialog-keys td:first-child { text-align: center; }
+
+/* Only set custom styles for <kbd> in our own UI */
+.story-slides-ui kbd {
+	/* Looks like, but also not exactly like, buttons */
+	display: inline-block;
+	border: 0.1em dotted var(--text-colour, var(--text-color));
+	border-radius: 0.25em;
+	padding: 0.15em 0.25em;
+	margin: 0.15em 0;
+}
+
+/*
  * General button styling
  */
 
-.story-slides-ui button {
+.story-slides-ui button,
+.story-slides-ui input {
 	font-size: inherit;
 	padding: 0.25em;
 	border: 0.1em solid var(--text-colour, var(--text-color));
-	border-radius: 0.5em;
 	background-color: var(--background-colour, var(--background-color));
 	color: var(--text-colour, var(--text-color));
 	box-shadow: 0 0 0 0.1em var(--background-colour, var(--background-color));
 }
+.story-slides-ui button { border-radius: 0.5em; }
 
 /* On desktop we can have wider borders */
 @media (hover: hover) and (pointer: fine) {
@@ -69,22 +199,39 @@ body { display: none; }
 }
 
 /*
+ * Specific button styling
+ */
+
+/* FIXME: Jump in size when switching modes */
+#story-slides-button-menu {
+	position: fixed;
+	top: 0;
+	right: 0;
+
+	/* NOTE: z-index is only really used for slides mode */
+	z-index: 2;  /* TODO: DRY variable with core/slides.css? */
+}
+
+@media screen and (min-width: 70em) {
+	#story-slides-button-menu { margin: 0.5rem 1rem; }
+}
+
+/*
  * Story Slides internal loading and intro screens CSS
  *
  * Note: Story mode styles will be applied here too.
  */
 
 #story-slides-screen-loading p {
-	margin-top: 25vh;
 	font-size: 2rem;
 	text-align: center;
 }
 
 #story-slides-screen-loading {
-	opacity: 0;
+	opacity: 0%;
 	transition: opacity var(--short-fade);
 }
-#story-slides-screen-loading.in-progress { opacity: 1; }
+#story-slides-screen-loading.in-progress { opacity: 100%; }
 
 #story-slides-screen-intro h1,
 #story-slides-screen-intro h2 {
@@ -100,6 +247,8 @@ body { display: none; }
 	padding-right: 0.5em;
 }
 
+#story-slides-choose-story { margin-bottom: 1.5em; }
+
 @media screen and (min-width: 60rem) {
 	#story-slides-screen-errors,
 	#story-slides-screen-intro { padding: 2em; }
@@ -109,8 +258,10 @@ body { display: none; }
 		grid-template-rows: repeat(3, auto);
 		grid-template-columns: repeat(2, 1fr);
 		grid-auto-flow: column;
-		column-gap: 1em;
+		column-gap: 1.5em;
 	}
+
+	#story-slides-choose-story { margin: 0; }
 }
 
 /*
@@ -137,8 +288,13 @@ body { display: none; }
 	 */
 
 	/* Setting the computed base font size here so that all other spacing is
-	 * natural for slide layout. UI works around this using the 'initial'
-	 * keyword. */
+	 * natural for slide layout.
+	 *
+	 * TODO: find a way to avoid this and set it just on slides—when last I
+	 *       tried that, enlarging the font did cause layout ructions, but that
+	 *       was probably either browser styling, or things here being
+	 *       expressed in rem?
+	 */
 	html.mode-slides {
 		font-size: var(--computed-base-font-size);
 		margin: 0;
@@ -183,10 +339,7 @@ body { display: none; }
 		height: var(--computed-slide-height);
 		max-width: var(--computed-slide-width);
 		max-height: var(--computed-slide-height);
-		margin-top: var(--computed-vertical-margin);
-		margin-bottom: var(--computed-vertical-margin);
-		margin-left: var(--computed-horizontal-margin);
-		margin-right: var(--computed-horizontal-margin);
+		margin: var(--computed-vertical-margin) var(--computed-horizontal-margin);
 		display: flex;
 		flex-direction: column;
 
@@ -274,6 +427,8 @@ body { display: none; }
 	 * NOTE: This is about horizontal alignment of the content containers; it's
 	 *       not about text alignment (that can easily be done by the user).
 	 */
+
+	/* FIXME: ignore .slide.no-padding */
 
 	.mode-slides .slide.active.left > :not(.story),
 	.mode-slides .slide.active .left {
@@ -369,6 +524,13 @@ body { display: none; }
 	.mode-slides [data-story-slides-step] { visibility: hidden; }
 
 	/*
+	 * Overflow FIXME
+	 */
+
+	/* FIXME: doc */
+	.mode-slides .overflow-auto { overflow: auto; }
+
+	/*
 	 *
 	 * UI
 	 *
@@ -383,7 +545,7 @@ body { display: none; }
 	 *
 	 * Note: no colour is specified here, so it won't actually show up. The
 	 *       theme stylesheet needs to specify a background-color for the
-	 *       #story-slides-progress>div element. */
+	 *       #story-slides-progress > div element. */
 	.mode-slides #story-slides-progress {
 		display: block;
 		position: absolute;
@@ -409,13 +571,6 @@ body { display: none; }
 	 */
 
 	@media (hover: none) and (pointer: coarse) {
-		.mode-slides #story-slides-button-menu {
-			position: absolute;
-			top: 0;
-			left: 0;
-			z-index: 2;  /* ? TODO dry variable? */
-		}
-
 		/* Previous slide and next slide invisible buttons are used to move
 		 * between slides on mobile devices - this avoided the need for custom
 		 * gesture detection (e.g. swipe between slides), which would've
@@ -426,7 +581,7 @@ body { display: none; }
 			position: absolute;
 			top: 0;
 			bottom: 0;
-			width: 33vw;
+			width: 20vw;
 			border: none;
 			box-shadow: none;
 		}
@@ -445,101 +600,10 @@ body { display: none; }
 		.mode-slides #story-slides-button-next:focus > span {
 			display: inline;
 			color: var(--text-colour, var(--text-color));
-			font-size: 30vw;
+			font-size: 20vw;  /* FIXME: not nicely specified */
 			visibility: visible;
 			filter: drop-shadow(0 0 0.05em black);
 		}
-	}
-
-	/*
-	 * Dialogs
-	 */
-
-	/* Roll our own dialogs as <dialog> support isn't great.
-	 *
-	 * On mobile devices, we make them bigger, and use the technique
-	 * described in the CSS-Tricks article:
-	 * https://css-tricks.com/the-trick-to-viewport-units-on-mobile/ */
-	.mode-slides .story-slides-dialog {
-		position: absolute;
-		overflow-y: scroll;
-		margin: auto;
-		padding: 1em;
-		background-color: var(--background-colour, var(--background-color));
-		border: 0.25em solid var(--background-colour, var(--background-color));
-		outline: 0.1em solid var(--text-colour, var(--text-color));
-		height: 100vh;
-		width: 100vw;
-	}
-
-	@media (min-width: 50em) {
-		/* TODO don't display scroll bar if not needed */
-		.mode-slides .story-slides-dialog {
-			height: auto;
-			width: auto;
-			max-height: 85vh;
-			max-width: 75vw;
-
-			/* TODO: Centre it properly */
-			margin-top: calc(15vh / 2);
-			margin-bottom: calc(15vh / 2);
-			margin-left: calc(25vw / 2);
-			margin-right: calc(25vw / 2);
-		}
-	}
-
-	.mode-slides .story-slides-dialog button.close {
-		float: right;
-		margin-top: 0.5em;
-		margin-bottom: 0.5em;
-	}
-
-	/* As the <dialog> element and it's ::backdrop aren't maturely supported
-	 * yet, we roll our own, with a nice smooth animation. */
-	.mode-slides #story-slides-main-content[aria-hidden="true"] {
-		opacity: 0.5;
-		transition: opacity var(--short-fade);
-	}
-	.mode-slides #story-slides-main-content { transition: opacity var(--short-fade); }
-
-	/*
-	 * Keyboard shortcuts table
-	 */
-
-	.mode-slides #story-slides-dialog-keys table {
-		margin-top: 1em;
-		margin-bottom: 1em;
-		border-collapse: collapse;
-		margin-left: auto;
-		margin-right: auto;
-	}
-
-	.mode-slides #story-slides-dialog-keys th,
-	.mode-slides #story-slides-dialog-keys td {
-		padding: 0.15em;
-		padding-left: 0.5em;
-		padding-right: 0.5em;
-	}
-
-	.mode-slides #story-slides-dialog-keys th {
-		background-color: var(--accent-colour, var(--accent-color));
-		color: var(--background-colour, var(--background-color));
-	}
-
-	.mode-slides #story-slides-dialog-keys tr:not(:first-child) {
-		border-bottom: 0.1em solid var(--text-colour, var(--text-color));
-	}   /* TODO DRY with table? */
-
-	.mode-slides #story-slides-dialog-keys td:first-child { text-align: center; }
-
-	/* Only set custom styles for <kbd> in our own UI */
-	.mode-slides .story-slides-ui kbd {
-		/* Looks like, but also not exactly like, buttons */
-		display: inline-block;
-		border: 0.1em dotted var(--text-colour, var(--text-color));
-		border-radius: 0.25em;
-		padding-left: 0.25em;
-		padding-right: 0.25em;
 	}
 
 	/*
@@ -558,6 +622,8 @@ body { display: none; }
 
 /*
  * Story Slides internal Story mode CSS
+ *
+ * FIXME: support inline images
  *
  * Things that are done here:
  *
@@ -585,46 +651,6 @@ body { display: none; }
 .mode-story h5 div,
 .mode-story h6 div { display: inline-block; }
 
-@media screen {
-	.mode-story body {
-		width: var(--body-width);
-
-		/* FIXME: All the below are subjective and should go in the theme? */
-		max-width: calc(100% - 1em);
-		margin: auto;
-		margin-bottom: 1em;
-	}
-
-	.mode-story pre { overflow: scroll; }
-
-	.mode-story .story-slides-ui > .story {  /* There's only one */
-		border-bottom: 0.1em solid var(--text-colour, var(--text-color));
-		padding-top: 0.5em;
-		padding-bottom: 0.5em;
-		margin-bottom: 0.5em;
-		overflow-y: visible;
-		height: 3.5em;
-	}
-
-	/* Show the description when it's helpful */
-	.mode-story #story-slides-button-mode-slides:focus ~ #story-slides-mode-slides-explainer-container,
-	.mode-story #story-slides-button-mode-slides:hover ~ #story-slides-mode-slides-explainer-container {
-		/* Nullify the hiding */
-		display: block;
-		position: relative;
-		margin: 0;
-		margin-top: 0.5em;
-		padding: 0 1rem 0 1rem;
-		background-color: var(--background-colour, var(--background-color));
-		outline: 0.1em dotted var(--text-colour, var(--text-color));
-	}
-
-	.mode-story #story-slides-mode-slides-explainer {
-		margin: 0;
-		padding: 0.5rem 0 0.5rem 0;
-	}
-}
-
 @media print {
 	.mode-story .story-slides-ui { display: none; }
 }
@@ -633,4 +659,3 @@ body { display: none; }
  * mode. */
 .mode-story .slides { display: none; }  /* The code inserts a space before br.slides */
 .mode-story #story-slides-announcer { display: none; }
-.mode-story #story-slides-mode-slides-explainer-container { display: none; }

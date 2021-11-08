@@ -2,12 +2,13 @@
  * Simple theme
  * Slides mode
  *
- * FIXME: separate out splitting from colour reduction
+ * FIXME: should hN.slide default to being like hN.slide.middle.centre?
  * FIXME: Print styles
+ * TODO: See if some uses of :not() could be better done as '.slide X' instead
  *
  * Contains some recommended styling for basic slide elements.
  *
- *  - FIXME
+ *  - FIXME: doc
  */
 
 /*
@@ -47,14 +48,21 @@ ol > li::marker {
 ul { padding-left: 1rem; }
 ol { padding-left: 1.25rem; }
 
-/* By default, assume that images want to be as big as they can be to fill the
- * slide. */
-img {
-	display: block;
-	width: 100%;
-	height: 100%;
-	object-fit: contain;
-}
+/* FIXME: DOC - how about :not(.slide).centre ? or .slide .centre
+ * FIXME: that might not work becuse of propogation of classes when slides
+ *        are split -- use a different class for propogating position?
+ */
+.centre-text,
+.center-text { text-align: center; }
+
+/*
+FIXME: had to undo this as it would affect bullet points as well as images.
+FIXME: but centreing images with 'centre-text' is weird.
+.centre,
+.center { text-align: center; }
+*/
+.left { text-align: left; }
+.right { text-align: right; }
 
 /* ...and similar for figures. */
 figure,
@@ -68,22 +76,117 @@ pre { text-align: left; }
 
 hr { border-bottom: 0.1rem solid var(--text-colour, var(--text-color)); }  /* TODO DRY with table? */
 
-/* FIXME: DOC */
-.centre-text,
-.center-text { text-align: center; }
+/*
+ *
+ * Images
+ *
+ */
+
+/* FIXME:
+ * should inline images be aligned middle by default?
+ * where's the escape hatch?
+ */
+
+/* FIXME: the following should be core?
+ * img display block
+ * image-wrapper
+ * natural-size?
+ * really-inline
+ * .no-padding > img
+ */
+
+/* FIXME: doc */
+img { display: block; }
+
+img.really-inline,
+img.natural-size {
+	display: inline;
+	width: calc((var(--width-px) / var(--scaled-image-px-to-percent)) * (var(--computed-slide-width) / 100));
+}
+
+/* Non-stretched images are displayed inline. This causes them to be displayed
+ * with a gap if their alignment is not explicitly set otherise.
+ *
+ * FIXME: don't we want inline images to be displayed middle by default too as
+ * it looks better on slides?
+ */
+img.natural-size:not(.really-inline) { vertical-align: middle; }
+
+/* Setting images' alignment
+ *
+ * If an image has been placed in a flexy column/row then the author might want
+ * to have all of the content in the column/row aligned. Images are centered by
+ * default so we need to provide an override. Also .left and .right come last
+ * because if a flexy column/row is being used, the slide was probably centred
+ * overall.
+ *
+ * FIXME: doc + tutorial
+ * FIXME: rows needed at all? */
+.centre img,
+.center img { object-position: center; }
+.left img { object-position: left; }
+.right img { object-position: right; }
+
+/* FIXME: doc + test with left and right */
+.no-padding > img { align-self: center; }
+
+/* FIXME: doc + make it work with horizontal image wrappers */
+.image-wrapper {
+	/* overflow is set in code, as has to be on non-slide outer flex parent */
+	display: flex;
+	flex-direction: column;
+}
+.image-wrapper.horizontal { flex-direction: row; }
+
+/* On Chrome, we need to explicitly specify this in order to allow the image to
+ * shrink below its content size... */
+.image-wrapper img,
+.no-padding > img { min-height: 0; }
+
+/* By default, assume that images want to be as big as they can be to fill the
+ * slide.
+ *
+ * FIXME: images on no-padding slides that have .natural-size are stretched
+ *
+ * FIXME: doc here
+ * FIXME: update docs
+ *
+ * TODO: remove figure.slide special case?
+ */
+img:not(.natural-size),
+figure.slide img {
+	width: 100%;
+	height: 100%;
+	object-fit: contain;
+}
+
+/* FIXME: doc */
+img.padded { padding: 0.25rem; }
 
 @media screen {
 	/* Configuring elements in the slideshow */
 
 	html {
-		font-family: sans-serif;
+		/* FIXME: Due to Helvetica, this is different on non-Macs */
+		font-family: Helvetica, Arial, sans-serif;
 
 		/* TODO: scale with font size? */
 		line-height: 1.4;  /* goes better with 8vh text than 1.5 */
 	}
 
-	/* UI font size is relative to --slide-font-height-percent-of-slide */
-	.story-slides-ui { font-size: 0.5rem; }
+	/* UI font size
+	 *
+	 * FIXME: On mobile Safari this behaves how I want it to, with the font
+	 *        size being based on the browser default, but on desktop browsers
+	 *        it ends up huge.
+	 *
+	 * TODO: See note in core/slides.css about wanting to start this from the
+	 *       browser default. */
+	.story-slides-ui { font-size: 1.5rem; }
+
+	@media (min-width: 40rem) {
+		.story-slides-ui { font-size: 0.5rem; }
+	}
 
 	#story-slides-progress div {
 		height: 1vh;
@@ -112,13 +215,15 @@ hr { border-bottom: 0.1rem solid var(--text-colour, var(--text-color)); }  /* TO
 		color: var(--accent-colour, var(--accent-color));
 	}
 
-	/* TODO: really a special case? */
 	.slide.inverse-first > :first-child {
 		background-color: var(--accent-colour, var(--accent-color));
 		color: var(--background-colour, var(--background-color));
 	}
 
+	/* FIXME: doc */
 	.slide.gap > :first-child { margin-bottom: 1rem; }
+	.slide.small-gap > :first-child { margin-bottom: 0.5rem; }
+	.slide.tiny-gap > :first-child { margin-bottom: 0.25rem; }
 
 	h1,
 	h2,
@@ -195,7 +300,7 @@ hr { border-bottom: 0.1rem solid var(--text-colour, var(--text-color)); }  /* TO
 		left: 0;
 		right: 0;
 		font-size: 0.5rem;
-		background-color: rgba(0, 0, 0, 0.5);
+		background-color: rgb(0 0 0 / 50%);
 		padding: 0.1rem;
 	}
 }
