@@ -1,37 +1,40 @@
 /*
+
+Story Slides
+
+Copyright © 2019-2022 Matthew Tylee Atkinson
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+*/
+
+/*
  * Story Slides internal shared CSS
  */
 
-:root {
-	/* UI (dialogs, progress) */
-	--short-fade: 0.5s;
-	--long-fade: 1s;
-}
-
-html {
-	background-color: var(--background-colour, var(--background-color));  /* needs to be on html for Safari */
-	color: var(--text-colour, var(--text-color));
-
-	/* FIXME: this happens discretely becuase we're pulling the rug out. */
-	transition: background-color var(--short-fade);
-}
-
-/* Hide page content on startup. We keep the <html> element visible so as to
- * prevent a flash on startup, particularly striking if in dark mode. */
-body { display: none; }
+/* FIXME: investigate dark mode meta tag etc. */
 
 /*
  * Utilities
  */
 
-/* This just makes everything make sense */
 * { box-sizing: border-box; }
-
-/* TODO: move this? */
-@media (hover: hover) and (pointer: fine) {
-	.story-slides-ui .mobile-only { display: none; }
-	.mode-slides .story-slides-ui .story-or-mobile-only { display: none; }
-}
 
 .visually-hidden {
 	position: absolute !important;
@@ -42,6 +45,52 @@ body { display: none; }
 	width: 1px !important;
 	overflow: hidden;
 	white-space: nowrap;
+}
+
+/*
+ * Scene setting
+ */
+
+:root {
+	/* UI (dialogs, progress) */
+	--short-fade: 0.5s;
+	--long-fade: 1s;
+}
+
+html {
+	/* NOTE: background-color needs to be on html for Safari */
+	background-color: var(--background-colour, var(--background-color));
+	color: var(--text-colour, var(--text-color));
+	transition: background-color var(--short-fade);
+}
+
+body {
+	/* Hide page content on startup. We keep the <html> element visible so as
+	 * to prevent a flash on startup, particularly striking if in dark mode. */
+	display: none;
+}
+
+/*
+ * Conditional content
+ */
+
+@media (hover: hover) and (pointer: fine) {
+	.story-slides-ui .mobile-assumed { display: none; }
+	.mode-slides .story-slides-ui .story-or-mobile-assumed { display: none; }
+}
+
+@media (pointer: coarse) {
+	.mode-slides .story-slides-ui .story-or-no-touch-slides { display: none; }
+}
+
+/* The have-touch class isn't used in Story mode, nor with a fine pointer */
+@media (pointer: fine) {
+	.story-slides-ui .have-touch { display: none; }
+}
+
+/* Touch help for slides mode, with touch input capability, only */
+@media (any-pointer: coarse) {
+	.mode-slides #story-slides-dialog-keys .have-touch { display: block; }
 }
 
 /*
@@ -77,8 +126,7 @@ body { display: none; }
 
 .story-slides-dialog h1 { margin-top: 0; }
 
-.story-slides-dialog .confirm-buttons,
-#story-slides-go-description { text-align: right; }
+.story-slides-dialog .confirm-buttons { text-align: right; }
 
 .story-slides-dialog button.close {
 	margin: 0.25em 0.5em 0.5em;
@@ -92,7 +140,7 @@ body { display: none; }
 /* As the <dialog> element and it's ::backdrop aren't maturely supported
  * yet, we roll our own, with a nice smooth animation. */
 #story-slides-main-content[aria-hidden="true"] {
-	opacity: 50%;
+	opacity: 0.3;
 	transition: opacity var(--short-fade);
 }
 #story-slides-main-content { transition: opacity var(--short-fade); }
@@ -100,29 +148,35 @@ body { display: none; }
 /* Stop headings being too big (on small screens this is a big deal) */
 .story-slides-dialog > :first-child { margin-top: 0; }
 
+/* Needed by inert polyfill */
+[inert] {
+	user-select: none;
+	pointer-events: none;
+}
+
 /*
  * Specific dialog (and part) sizing
  */
 
-/* Actions menu dialog */
+/* Menu dialog */
 
-#story-slides-dialog-actions { width: 20em; }
+#story-slides-dialog-menu { width: 20em; }
 
-#story-slides-dialog-actions > .actions {
+#story-slides-dialog-menu > .menu {
 	display: flex;
 	flex-direction: column;
 	gap: 0.25em;
 }
 
 @media screen and (min-width: 50rem) {
-	#story-slides-dialog-actions { width: auto; }
+	#story-slides-dialog-menu { width: auto; }
 
-	#story-slides-dialog-actions > .actions {
+	#story-slides-dialog-menu > .menu {
 		flex-direction: row;
 		gap: 0.5em;
 	}
 
-	#story-slides-dialog-actions button { white-space: nowrap; }
+	#story-slides-dialog-menu button { white-space: nowrap; }
 }
 
 /* Go dialog */
@@ -134,41 +188,47 @@ body { display: none; }
 
 #story-slides-dialog-keys { width: 40em; }
 
+#story-slides-dialog-keys .have-touch :first-child {
+	font-size: 3em;
+	line-height: 0.5em;
+	margin-top: -0.1em;
+}
+
+#story-slides-dialog-keys .wide { display: none; }
+
+@media screen and (min-width: 40em) {
+	#story-slides-dialog-keys .wide { display: inline; }
+
+	@media (any-pointer: coarse) {
+		.mode-slides #story-slides-dialog-keys .have-touch {
+			display: flex;
+			align-items: center;
+			gap: 0.75em;
+		}
+	}
+}
+
+/* Space between the disclosure, touch info (if present) and table */
+#story-slides-dialog-keys > details,
+#story-slides-dialog-keys > p { margin-bottom: 0.75em; }
+
 /*
- * Keyboard shortcuts table
+ * Keyboard shortcuts table and key indicator
  */
 
-#story-slides-dialog-keys table {
-	margin: 1em auto;
-	border-collapse: collapse;
-}
+/* NOTE: The table takes its styles from the theme. */
 
-#story-slides-dialog-keys th,
-#story-slides-dialog-keys td {
-	padding: 0.15em;
-	padding-left: 0.5em;
-	padding-right: 0.5em;
-}
-
-#story-slides-dialog-keys th {
-	background-color: var(--accent-colour, var(--accent-color, var(--text-colour, var(--text-color))));
-	color: var(--background-colour, var(--background-color));
-}
-
-#story-slides-dialog-keys tr:not(:first-child) {
-	border-bottom: 0.1em solid var(--text-colour, var(--text-color));
-}   /* TODO DRY with table? */
-
-#story-slides-dialog-keys td:first-child { text-align: center; }
-
-/* Only set custom styles for <kbd> in our own UI */
+/* Looks like, but also not exactly like, buttons */
 .story-slides-ui kbd {
-	/* Looks like, but also not exactly like, buttons */
-	display: inline-block;
 	border: 0.1em dotted var(--text-colour, var(--text-color));
 	border-radius: 0.25em;
-	padding: 0.15em 0.25em;
-	margin: 0.15em 0;
+	padding: 0 0.25em;
+	white-space: nowrap;
+}
+
+.story-slides-ui th kbd {
+	display: inline-block;
+	margin: 0.25em 0;
 }
 
 /*
@@ -188,7 +248,6 @@ body { display: none; }
 
 /* On desktop we can have wider borders */
 @media (hover: hover) and (pointer: fine) {
-	/* TODO: fold into the above? seems better for mobile */
 	.story-slides-ui button { padding: 0.5em; }
 }
 
@@ -202,7 +261,6 @@ body { display: none; }
  * Specific button styling
  */
 
-/* FIXME: Jump in size when switching modes */
 #story-slides-button-menu {
 	position: fixed;
 	top: 0;
@@ -212,26 +270,28 @@ body { display: none; }
 	z-index: 2;  /* TODO: DRY variable with core/slides.css? */
 }
 
+.mode-story #story-slides-button-menu {
+	padding: 0.1rem 0.25rem 0.25rem;
+
+	/* NOTE: last rems are: body margins; body padding; button width */
+	right: max(50% - var(--body-width) / 2 - 2rem - 1rem - 1rem, 0px);
+}
+
 @media screen and (min-width: 70em) {
-	#story-slides-button-menu { margin: 0.5rem 1rem; }
+	#story-slides-button-menu {
+		margin: 0.5rem 1rem;
+	}
+
+	.mode-story #story-slides-button-menu {
+		padding: 0.3rem 0.5rem 0.5rem;
+	}
 }
 
 /*
- * Story Slides internal loading and intro screens CSS
+ * Story Slides internal intro screens CSS
  *
- * Note: Story mode styles will be applied here too.
+ * NOTE: Story mode styles will be applied here too.
  */
-
-#story-slides-screen-loading p {
-	font-size: 2rem;
-	text-align: center;
-}
-
-#story-slides-screen-loading {
-	opacity: 0%;
-	transition: opacity var(--short-fade);
-}
-#story-slides-screen-loading.in-progress { opacity: 100%; }
 
 #story-slides-screen-intro h1,
 #story-slides-screen-intro h2 {
@@ -240,14 +300,19 @@ body { display: none; }
 	margin-bottom: 0;
 }
 
-#story-slides-screen-intro fieldset { border: 0.1em solid var(--text-colour, var(--text-color)); }
-
-#story-slides-screen-intro legend {
-	padding-left: 0.5em;
-	padding-right: 0.5em;
+#story-slides-screen-intro fieldset {
+	border: 0.1em solid var(--text-colour, var(--text-color));
+	margin-bottom: 1rem;
 }
 
-#story-slides-choose-story { margin-bottom: 1.5em; }
+#story-slides-screen-intro legend { padding: 0.5rem; }
+
+/* We mainly want to put the margin on the first button (for visual layout
+ * reasons particular to the intro screen. But, if the author has styled
+ * buttons specifically margin-wise, then that would affect one button but not
+ * the other. */
+#story-slides-choose-story,
+#story-slides-choose-slides { margin-bottom: 1.5em; }
 
 @media screen and (min-width: 60rem) {
 	#story-slides-screen-errors,
@@ -261,14 +326,12 @@ body { display: none; }
 		column-gap: 1.5em;
 	}
 
-	#story-slides-choose-story { margin: 0; }
+	#story-slides-choose-story,
+	#story-slides-choose-slides { margin-bottom: 0; }
 }
 
 /*
  * Story Slides internal Slides mode CSS
- *
- * TODO: Print styles
- * TODO: Don't need the .active on most of these? Performance?
  */
 
 /* The following are provided by script...
@@ -283,7 +346,7 @@ body { display: none; }
 @media screen {
 	/*
 	 *
-	 * Essential typography
+	 * Essential typography and spacing
 	 *
 	 */
 
@@ -341,72 +404,11 @@ body { display: none; }
 		max-height: var(--computed-slide-height);
 		margin: var(--computed-vertical-margin) var(--computed-horizontal-margin);
 		display: flex;
-		flex-direction: column;
-
-		/* TODO: check if needed (due to elements being used as slides)... */
-		padding: 0;
-	}
-
-	.mode-slides .slide.active.horizontal { flex-direction: row; }
-
-	/*
-	 * Vertically aligning content
-	 */
-
-	/* Slides that have the class of (top|middle|bottom) or elements within
-	 * slides that have one of those classes should align their content
-	 * vertically accordingly. To do this, they are rendred as flexboxes (the
-	 * slides themselves already are). */
-	.mode-slides .slide.active.top:not(.horizontal),
-	.mode-slides .slide.active .top {
-		display: flex;
-		flex-direction: column;
-		justify-content: flex-start;
-		height: 100%;
-	}
-
-	.mode-slides .slide.active.horizontal.top,
-	.mode-slides .slide.active.horizontal .top {
-		display: flex;
-		flex-direction: row;
-		align-items: flex-start;
-		height: 100%;
-	}
-
-	.mode-slides .slide.active.middle:not(.horizontal),
-	.mode-slides .slide.active:not(.horizontal) .middle {
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		height: 100%;
-	}
-
-	.mode-slides .slide.active.horizontal.middle,
-	.mode-slides .slide.active.horizontal .middle {
-		display: flex;
-		flex-direction: row;
-		align-items: center;
-		height: 100%;
-	}
-
-	.mode-slides .slide.active.bottom:not(.horizontal),
-	.mode-slides .slide.active:not(.horizontal) .bottom {
-		display: flex;
-		flex-direction: column;
-		justify-content: flex-end;
-		height: 100%;
-	}
-
-	.mode-slides .slide.active.horizontal.bottom,
-	.mode-slides .slide.active.horizontal .bottom {
-		display: flex;
-		flex-direction: row;
-		align-items: flex-end;
-		height: 100%;
+		flex-flow: column nowrap;
 	}
 
 	/*
-	 * Split content
+	 * Split slides
 	 */
 
 	/* Slides can be split into different vertical (or horizontal) parts. The
@@ -414,48 +416,123 @@ body { display: none; }
 	 * if they don't we need a sensible default. By making each part equally
 	 * greedy for the whole space, we arrive at each part being allocated
 	 * (1/n)th of the space. */
-	.mode-slides .slide[data-split] > * { flex-basis: 100%; }
+
+	.mode-slides .slide [data-split] {
+		display: flex;
+		flex-flow: column nowrap;
+		flex-basis: 100%;
+	}
+
+	.mode-slides [data-split] > :not(.story) { flex-basis: 100%; }
+
+	.mode-slides .slide-part:not(.horizontal) {
+		display: flex;  /* Still need this even if same orientation as parent */
+		flex-flow: column nowrap;
+		width: 100%;
+	}
+
+	/*
+	 * Slide split-part padding
+	 */
+
+	/* Padding for slide parts (split explicitly or otherwise) can be disabled
+	 * by adding the "no-part-padding" class. The script propagates this down
+	 * from slides or split containers, so if you want to disable padding on
+	 * all parts, you can just apply the class to the container. */
+	.mode-slides .slide-part:not(.no-part-padding, .no-split-padding) {
+		padding: var(--part-padding-vertical) var(--part-padding-horizontal);
+	}
+
+	/*
+	 * Horizontal slides or split parts
+	 */
+
+	.mode-slides .slide [data-split].horizontal { display: flex; }
+
+	.mode-slides .slide.horizontal { flex-direction: row; }
+
+	.mode-slides .slide-part.horizontal {
+		flex-direction: row;
+		height: 100%;
+	}
+
+	.mode-slides .slide.horizontal .slide-part { height: 100%; }
+
+	/*
+	 * Vertically aligning content
+	 */
+
+	.mode-slides .slide:not(.horizontal).top,
+	.mode-slides .slide-part:not(.horizontal).top {
+		justify-content: flex-start;
+	}
+
+	.mode-slides .slide:not(.horizontal).middle,
+	.mode-slides .slide-part:not(.horizontal).middle {
+		justify-content: center;
+	}
+
+	.mode-slides .slide:not(.horizontal).bottom,
+	.mode-slides .slide-part:not(.horizontal).bottom {
+		justify-content: flex-end;
+	}
+
+	.mode-slides .slide.horizontal.top,
+	.mode-slides .slide-part.horizontal.top { align-items: flex-start; }
+
+	.mode-slides .slide.horizontal.middle,
+	.mode-slides .slide-part.horizontal.middle { align-items: center; }
+
+	.mode-slides .slide.horizontal.bottom,
+	.mode-slides .slide-part.horizontal.bottom { align-items: flex-end; }
 
 	/*
 	 * Horizontally aligning content
 	 */
 
-	/* If these classes, used for horizontal alignment, were added to a slide,
-	 * the user wants the content centred horizontally. This needs to be passed
-	 * on to the script-created <div>.
-	 *
-	 * NOTE: This is about horizontal alignment of the content containers; it's
+	/* FIXME: update doc */
+
+	/* NOTE: This is about horizontal alignment of the content containers; it's
 	 *       not about text alignment (that can easily be done by the user).
 	 */
 
-	/* FIXME: ignore .slide.no-padding */
+	.mode-slides .slide:not(.horizontal).left,
+	.mode-slides .slide-part:not(.horizontal).left,
+	.mode-slides .slide:not(.horizontal).position-left,
+	.mode-slides .slide-part:not(.horizontal).position-left { align-items: flex-start; }
 
-	.mode-slides .slide.active.left > :not(.story),
-	.mode-slides .slide.active .left {
-		display: flex;
-		margin-right: auto;
-		width: 100%;
-		justify-content: flex-start;
-	}
+	.mode-slides .slide:not(.horizontal).centre,
+	.mode-slides .slide:not(.horizontal).center,
+	.mode-slides .slide-part:not(.horizontal).centre,
+	.mode-slides .slide-part:not(.horizontal).center,
+	.mode-slides .slide:not(.horizontal).position-centre,
+	.mode-slides .slide:not(.horizontal).position-center,
+	.mode-slides .slide-part:not(.horizontal).position-centre,
+	.mode-slides .slide-part:not(.horizontal).position-center { align-items: center; }
 
-	.mode-slides .slide.active.centre > :not(.story),
-	.mode-slides .slide.active .centre,
-	.mode-slides .slide.active.center > :not(.story),
-	.mode-slides .slide.active .center {
-		display: flex;
-		margin-left: auto;
-		margin-right: auto;
-		width: 100%;
-		justify-content: center;
-	}
+	.mode-slides .slide:not(.horizontal).right,
+	.mode-slides .slide-part:not(.horizontal).right,
+	.mode-slides .slide:not(.horizontal).position-right,
+	.mode-slides .slide-part:not(.horizontal).position-right { align-items: flex-end; }
 
-	.mode-slides .slide.active.right > :not(.story),
-	.mode-slides .slide.active .right {
-		display: flex;
-		margin-left: auto;
-		width: 100%;
-		justify-content: flex-end;
-	}
+	.mode-slides .slide.horizontal.left,
+	.mode-slides .slide-part.horizontal.left,
+	.mode-slides .slide.horizontal.position-left,
+	.mode-slides .slide-part.horizontal.position-left { justify-content: flex-start; }
+
+	.mode-slides .slide.horizontal.centre,
+	.mode-slides .slide.horizontal.center,
+	.mode-slides .slide-part.horizontal.centre,
+	.mode-slides .slide-part.horizontal.center,
+	.mode-slides .slide.horizontal.position-centre,
+	.mode-slides .slide.horizontal.position-center,
+	.mode-slides .slide-part.horizontal.position-centre,
+	.mode-slides .slide-part.horizontal.position-center { justify-content: center; }
+
+	.mode-slides .slide.horizontal.right,
+	.mode-slides .slide-part.horizontal.right,
+	.mode-slides .slide.horizontal.position-right,
+	.mode-slides .slide-part.horizontal.position-right { justify-content: flex-end; }
 
 	/*
 	 * Default padding around content
@@ -467,7 +544,8 @@ body { display: none; }
 	 * full-width/-height elements, which stops the split parts being of use.
 	 *
 	 * Therefore the script wraps each direct child of the slide in a <div> and
-	 * gives it an appropriate class, and we add the padding here.
+	 * gives it an appropriate class, and we add the padding here. (If this
+	 * <div> is added, it's re-used when splitting the slide.)
 	 *
 	 * Some slides will want to take up the full space, with no padding. By
 	 * specifying the "no-padding" class, the script knows not to insert the
@@ -477,18 +555,19 @@ body { display: none; }
 	 * The script doesn't wrap absolutely-positioned elements in padding <div>s
 	 * either.
 	 */
-	.mode-slides .slide.active .padding-wrapper-first {
+
+	.mode-slides .slide:not(.horizontal) .slide-padding-wrapper-first {
 		padding-top: var(--slide-padding-vertical);
 		padding-left: var(--slide-padding-horizontal);
 		padding-right: var(--slide-padding-horizontal);
 	}
 
-	.mode-slides .slide.active .padding-wrapper-middle {
+	.mode-slides .slide:not(.horizontal) .slide-padding-wrapper-middle {
 		padding-left: var(--slide-padding-horizontal);
 		padding-right: var(--slide-padding-horizontal);
 	}
 
-	.mode-slides .slide.active .padding-wrapper-last {
+	.mode-slides .slide:not(.horizontal) .slide-padding-wrapper-last {
 		padding-left: var(--slide-padding-horizontal);
 		padding-right: var(--slide-padding-horizontal);
 		padding-bottom: var(--slide-padding-vertical);
@@ -496,18 +575,18 @@ body { display: none; }
 
 	/* Slides organised horizontally require different padding... */
 
-	.mode-slides .slide.active.horizontal .padding-wrapper-first {
+	.mode-slides .slide.horizontal .slide-padding-wrapper-first {
 		padding-top: var(--slide-padding-vertical);
 		padding-left: var(--slide-padding-horizontal);
 		padding-bottom: var(--slide-padding-vertical);
 	}
 
-	.mode-slides .slide.active.horizontal .padding-wrapper-middle {
+	.mode-slides .slide.horizontal .slide-padding-wrapper-middle {
 		padding-top: var(--slide-padding-vertical);
 		padding-bottom: var(--slide-padding-vertical);
 	}
 
-	.mode-slides .slide.active.horizontal .padding-wrapper-last {
+	.mode-slides .slide.horizontal .slide-padding-wrapper-last {
 		padding-top: var(--slide-padding-vertical);
 		padding-right: var(--slide-padding-horizontal);
 		padding-bottom: var(--slide-padding-vertical);
@@ -524,13 +603,6 @@ body { display: none; }
 	.mode-slides [data-story-slides-step] { visibility: hidden; }
 
 	/*
-	 * Overflow FIXME
-	 */
-
-	/* FIXME: doc */
-	.mode-slides .overflow-auto { overflow: auto; }
-
-	/*
 	 *
 	 * UI
 	 *
@@ -543,7 +615,7 @@ body { display: none; }
 	/* The progress bar is a container with nested <div> that adjusts its
 	 * width. Got this neat trick from impress.js; thanks :-).
 	 *
-	 * Note: no colour is specified here, so it won't actually show up. The
+	 * NOTE: no colour is specified here, so it won't actually show up. The
 	 *       theme stylesheet needs to specify a background-color for the
 	 *       #story-slides-progress > div element. */
 	.mode-slides #story-slides-progress {
@@ -605,13 +677,6 @@ body { display: none; }
 			filter: drop-shadow(0 0 0.05em black);
 		}
 	}
-
-	/*
-	 * Live region
-	 */
-
-	/* The announcer usually has a class of visually-hidden. */
-	.mode-slides .story-slides-locked #story-slides-announcer { display: none; }
 }
 
 /* Story mode content should not be available to anyone when we are in slides
@@ -643,7 +708,7 @@ body { display: none; }
 
 /* Flatten headings
  * This is useful when you have a heading that is also a split slide.
- * Note: use a <span class="story">: </span> to break them up. */
+ * NOTE: use a <span class="story">: </span> to break them up. */
 .mode-story h1 div,
 .mode-story h2 div,
 .mode-story h3 div,

@@ -1,4 +1,30 @@
 /*
+
+Story Slides
+
+Copyright © 2019-2022 Matthew Tylee Atkinson
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+*/
+
+/*
  * Simple theme
  * Story mode (and introduction screen)
  *
@@ -23,6 +49,10 @@ body {
 	max-width: calc(100% - 1em);
 	margin: auto;
 	margin-bottom: 1em;
+
+	/* To fix the horizontal scrolling caused by wide images and tables - seems
+	 * hacky but is also the way the pros are doing it... */
+	overflow-x: hidden;
 }
 
 /* Images are sized to be drawn as widely as possible. Their heights are then
@@ -44,6 +74,7 @@ img {
  * TODO: open the wide class to other elements?
  *
  * HT https://gomakethings.com/how-to-break-an-image-out-of-its-parent-container-with-css/
+ * HT https://css-tricks.com/full-width-containers-limited-width-parents/
  */
 img.wide,
 .table-wrapper {
@@ -58,9 +89,7 @@ img.wide,
 
 /* This class allows an image to be rendered at its full height—even if that
  * will be taller than the viewport. */
-img.tall {
-	max-height: 100%;
-}
+img.tall { max-height: 100%; }
 
 /* FIXME: doc */
 img.really-inline,
@@ -110,3 +139,6 @@ figcaption a { overflow-wrap: break-word; }
 
 /* Thanks https://fvsch.com/object-fit-decoration/ :-) */
 img.border { filter: drop-shadow(0 0 0.1em var(--text-colour, var(--text-color))); }
+
+dt,
+summary { font-weight: bold; }

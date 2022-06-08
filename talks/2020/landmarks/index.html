@@ -154,7 +154,7 @@
 		<!-- TODO nested data-pause doesn't work -->
 		<div class="slide centre middle">
 			<h2>Skip links are awesome</h2>
-			<div class="centre-text" data-pause>
+			<div class="text-centre" data-pause>
 				<p>Easily discoverable<span class="story">&mdash;by convention they're always at the top of the page.</span></p>
 				<p>Avoid repeated content</p>
 				<p><strong>Save your visitors' time</strong><span class="story">&mdash;<a href="https://www.bbc.co.uk/sport/get-inspired/47977024">try reading through the navigation links with a screen reader</a>: they're all important and helpful, but someone who's familar with them and just wants to get to the article can save so much time by skipping them.</span></p>
@@ -176,7 +176,7 @@
 			<h2>Landmark regions</h2>
 		</div>
 
-		<div class="slide middle centre-text" data-pause>
+		<div class="slide middle text-centre" data-pause>
 			<p class="story">Landmark regions are&hellip;</p>
 			<p>Signposts to broad areas of the page<span class="story">.</span></p>
 			<p><strong>Non-visual</strong> complement to visual design<span class="story">&mdash;they don't change the appearance of a page; they let you impart the same structural information that the visual design does to people who may not be able to perceive it.</span></p>
@@ -223,73 +223,49 @@
 		<div class="slide">
 			<h2>Search box</h2>
 			<p class="story">A conventional way to mark up a search UI is using a textbox, and a button labelled "Search", both wrapped in a <code>&lt;div&gt;</code> element.</p>
-			<div data-pause>
-				<div data-markdown><!--
-				```html
-				<div>
-					<input type="text" ...>
-					<button>Search</button>
-				</div>
-				```
-				--></div>
-			</div>
+			<pre data-pause>&lt;div&gt;
+    &lt;input type=&quot;text&quot; ...&gt;
+    &lt;button&gt;Search&lt;/button&gt;
+&lt;/div&gt;</pre>
 		</div>
 
 		<div class="slide">
 			<h2>Search box<span class="story"> with landmark</span></h2>
 			<p class="story">A helpful landmark region can be added simply, by setting the <code>role</code> attribute on the container <code>&lt;div&gt;</code> element to a value of "search".</p>
-			<div data-markdown><!--
-			```html
-			<div role="search">
-				<input type="text" ...>
-				<button>Search</button>
-			</div>
-			```
-			--></div>
+			<pre>&lt;div role=&quot;search&quot;&gt;
+    &lt;input type=&quot;text&quot; ...&gt;
+    &lt;button&gt;Search&lt;/button&gt;
+&lt;/div&gt;</pre>
 		</div>
 
 		<div class="slide">
 			<h2>Main content</h2>
 			<p class="story"><a href="https://twitter.com/stevefaulkner">Steve Faulkner</a> did some research and found that there are some common ways people mark up the container of the page's main content. They may use a <code>&lt;div&gt;</code> element with an <code>id</code> of "content".</p>
-			<div data-pause>
-				<div data-markdown><!--
-				```html
-				<div id="content">
-					.
-					.
-					.
-				</div>
-				```
-				--></div>
-			</div>
+			<pre data-pause>&lt;div id=&quot;content&quot;&gt;
+    .
+    .
+    .
+&lt;/div&gt;</pre>
 		</div>
 
 		<div class="slide">
 			<h2>Main content<span class="story">: popular <code>id</code> value</span></h2>
 			<p class="story">However, using an <code>id</code> of "main" is even more popular.</p>
-			<div data-markdown><!--
-			```html
-			<div id="main">
-				.
-				.
-				.
-			</div>
-			```
-			--></div>
+			<pre>&lt;div id=&quot;main&quot;&gt;
+    .
+    .
+    .
+&lt;/div&gt;</pre>
 		</div>
 
 		<div class="slide">
 			<h2>Main content<span class="story"> with landmark</span></h2>
 			<p class="story">To have this container recognised as the &quot;main&quot; landmark, simply add a <code>role</code> attribute with a value of "main".</p>
-			<div data-markdown><!--
-			```html
-			<div id="main" role="main">
-				.
-				.
-				.
-			</div>
-			```
-			--></div>
+			<pre>&lt;div id=&quot;main&quot; role=&quot;main&quot;&gt;
+    .
+    .
+    .
+&lt;/div&gt;</pre>
 		</div>
 
 		<div class="slide no-padding">
@@ -300,15 +276,11 @@
 		<div class="slide">
 			<h2>Main content<span class="story"> identified only by landmark role</span></h2>
 			<p class="story">You could just use the <code>role</code> attribute instead of the <code>id</code> value to identify the main content, and key your CSS off the <code>role</code> attribute only.</p>
-			<div data-markdown><!--
-			```html
-			<div role="main">
-				.
-				.
-				.
-			</div>
-			```
-			--></div>
+			<pre>&lt;div role=&quot;main&quot;&gt;
+    .
+    .
+    .
+&lt;/div&gt;</pre>
 		</div>
 
 		<!-- FIXME: this has a light background in slides mode but not story -->
@@ -322,18 +294,14 @@
 		<div class="slide">
 			<h2>Main content<span class="story">: HTML5 version</span></h2>
 			<p class="story">HTML5 introduced the <code>&lt;main&gt;</code> element, which brings with it an implicit "main" landmark.</p>
-			<div data-markdown><!--
-			```html
-			<main>
-				.
-				.
-				.
-			</div>
-			```
-			--></div>
+			<pre>&lt;main&gt;
+    .
+    .
+    .
+&lt;/main&gt;</pre>
 		</div>
 
-		<div class="slide middle centre-text">
+		<div class="slide middle text-centre">
 			<p><strong>*</strong> <span class="story">now I was actually fibbing a bit before in order to squeeze in a nerdy reference, becuase </span><a href="https://html.spec.whatwg.org/multipage/grouping-content.html#the-main-element">actually there can be more than one<span class="story"> <code>&lt;main&gt;</code> element</span>,<br class="slides"><span data-pause><span>if the others are hidden.</span></span></a></p>
 		</div>
 
@@ -341,13 +309,9 @@
 			<h2>Main content<span class="story">: summary</span></h2>
 			<p class="story">In summary&hellip;</p>
 			<div data-pause>
-				<div data-markdown><!--
-				`<div role="main">`
-				--></div>
+				<p><code>&lt;div role=&quot;main&quot;&gt;</code></p>
 				<p>is the same, semantically, as<span class="story"> just</span></p>
-				<div data-markdown><!--
-				`<main>`
-				--></div>
+				<p><code>&lt;main&gt;</code></p>
 			</div>
 		</div>
 
@@ -364,17 +328,11 @@
 			<h2>Footer</h2>
 			<p class="story">A similar story as above applies when marking up your footer content&hellip;</p>
 			<div data-pause>
-				<div data-markdown><!--
-				`<div class="footer">`
-				--></div>
+				<p><code>&lt;div class=&quot;footer&quot;&gt;</code></p>
 				<p>could become</p>
-				<div data-markdown><!--
-				`<div role="contentinfo">`
-				--></div>
+				<p><code>&lt;div role=&quot;contentinfo&quot;&gt;</code></p>
 				<p>or, more simply</p>
-				<div data-markdown><!--
-				`<footer>`
-				--></div>
+				<p><code>&lt;footer&gt;</code></p>
 			</div>
 		</div>
 
@@ -385,19 +343,23 @@
 
 		<!-- TODO: why is there apparent padding around the table? -->
 		<!-- TODO: not that accessible when in slide (live-region) mode? -->
-		<div class="slide middle no-padding slightly-smaller">
+		<div class="slide no-padding slightly-smaller">
 			<table>
-				<tr><th>Element</th><th>Landmark region role</th></tr>
-				<tr><td><code>&lt;header&gt;</code></td><td><code>banner</code><strong><sup>1</sup></strong></td></tr>
-				<tr><td><code>&lt;nav&gt;</code></td><td><code>navigation</code></td></tr>
-				<tr><td><code>&lt;main&gt;</code></td><td><code>main</code></td></tr>
-				<tr><td><code>&lt;section&gt;</code></td><td><code>region</code><strong><sup>2</sup></strong></td></tr>
-				<tr><td><code>&lt;form&gt;</code></td><td><code>form</code><strong><sup>2</sup></strong></td></tr>
-				<tr><td><code>&lt;aside&gt;</code></td><td><code>complementary</code></td></tr>
-				<tr><td><code>&lt;footer&gt;</code></td><td><code>contentinfo</code><strong><sup>1</sup></strong></td></tr>
+				<thead>
+					<tr><th>Element</th><th>Landmark region role</th></tr>
+				</thead>
+				<tbody>
+					<tr><td><code>&lt;header&gt;</code></td><td><code>banner</code><strong><sup>1</sup></strong></td></tr>
+					<tr><td><code>&lt;nav&gt;</code></td><td><code>navigation</code></td></tr>
+					<tr><td><code>&lt;main&gt;</code></td><td><code>main</code></td></tr>
+					<tr><td><code>&lt;section&gt;</code></td><td><code>region</code><strong><sup>2</sup></strong></td></tr>
+					<tr><td><code>&lt;form&gt;</code></td><td><code>form</code><strong><sup>2</sup></strong></td></tr>
+					<tr><td><code>&lt;aside&gt;</code></td><td><code>complementary</code></td></tr>
+					<tr><td><code>&lt;footer&gt;</code></td><td><code>contentinfo</code><strong><sup>1</sup></strong></td></tr>
+				</tbody>
 			</table>
 			<div data-pause>
-				<ol class="align-right">
+				<ol class="list-on-the-right">
 					<li><span class="story">only considered landmark regions </span>if scoped to the <code>&lt;body&gt;</code> element, i.e. page-global<span class="story">.</span></li>
 					<li><span class="story">only considered landmark regions </span>if labelled<span class="story">.</span></li>
 				</ol>
@@ -409,39 +371,27 @@
 			<p class="story">Labelling landmarks allows you to differentiate them, and further explain their purpose. Some HTML5 elements are actually only recognised <em>as</em> landmarks if they have a label&mdash;this is good because it avoids there being way too many landmarks on the page and overwhelming the user with them.</p>
 			<p class="story">Say you have a <code>&lt;section&gt;</code> element that contains a paragraph&hellip;</p>
 			<div data-pause>
-				<div data-markdown><!--
-				```html
-				<section>
-					<p>blah</p>
-				</section>
-				```
-				--></div>
+				<pre>&lt;section&gt;
+    &lt;p&gt;blah&lt;/p&gt;
+&lt;/section&gt;</pre>
 				<p><span class="story">That </span>isn't<span class="story"> recognised as</span> a landmark, but <span class="slides">this</span><span class="story">a <code>&lt;section&gt;</code> containing a heading (an <code>&lt;h2&gt;</code> of "Penguins" in this case), with an <code>aria-labelledby</code> attribute that points to the heading by referencing it's <code>id</code></span> is<span class="story"> considered a landmark</span>:</p>
-				<div data-markdown><!--
-				```html
-				<section aria-labelledby="penguins-header">
-					<h2 id="penguins-header">Penguins</h2>
-					<p>blah</p>
-				</section>
-				```
-				--></div>
+				<pre>&lt;section aria-labelledby=&quot;penguins-header&quot;&gt;
+    &lt;h2 id=&quot;penguins-header&quot;&gt;Penguins&lt;/h2&gt;
+    &lt;p&gt;blah&lt;/p&gt;
+&lt;/section&gt;</pre>
 				<!-- TODO: note about visual here first? Decided not to as it makes this section longer and fits nicely later anyway. -->
 			</div>
 		</div>
 
 		<div class="slide middle centre a-little-smaller">
 			<div class="slides">
-				<div data-markdown><!--
-				```html
-				<section aria-labelledby="penguins-header">
-					<h2 id="penguins-header">Penguins</h2>
-					<p>blah</p>
-				</section>
-				```
-				--></div>
+				<pre>&lt;section aria-labelledby=&quot;penguins-header&quot;&gt;
+    &lt;h2 id=&quot;penguins-header&quot;&gt;Penguins&lt;/h2&gt;
+    &lt;p&gt;blah&lt;/p&gt;
+&lt;/section&gt;</pre>
 			</div>
 			<div data-pause>
-				<div class="centre-text">
+				<div class="text-centre">
 					<p><span class="story">In this case, </span>Screen readers may say</p>
 					<strong>"Penguins, region"</strong>
 					<p class="story">when entering the region (or listing it in the dialog mentioned before).</p>
@@ -501,7 +451,7 @@
 			<h3 class="big"><span class="story">Golden Rule </span>3</h3>
 		</div>
 
-		<div class="slide middle centre-text">
+		<div class="slide middle text-centre">
 			<p>
 				<span>If you've got <strong>more than one</strong> of the same type of landmark on a page,</span>
 				<span data-pause>
@@ -514,33 +464,27 @@
 
 		<div class="slide middle a-little-smaller">
 			<p class="story">Imagine we have two navigation landmarks on a page, provided by two <code>&lt;nav&gt;</code> elements. Without delving into their content, it's not clear what the purpose of each of them is, though it may be obvious from the visual design of the page.</p>
-			<div data-markdown><!--
-			```html
-			<nav>
-				. . .
-			</nav>
+			<pre>&lt;nav&gt;
+    . . .
+&lt;/nav&gt;
 
-			<nav>
-				. . .
-			</nav>
-			```--></div>
+&lt;nav&gt;
+    . . .
+&lt;/nav&gt;</pre>
 		</div>
 
 		<div class="slide middle a-little-smaller">
 			<p class="story">Labels can be provided to make the different purposes of the navigation regions clear. We can give one <code>&lt;nav&gt;</code> element an <code>aria-label</code> attribute value of "Site" and the other one a value of "Page", for example.</p>
-			<div data-markdown><!--
-			```html
-			<nav aria-label="Site">
-				. . .
-			</nav>
+			<pre>&lt;nav aria-label="Site"&gt;
+    . . .
+&lt;/nav&gt;
 
-			<nav aria-label="Page">
-				. . .
-			</nav>
-			```--></div>
+&lt;nav aria-label="Page"&gt;
+    . . .
+&lt;/nav&gt;</pre>
 		</div>
 
-		<div class="slide middle centre-text">
+		<div class="slide middle text-centre">
 			<p>Screen readers may say</p>
 			<div data-pause>
 				<strong>"Site, navigation"</strong>
@@ -564,18 +508,15 @@
 					<li>linking the <code>&lt;nav&gt;</code> elements to the headings by setting <code>aria-labelledby</code> attributes on the <code>&lt;nav&gt;</code> elements to point to the <code>id</code> values of the headings.</li>
 				</ul>
 			</div>
-			<div data-markdown><!--
-			```html
-			<nav aria-labelledby="nav-global-header">
-				<h2 id="nav-global-header">Site</h2>
-				. . .
-			</nav>
+			<pre>&lt;nav aria-labelledby=&quot;nav-global-header&quot;&gt;
+    &lt;h2 id=&quot;nav-global-header&quot;&gt;Site&lt;/h2&gt;
+    . . .
+&lt;/nav&gt;
 
-			<nav aria-labelledby="nav-local-header">
-				<h2 id="nav-local-header">Page</h2>
-				. . .
-			</nav>
-			```--></div>
+&lt;nav aria-labelledby=&quot;nav-local-header&quot;&gt;
+    &lt;h2 id=&quot;nav-local-header&quot;&gt;Page&lt;/h2&gt;
+    . . .
+&lt;/nav&gt;</pre>
 			<p class="story">As we've only made a visual change here, the screen reader would the same things ("Site, navigation" and "Page, navigation").</p>
 		</div>
 
@@ -584,18 +525,15 @@
 			<h3 class="big"><span class="story">Golden Rule </span>4</h3>
 		</div>
 
-		<div class="slide middle centre-text">
+		<div class="slide middle text-centre">
 			<p>There's <strong>no need to include the type</strong><br class="slides">of the landmark region <strong>in its label</strong>.</p>
 		</div>
 
-		<div class="slide middle centre centre-text">
+		<div class="slide middle centre text-centre">
 			<p class="story">Given a <code>&lt;nav&gt;</code> element with an <code>aria-label</code> of "Site"&hellip;</p>
-			<div data-markdown><!--
-			```html
-			<nav aria-label="Site">
-				. . .
-			</nav>
-			```--></div>
+			<pre>&lt;nav aria-label=&quot;Site&quot;&gt;
+    . . .
+&lt;/nav&gt;</pre>
 			<div data-pause>
 				<div>
 					<p>Screen readers may say</p>
@@ -604,14 +542,11 @@
 			</div>
 		</div>
 
-		<div class="slide middle centre-text">
+		<div class="slide middle text-centre">
 			<p class="story">However, if the type of the region is included in the <code>aria-label</code> attribute's value&hellip;</p>
-			<div data-markdown><!--
-			```html
-			<nav aria-label="Site Navigation">
-				. . .
-			</nav>
-			```--></div>
+			<pre>&lt;nav aria-label=&quot;Site Navigation&quot;&gt;
+    . . .
+&lt;/nav&gt;</pre>
 			<div data-pause>
 				<div>
 					<p>Screen readers may say</p>
@@ -625,7 +560,7 @@
 			<h3 class="big"><span class="story">Golden Rule </span>5</h3>
 		</div>
 
-		<div class="slide middle centre-text">
+		<div class="slide middle text-centre">
 			<p>Generally <strong>avoid</strong> using the<br class="slides"><strong><code>aria-roledescription</code></strong><br class="slides">attribute</p>
 		</div>
 
@@ -634,14 +569,11 @@
 			<p class="story">Ok, let's rewind slightly&hellip;</p>
 		</div>
 
-		<div class="slide middle centre-text a-little-smaller">
+		<div class="slide middle text-centre a-little-smaller">
 			<p class="story">What's the <code>aria-roledescription</code> attribute? It lets you override how a <code>role</code> is announced by screen readers. Let's imagine a <code>&lt;main&gt;</code> element with a role description of "Slartibartfast"&hellip;</p>
-			<div data-markdown><!--
-			```html
-			<main aria-roledescription="Slartibartfast">
-				. . .
-			</main>
-			```--></div>
+			<pre>&lt;main aria-roledescription=&quot;Slartibartfast&quot;&gt;
+    . . .
+&lt;/main&gt;</pre>
 			<div data-pause>
 				<div>
 					<p>Screen readers may say</p>
@@ -651,17 +583,14 @@
 			</div>
 		</div>
 
-		<div class="slide middle centre-text a-little-smaller-er">
+		<div class="slide middle text-centre a-little-smaller-er">
 			<p class="story">However, providing role descriptions can be pretty helpful in specific circumstances. Let's consider a web-app that's a slide show viewer. We have a <code>&lt;section&gt;</code> element labelled by a heading that says "Reasons landmarks rock" and an <code>aria-roledescription</code> of "Slide"&hellip;</p>
-			<div data-markdown><!--
-			```html
-			<section
-			 aria-labelledby="head"
-			 aria-roledescription="Slide">
-			    <h2 id="head">Reasons landmarks rock</h2>
-				. . .
-			</section>
-			```--></div>
+			<pre>&lt;section
+ aria-labelledby=&quot;head&quot;
+ aria-roledescription=&quot;Slide&quot;&gt;
+    &lt;h2 id=&quot;head&quot;&gt;Reasons landmarks rock&lt;/h2&gt;
+    . . .
+&lt;/section&gt;</pre>
 			<div data-pause>
 				<div>
 					<p>Screen readers may say</p>
@@ -671,7 +600,7 @@
 			</div>
 		</div>
 
-		<div class="slide middle centre-text">
+		<div class="slide middle text-centre">
 			<p><strong>With great power<span class="slides">&hellip;</span></strong><span class="story"><strong>, comes great responsibility</strong> though! There are some serious challenges that using this attribute can create for your visitors&hellip;</span></p>
 			<div data-pause>
 				<p>Subverting users' expectations<span class="story"> by changing the way that standard regions they've come to expect to find are announced, raising inconsistencies across sites and sowing the seeds of confusion.</span></p>

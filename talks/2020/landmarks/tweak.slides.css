@@ -25,6 +25,8 @@
 @media screen {
 	/* Presentation-specific extras... */
 
+	tbody tr { border-bottom: none; }
+
 	p.key {
 		font-size: 2rem;
 		border: 0.1rem solid white;
@@ -45,7 +47,10 @@
 	.slightly-smaller          { font-size: 0.66rem;  } /* with no-padding */
 	.slightly-smaller-er       { font-size: 0.63rem;  } /* is used */
 
-	.align-right { text-align: right; }
+	ol.list-on-the-right li {
+		width: fit-content;
+		margin-left: auto;
+	}
 
 	.slide.light { background-color: var(--secondary-background-colour); }
 

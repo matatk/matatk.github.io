@@ -1,15 +1,35 @@
 /*
+
+Story Slides
+
+Copyright © 2019-2022 Matthew Tylee Atkinson
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+*/
+
+/*
  * Simple theme
  * Slides mode
- *
- * FIXME: should hN.slide default to being like hN.slide.middle.centre?
- * FIXME: Print styles
- * TODO: See if some uses of :not() could be better done as '.slide X' instead
- *
- * Contains some recommended styling for basic slide elements.
- *
- *  - FIXME: doc
  */
+
+/* FIXME: remove top/bottom margin for <pre>s? */
 
 /*
  *
@@ -37,7 +57,8 @@ dl {
 	margin-bottom: 0;
 }
 
-dt { font-weight: bold; }
+dt,
+summary { font-weight: bold; }
 
 ol > li::marker {
 	font-weight: bold;
@@ -47,22 +68,6 @@ ol > li::marker {
 /* Adjust default padding or the markers end up outside of the slide */
 ul { padding-left: 1rem; }
 ol { padding-left: 1.25rem; }
-
-/* FIXME: DOC - how about :not(.slide).centre ? or .slide .centre
- * FIXME: that might not work becuse of propogation of classes when slides
- *        are split -- use a different class for propogating position?
- */
-.centre-text,
-.center-text { text-align: center; }
-
-/*
-FIXME: had to undo this as it would affect bullet points as well as images.
-FIXME: but centreing images with 'centre-text' is weird.
-.centre,
-.center { text-align: center; }
-*/
-.left { text-align: left; }
-.right { text-align: right; }
 
 /* ...and similar for figures. */
 figure,
@@ -77,98 +82,143 @@ pre { text-align: left; }
 hr { border-bottom: 0.1rem solid var(--text-colour, var(--text-color)); }  /* TODO DRY with table? */
 
 /*
+ * Text alignment
+ */
+
+/* FIXME: doc/remove */
+
+.centre,
+.center,
+.text-centre,
+.text-center { text-align: center; }
+
+.left,
+.text-left { text-align: left; }
+
+.right,
+.text-right { text-align: right; }
+
+h1.slide,
+h2.slide,
+h3.slide,
+h4.slide,
+h5.slide,
+h6.slide {
+	text-align: center;
+	padding: 0;  /* Otherwise we get some border at the top/bottom, due to the
+					heading styling above. This is done separately here to make
+					it easy for tweak stylesheets to modify headings */
+}
+
+/*
  *
  * Images
  *
  */
 
-/* FIXME:
- * should inline images be aligned middle by default?
- * where's the escape hatch?
+img { display: block; }  /* FIXME: make it so this can be moved down */
+
+/*
+ * Alignment/positioning of aspect-corrected images within their containers
  */
 
-/* FIXME: the following should be core?
- * img display block
- * image-wrapper
- * natural-size?
- * really-inline
- * .no-padding > img
+/* FIXME: correct for accounting of split between position and alignment. */
+
+.top img,
+img.top { object-position: top; }
+
+.middle img,
+img.middle { object-position: center; }
+
+.bottom img,
+img.bottom { object-position: bottom; }
+
+.left img,
+img.left { object-position: left; }
+
+.right img,
+img.right { object-position: right; }
+
+/*
+ * Basic image sizing
  */
 
-/* FIXME: doc */
-img { display: block; }
+/* Assume that images want to be as big as they can be to fill the slide. */
+img:not(.natural-size),
+figure.slide img {
+	min-height: 0;        /* needed for no-padding slides */
+	min-width: 0;         /* TODO: check needed */
+	height: 100%;
+	width: 100%;          /* allows object-fit to work when image is nested */
+	max-width: 100%;
+	max-height: 100%;
+	object-fit: contain;  /* needed for when the image is a flex-item */
+}
 
 img.really-inline,
 img.natural-size {
-	display: inline;
-	width: calc((var(--width-px) / var(--scaled-image-px-to-percent)) * (var(--computed-slide-width) / 100));
+	display: inline;      /* TODO: change sense on img so this isn't needed */
+	width:
+		calc(
+			(var(--width-px) / var(--scaled-image-px-to-percent))
+			* (var(--computed-slide-width) / 100)
+		);
 }
 
 /* Non-stretched images are displayed inline. This causes them to be displayed
  * with a gap if their alignment is not explicitly set otherise.
  *
- * FIXME: don't we want inline images to be displayed middle by default too as
- * it looks better on slides?
+ * TODO: don't we want inline images to be displayed middle by default too as
+ *       it looks better on slides?
  */
 img.natural-size:not(.really-inline) { vertical-align: middle; }
 
-/* Setting images' alignment
- *
- * If an image has been placed in a flexy column/row then the author might want
- * to have all of the content in the column/row aligned. Images are centered by
- * default so we need to provide an override. Also .left and .right come last
- * because if a flexy column/row is being used, the slide was probably centred
- * overall.
- *
- * FIXME: doc + tutorial
- * FIXME: rows needed at all? */
-.centre img,
-.center img { object-position: center; }
-.left img { object-position: left; }
-.right img { object-position: right; }
-
-/* FIXME: doc + test with left and right */
-.no-padding > img { align-self: center; }
-
-/* FIXME: doc + make it work with horizontal image wrappers */
-.image-wrapper {
-	/* overflow is set in code, as has to be on non-slide outer flex parent */
-	display: flex;
-	flex-direction: column;
-}
-.image-wrapper.horizontal { flex-direction: row; }
-
-/* On Chrome, we need to explicitly specify this in order to allow the image to
- * shrink below its content size... */
-.image-wrapper img,
-.no-padding > img { min-height: 0; }
-
-/* By default, assume that images want to be as big as they can be to fill the
- * slide.
- *
- * FIXME: images on no-padding slides that have .natural-size are stretched
- *
- * FIXME: doc here
- * FIXME: update docs
- *
- * TODO: remove figure.slide special case?
+/*
+ * Image wrappers
  */
-img:not(.natural-size),
-figure.slide img {
-	width: 100%;
-	height: 100%;
-	object-fit: contain;
+
+/* NOTE: Don't set flex-basis, as it overrides the defaults. */
+.grow-flex-item { min-height: 0; }
+
+/* Needed to ensure an image that's not inside of a flexbox will know how tall
+ * it can get. */
+.grow-block { height: 100%; }
+
+/* FIXME: rename */
+
+/* When an image container has more than just the image as children. */
+.img-container {
+	display: flex;
+	flex-flow: column nowrap;
+	min-height: 0;
+}
+.img-container:not(.horizontal) { max-height: 100%; }
+
+/* TODO: test */
+.img-container.horizontal {
+	flex-direction: row;
+	max-width: 100%;
 }
 
 /* FIXME: doc */
+img.non-greedy-height { height: auto; }
+
+/* FIXME: doc */
 img.padded { padding: 0.25rem; }
+
+/* TODO: doc */
+img.no-expand-width { width: auto; }
+img.no-expand-height { height: auto; }
 
 @media screen {
 	/* Configuring elements in the slideshow */
 
 	html {
-		/* FIXME: Due to Helvetica, this is different on non-Macs */
-		font-family: Helvetica, Arial, sans-serif;
+		/* Helvetica on Windows apparently doesn't render well. Also,
+		 * specificying it here explictily on a Mac somehow seems to make
+		 * browsers use a slightly different version of it (slide diff images
+		 * have slight hotspots around font outlines in some places). */
+		font-family: sans-serif;
 
 		/* TODO: scale with font size? */
 		line-height: 1.4;  /* goes better with 8vh text than 1.5 */
@@ -232,6 +282,7 @@ img.padded { padding: 0.25rem; }
 	h5,
 	h6,
 	dt,
+	summary,
 	strong { color: var(--accent-colour, var(--accent-color)); }
 
 	/* FIXME: doc */
@@ -249,6 +300,8 @@ img.padded { padding: 0.25rem; }
 	.part-odd h6,
 	.inverse dt,
 	.part-odd dt,
+	.inverse summary,
+	.part-odd summary,
 	.inverse strong,
 	.part-odd strong,
 	.slide.inverse-first > :first-child * {
@@ -266,29 +319,17 @@ img.padded { padding: 0.25rem; }
 		color: var(--background-colour, var(--background-color));
 	}
 
-	/* FIXME: DOC */
-	h1.slide.centre,
-	h1.slide.center,
-	h2.slide.centre,
-	h2.slide.center,
-	h3.slide.centre,
-	h3.slide.center,
-	h4.slide.centre,
-	h4.slide.center,
-	h5.slide.centre,
-	h5.slide.center,
-	h6.slide.centre,
-	h6.slide.center { text-align: center; }
-
 	a { color: var(--text-colour, var(--text-color)); }
 
+	/* TODO: summary one needed? */
 	dt > a,
+	summary > a,
 	strong > a { color: var(--accent-colour, var(--accent-color)); }
 
 	/* Presentation-specific extras... */
 
 	.rotate270 {
-		width: 1rem;
+		width: 1rem;  /* FIXME doesn't work in some presentations */
 		transform: rotate(270deg);
 		white-space: nowrap;
 	}
@@ -304,3 +345,210 @@ img.padded { padding: 0.25rem; }
 		padding: 0.1rem;
 	}
 }
+
+/*
+ *
+ * One-time automatically generated stuff
+ * FIXME: doc
+ *
+ */
+
+img.height-1 { height: calc(0.01 * var(--computed-slide-height)); }
+img.height-2 { height: calc(0.02 * var(--computed-slide-height)); }
+img.height-3 { height: calc(0.03 * var(--computed-slide-height)); }
+img.height-4 { height: calc(0.04 * var(--computed-slide-height)); }
+img.height-5 { height: calc(0.05 * var(--computed-slide-height)); }
+img.height-6 { height: calc(0.06 * var(--computed-slide-height)); }
+img.height-7 { height: calc(0.07 * var(--computed-slide-height)); }
+img.height-8 { height: calc(0.08 * var(--computed-slide-height)); }
+img.height-9 { height: calc(0.09 * var(--computed-slide-height)); }
+img.height-10 { height: calc(0.1 * var(--computed-slide-height)); }
+img.height-11 { height: calc(0.11 * var(--computed-slide-height)); }
+img.height-12 { height: calc(0.12 * var(--computed-slide-height)); }
+img.height-13 { height: calc(0.13 * var(--computed-slide-height)); }
+img.height-14 { height: calc(0.14 * var(--computed-slide-height)); }
+img.height-15 { height: calc(0.15 * var(--computed-slide-height)); }
+img.height-16 { height: calc(0.16 * var(--computed-slide-height)); }
+img.height-17 { height: calc(0.17 * var(--computed-slide-height)); }
+img.height-18 { height: calc(0.18 * var(--computed-slide-height)); }
+img.height-19 { height: calc(0.19 * var(--computed-slide-height)); }
+img.height-20 { height: calc(0.2 * var(--computed-slide-height)); }
+img.height-21 { height: calc(0.21 * var(--computed-slide-height)); }
+img.height-22 { height: calc(0.22 * var(--computed-slide-height)); }
+img.height-23 { height: calc(0.23 * var(--computed-slide-height)); }
+img.height-24 { height: calc(0.24 * var(--computed-slide-height)); }
+img.height-25 { height: calc(0.25 * var(--computed-slide-height)); }
+img.height-26 { height: calc(0.26 * var(--computed-slide-height)); }
+img.height-27 { height: calc(0.27 * var(--computed-slide-height)); }
+img.height-28 { height: calc(0.28 * var(--computed-slide-height)); }
+img.height-29 { height: calc(0.29 * var(--computed-slide-height)); }
+img.height-30 { height: calc(0.3 * var(--computed-slide-height)); }
+img.height-31 { height: calc(0.31 * var(--computed-slide-height)); }
+img.height-32 { height: calc(0.32 * var(--computed-slide-height)); }
+img.height-33 { height: calc(0.33 * var(--computed-slide-height)); }
+img.height-34 { height: calc(0.34 * var(--computed-slide-height)); }
+img.height-35 { height: calc(0.35 * var(--computed-slide-height)); }
+img.height-36 { height: calc(0.36 * var(--computed-slide-height)); }
+img.height-37 { height: calc(0.37 * var(--computed-slide-height)); }
+img.height-38 { height: calc(0.38 * var(--computed-slide-height)); }
+img.height-39 { height: calc(0.39 * var(--computed-slide-height)); }
+img.height-40 { height: calc(0.4 * var(--computed-slide-height)); }
+img.height-41 { height: calc(0.41 * var(--computed-slide-height)); }
+img.height-42 { height: calc(0.42 * var(--computed-slide-height)); }
+img.height-43 { height: calc(0.43 * var(--computed-slide-height)); }
+img.height-44 { height: calc(0.44 * var(--computed-slide-height)); }
+img.height-45 { height: calc(0.45 * var(--computed-slide-height)); }
+img.height-46 { height: calc(0.46 * var(--computed-slide-height)); }
+img.height-47 { height: calc(0.47 * var(--computed-slide-height)); }
+img.height-48 { height: calc(0.48 * var(--computed-slide-height)); }
+img.height-49 { height: calc(0.49 * var(--computed-slide-height)); }
+img.height-50 { height: calc(0.5 * var(--computed-slide-height)); }
+img.height-51 { height: calc(0.51 * var(--computed-slide-height)); }
+img.height-52 { height: calc(0.52 * var(--computed-slide-height)); }
+img.height-53 { height: calc(0.53 * var(--computed-slide-height)); }
+img.height-54 { height: calc(0.54 * var(--computed-slide-height)); }
+img.height-55 { height: calc(0.55 * var(--computed-slide-height)); }
+img.height-56 { height: calc(0.56 * var(--computed-slide-height)); }
+img.height-57 { height: calc(0.57 * var(--computed-slide-height)); }
+img.height-58 { height: calc(0.58 * var(--computed-slide-height)); }
+img.height-59 { height: calc(0.59 * var(--computed-slide-height)); }
+img.height-60 { height: calc(0.6 * var(--computed-slide-height)); }
+img.height-61 { height: calc(0.61 * var(--computed-slide-height)); }
+img.height-62 { height: calc(0.62 * var(--computed-slide-height)); }
+img.height-63 { height: calc(0.63 * var(--computed-slide-height)); }
+img.height-64 { height: calc(0.64 * var(--computed-slide-height)); }
+img.height-65 { height: calc(0.65 * var(--computed-slide-height)); }
+img.height-66 { height: calc(0.66 * var(--computed-slide-height)); }
+img.height-67 { height: calc(0.67 * var(--computed-slide-height)); }
+img.height-68 { height: calc(0.68 * var(--computed-slide-height)); }
+img.height-69 { height: calc(0.69 * var(--computed-slide-height)); }
+img.height-70 { height: calc(0.7 * var(--computed-slide-height)); }
+img.height-71 { height: calc(0.71 * var(--computed-slide-height)); }
+img.height-72 { height: calc(0.72 * var(--computed-slide-height)); }
+img.height-73 { height: calc(0.73 * var(--computed-slide-height)); }
+img.height-74 { height: calc(0.74 * var(--computed-slide-height)); }
+img.height-75 { height: calc(0.75 * var(--computed-slide-height)); }
+img.height-76 { height: calc(0.76 * var(--computed-slide-height)); }
+img.height-77 { height: calc(0.77 * var(--computed-slide-height)); }
+img.height-78 { height: calc(0.78 * var(--computed-slide-height)); }
+img.height-79 { height: calc(0.79 * var(--computed-slide-height)); }
+img.height-80 { height: calc(0.8 * var(--computed-slide-height)); }
+img.height-81 { height: calc(0.81 * var(--computed-slide-height)); }
+img.height-82 { height: calc(0.82 * var(--computed-slide-height)); }
+img.height-83 { height: calc(0.83 * var(--computed-slide-height)); }
+img.height-84 { height: calc(0.84 * var(--computed-slide-height)); }
+img.height-85 { height: calc(0.85 * var(--computed-slide-height)); }
+img.height-86 { height: calc(0.86 * var(--computed-slide-height)); }
+img.height-87 { height: calc(0.87 * var(--computed-slide-height)); }
+img.height-88 { height: calc(0.88 * var(--computed-slide-height)); }
+img.height-89 { height: calc(0.89 * var(--computed-slide-height)); }
+img.height-90 { height: calc(0.9 * var(--computed-slide-height)); }
+img.height-91 { height: calc(0.91 * var(--computed-slide-height)); }
+img.height-92 { height: calc(0.92 * var(--computed-slide-height)); }
+img.height-93 { height: calc(0.93 * var(--computed-slide-height)); }
+img.height-94 { height: calc(0.94 * var(--computed-slide-height)); }
+img.height-95 { height: calc(0.95 * var(--computed-slide-height)); }
+img.height-96 { height: calc(0.96 * var(--computed-slide-height)); }
+img.height-97 { height: calc(0.97 * var(--computed-slide-height)); }
+img.height-98 { height: calc(0.98 * var(--computed-slide-height)); }
+img.height-99 { height: calc(0.99 * var(--computed-slide-height)); }
+
+img.width-1 { width: calc(0.01 * var(--computed-slide-width)); }
+img.width-2 { width: calc(0.02 * var(--computed-slide-width)); }
+img.width-3 { width: calc(0.03 * var(--computed-slide-width)); }
+img.width-4 { width: calc(0.04 * var(--computed-slide-width)); }
+img.width-5 { width: calc(0.05 * var(--computed-slide-width)); }
+img.width-6 { width: calc(0.06 * var(--computed-slide-width)); }
+img.width-7 { width: calc(0.07 * var(--computed-slide-width)); }
+img.width-8 { width: calc(0.08 * var(--computed-slide-width)); }
+img.width-9 { width: calc(0.09 * var(--computed-slide-width)); }
+img.width-10 { width: calc(0.1 * var(--computed-slide-width)); }
+img.width-11 { width: calc(0.11 * var(--computed-slide-width)); }
+img.width-12 { width: calc(0.12 * var(--computed-slide-width)); }
+img.width-13 { width: calc(0.13 * var(--computed-slide-width)); }
+img.width-14 { width: calc(0.14 * var(--computed-slide-width)); }
+img.width-15 { width: calc(0.15 * var(--computed-slide-width)); }
+img.width-16 { width: calc(0.16 * var(--computed-slide-width)); }
+img.width-17 { width: calc(0.17 * var(--computed-slide-width)); }
+img.width-18 { width: calc(0.18 * var(--computed-slide-width)); }
+img.width-19 { width: calc(0.19 * var(--computed-slide-width)); }
+img.width-20 { width: calc(0.2 * var(--computed-slide-width)); }
+img.width-21 { width: calc(0.21 * var(--computed-slide-width)); }
+img.width-22 { width: calc(0.22 * var(--computed-slide-width)); }
+img.width-23 { width: calc(0.23 * var(--computed-slide-width)); }
+img.width-24 { width: calc(0.24 * var(--computed-slide-width)); }
+img.width-25 { width: calc(0.25 * var(--computed-slide-width)); }
+img.width-26 { width: calc(0.26 * var(--computed-slide-width)); }
+img.width-27 { width: calc(0.27 * var(--computed-slide-width)); }
+img.width-28 { width: calc(0.28 * var(--computed-slide-width)); }
+img.width-29 { width: calc(0.29 * var(--computed-slide-width)); }
+img.width-30 { width: calc(0.3 * var(--computed-slide-width)); }
+img.width-31 { width: calc(0.31 * var(--computed-slide-width)); }
+img.width-32 { width: calc(0.32 * var(--computed-slide-width)); }
+img.width-33 { width: calc(0.33 * var(--computed-slide-width)); }
+img.width-34 { width: calc(0.34 * var(--computed-slide-width)); }
+img.width-35 { width: calc(0.35 * var(--computed-slide-width)); }
+img.width-36 { width: calc(0.36 * var(--computed-slide-width)); }
+img.width-37 { width: calc(0.37 * var(--computed-slide-width)); }
+img.width-38 { width: calc(0.38 * var(--computed-slide-width)); }
+img.width-39 { width: calc(0.39 * var(--computed-slide-width)); }
+img.width-40 { width: calc(0.4 * var(--computed-slide-width)); }
+img.width-41 { width: calc(0.41 * var(--computed-slide-width)); }
+img.width-42 { width: calc(0.42 * var(--computed-slide-width)); }
+img.width-43 { width: calc(0.43 * var(--computed-slide-width)); }
+img.width-44 { width: calc(0.44 * var(--computed-slide-width)); }
+img.width-45 { width: calc(0.45 * var(--computed-slide-width)); }
+img.width-46 { width: calc(0.46 * var(--computed-slide-width)); }
+img.width-47 { width: calc(0.47 * var(--computed-slide-width)); }
+img.width-48 { width: calc(0.48 * var(--computed-slide-width)); }
+img.width-49 { width: calc(0.49 * var(--computed-slide-width)); }
+img.width-50 { width: calc(0.5 * var(--computed-slide-width)); }
+img.width-51 { width: calc(0.51 * var(--computed-slide-width)); }
+img.width-52 { width: calc(0.52 * var(--computed-slide-width)); }
+img.width-53 { width: calc(0.53 * var(--computed-slide-width)); }
+img.width-54 { width: calc(0.54 * var(--computed-slide-width)); }
+img.width-55 { width: calc(0.55 * var(--computed-slide-width)); }
+img.width-56 { width: calc(0.56 * var(--computed-slide-width)); }
+img.width-57 { width: calc(0.57 * var(--computed-slide-width)); }
+img.width-58 { width: calc(0.58 * var(--computed-slide-width)); }
+img.width-59 { width: calc(0.59 * var(--computed-slide-width)); }
+img.width-60 { width: calc(0.6 * var(--computed-slide-width)); }
+img.width-61 { width: calc(0.61 * var(--computed-slide-width)); }
+img.width-62 { width: calc(0.62 * var(--computed-slide-width)); }
+img.width-63 { width: calc(0.63 * var(--computed-slide-width)); }
+img.width-64 { width: calc(0.64 * var(--computed-slide-width)); }
+img.width-65 { width: calc(0.65 * var(--computed-slide-width)); }
+img.width-66 { width: calc(0.66 * var(--computed-slide-width)); }
+img.width-67 { width: calc(0.67 * var(--computed-slide-width)); }
+img.width-68 { width: calc(0.68 * var(--computed-slide-width)); }
+img.width-69 { width: calc(0.69 * var(--computed-slide-width)); }
+img.width-70 { width: calc(0.7 * var(--computed-slide-width)); }
+img.width-71 { width: calc(0.71 * var(--computed-slide-width)); }
+img.width-72 { width: calc(0.72 * var(--computed-slide-width)); }
+img.width-73 { width: calc(0.73 * var(--computed-slide-width)); }
+img.width-74 { width: calc(0.74 * var(--computed-slide-width)); }
+img.width-75 { width: calc(0.75 * var(--computed-slide-width)); }
+img.width-76 { width: calc(0.76 * var(--computed-slide-width)); }
+img.width-77 { width: calc(0.77 * var(--computed-slide-width)); }
+img.width-78 { width: calc(0.78 * var(--computed-slide-width)); }
+img.width-79 { width: calc(0.79 * var(--computed-slide-width)); }
+img.width-80 { width: calc(0.8 * var(--computed-slide-width)); }
+img.width-81 { width: calc(0.81 * var(--computed-slide-width)); }
+img.width-82 { width: calc(0.82 * var(--computed-slide-width)); }
+img.width-83 { width: calc(0.83 * var(--computed-slide-width)); }
+img.width-84 { width: calc(0.84 * var(--computed-slide-width)); }
+img.width-85 { width: calc(0.85 * var(--computed-slide-width)); }
+img.width-86 { width: calc(0.86 * var(--computed-slide-width)); }
+img.width-87 { width: calc(0.87 * var(--computed-slide-width)); }
+img.width-88 { width: calc(0.88 * var(--computed-slide-width)); }
+img.width-89 { width: calc(0.89 * var(--computed-slide-width)); }
+img.width-90 { width: calc(0.9 * var(--computed-slide-width)); }
+img.width-91 { width: calc(0.91 * var(--computed-slide-width)); }
+img.width-92 { width: calc(0.92 * var(--computed-slide-width)); }
+img.width-93 { width: calc(0.93 * var(--computed-slide-width)); }
+img.width-94 { width: calc(0.94 * var(--computed-slide-width)); }
+img.width-95 { width: calc(0.95 * var(--computed-slide-width)); }
+img.width-96 { width: calc(0.96 * var(--computed-slide-width)); }
+img.width-97 { width: calc(0.97 * var(--computed-slide-width)); }
+img.width-98 { width: calc(0.98 * var(--computed-slide-width)); }
+img.width-99 { width: calc(0.99 * var(--computed-slide-width)); }
