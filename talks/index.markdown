@@ -3,6 +3,10 @@ layout: page
 title: Talks
 ---
 
+## Web accessibility in terms and tools you already know
+
+["Web accessibility in terms and tools you already know"](2025/web-accessibility-you-already-know/) was presented at [London Web Standards' Global Accessibility Awareness Day meet-up](https://londonwebstandards.org/events/lwsmay2025-gaad-week/).
+
 ## Innovative adaptation, personalization and assistive technologies
 
 ["Innovative adaptation, personalization and assistive technologies"](2020/innovative-adaptations/) was a [breakout session run at W3C TPAC 2020](https://www.w3.org/2020/10/TPAC/breakout-schedule.html#adaptation).

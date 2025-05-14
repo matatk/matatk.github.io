@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<!-- FIXME: br inside span -->
+<html lang="en-GB">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Web accessibility in terms and tools you already know</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="mobile-web-app-capable" content="yes">
+
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap"
+		rel="stylesheet">
+
+	<!-- Story Slides CSS -->
+	<link href="story-slides.css" rel="stylesheet">
+
+	<!-- Story Slides theme CSS -->
+	<link href="simple.shared.css" rel="stylesheet">
+	<link href="simple.slides.css" rel="stylesheet">
+	<link href="simple.story.css" rel="stylesheet">
+
+	<!--
+			Your chosen colours and other settings for the theme
+
+			NOTE: The story mode sheet must come last, because the page boots
+			into story mode, and this will help avoid any flashes.
+		-->
+	<link href="tweak.shared.css" rel="stylesheet">
+	<link href="tweak.slides.css" rel="stylesheet">
+	<link href="tweak.story.css" rel="stylesheet">
+</head>
+
+<body>
+	<div class="slide bottom two-tone" data-split="* -">
+		<h1 data-pause>Web accessibility<span><br class="slides">in terms and tools</span><span><br class="slides">you
+				already know</span></h1>
+		<p>Matthew Tylee Atkinson</p>
+	</div>
+
+	<div class="slide middle centre horizontal no-padding" data-split data-pause>
+		<p class=story>Here's a bit of background on me&hellip;</p>
+		<img class="padded story-size-thing" src="images/w3c.svg" alt="W3C">
+		<p class=story>Me and my team are active in the World Wide Web Consortium (W3C). I co-chair the <a
+				href="https://www.w3.org/WAI/about/groups/apawg/">Accessible Platform Architectures (APA) working group</a>, and
+			I'm a member of the <a href="https://tag.w3.org/">Technical Architecture Group</a>.</p>
+		<img class="padded height-60 story-size-thing" src="images/samsung-internet.svg" alt="Samsung Internet Browser">
+		<p class=story>I'm also head of web standards at Samsung Research and Development Institute UK, where we have a
+			great team working on all sorts of web platform improvements, within W3C, representing Samsung Internet, our
+			browser.</p>
+		<p class=story>In this talk, we're going to be covering&hellip;</p>
+	</div>
+
+	<ol class="slide middle centre two-tone" data-pause data-split>
+		<li>Accessibility speedrun</li>
+		<li>Accessibility in terms you know</li>
+		<li>Practical things you <span class="story">as a content author/developer</span> can do</li>
+	</ol>
+
+	<div class="slide centre middle bkg desert" data-pause>
+		<p class=story>The main motivation for this talk is that&hellip;</p>
+		<figure>
+			<blockquote>
+				<p>Fear is the mind-killer.</p>
+			</blockquote>
+			<p>Frank Herbert, <cite>Dune</cite></p>
+		</figure>
+	</div>
+
+	<div class="slide centre middle">
+		<p class=story>This is particularly true when lost of us think about web accessibility.</p>
+		<p class=slides>Web Accessibility</p>
+	</div>
+
+	<div class="slide centre middle">
+		<p class=story>Thinking about web accessibility often leads quite quickly to thinking about assistive technologies,
+			or &quot;AT&quot; for short. And, of course, one of the most well-known assistive technologies is the screen
+			reader&hellip;</p>
+		<p class=slides>Assistive technologies</p>
+	</div>
+
+	<div class="slide centre middle no-padding">
+		<img src="images/Terminator-salvation-poster.jpg"
+			alt="Poster for the film Terminator: Salvation, depicting an angry-looking humanoid 'terminator' robot toting a big multi-barrelled gun.">
+		<p class=story>This is a picture of a Terminator, not a screen reader&mdash;but it accurately summarises how we feel
+			when booting up a
+			screen reader for the first time, and trying to make sense of what it's saying. However, there is hope, becuase,
+			as several people through the ages have observed&hellip;</p>
+		<p class=story>However, as many people have observed over the years, knowledge is power&mdash;and not only this, but
+			as
+			developers, you <em>already have</em> the knowledge you need to
+			make sense of accessibility. I hope to show you this during the rest of this talk.</p>
+	</div>
+
+	<div class="slide middle centre">
+		<p data-pause><span class=story>All that being said, it's super-important to bear in mind that this is a very
+				focused story. We'll use a screen reader during this talk but, in practice, </span>
+			<span><span class=slides>A</span><span class=story>a</span> <strong>range</strong> of accessibility
+				<strong>barriers</strong> exist</span><span>, and a
+				<strong>range</strong> of <strong>assistive
+					technologies (ATs)</strong> are available to address them.</span>
+		</p>
+	</div>
+
+	<div class="slide centre middle">
+		<!-- <span>⬅</span> -->
+		<p class=story>And <em>even more importantly</em>, please bear in mind that this talk is mainly aimed at helping
+			developers understand how accessibility works technically. In practice, it's <em>vital</em> to consider
+			accessibility from the inception of a project, and at all stages&mdash;exactly as <a
+				href="https://londonwebstandards.org/talks/shift-left-on-accessibility/">Geri has
+				outlined in her talk
+				on &quot;shifting left&quot;</a>.</p>
+		<img src="images/traffic-sign-160686_1280.png" alt="Left-pointing road-sign-style arrow">
+	</div>
+
+	<h2 class="slide middle centre">1. Accessibility speedrun</h2>
+
+	<div class="slide middle centre">
+		<p class=story>What do you think this form is about? This one doesn't have any visible labels, so it can be hard to
+			tell. This is a visual analogue of how someone who can't see the screen might experience the form if it's not
+			labelled properly.</p>
+		<figure class="example">
+			<figcaption>
+				<p>Example 1a</p>
+			</figcaption>
+			<div class="gird22">
+				<label>&nbsp;</label>
+				<input>
+				<label>&nbsp;</label>
+				<input>
+			</div>
+			<p class="right"><button><span class="invisible">Log in</span></button></p>
+		</figure>
+		<!-- FIXME: had to add the following <p> becuase rules for the .slide-part <div>s are affected when there's an extra element (such as the <p> on the next slide that follows the <figure>) - even if it's only a story-mode element. -->
+		<p class=story>Let's check out what this might be like with correctly-associated labels&hellip;</p>
+	</div>
+
+	<div class="slide middle centre">
+		<p class=story>If you guessed that it's a log-in form, you'd be right. This one uses standard HTML means to
+			associate visible labels with the controls. But if we <kbd>Tab</kbd> around this when running a screen reader, we
+			find that the button isn't announced as expected&hellip;</p>
+		<!-- NOTE: Repeated below -->
+		<figure class="example">
+			<figcaption>
+				<p>Example 1b</p>
+			</figcaption>
+			<div class="gird22">
+				<label for="user-1b">Username:</label>
+				<input id="user-1b">
+				<label for="pass-1b">Password:</label>
+				<input id="pass-1b" type="password">
+			</div>
+			<p class="right"><button type="submit" aria-label="Sign in">Log in</button></p>
+		</figure>
+		<p class=story>So, how can we ensure that the UI and content we build is accessible?</p>
+	</div>
+
+	<h3 class="slide middle centre">
+		How do we make things accessible?
+	</h3>
+
+	<div class="slide middle centre">
+		<p>Don't make them inaccessible.</p>
+		<p class=story>It sounds flippant, but there's a lot of truth in this advice&mdash;the web platform gives us many
+			ways to easily ensure that our content <em>is</em> accessible, for example:</p>
+	</div>
+
+	<div class="slide middle centre">
+		<p class=story>Providing labels for buttons:</p>
+		<code>&lt;button&gt;<mark>Send</mark>&lt;/button&gt;</code>
+	</div>
+
+	<div class="slide middle">
+		<p class=story>Associating labels with input controls:</p>
+		<pre><code>&lt;label for="<mark>pass</mark>"&gt;<mark>Password:</mark>&lt;/label&gt;
+&lt;input  id="<mark>pass</mark>" type="password"&gt;</code></pre>
+	</div>
+
+	<div class="slide middle centre">
+		<p class=story>Providing a heading hierarchy:</p>
+		<p><code>&lt;h1&gt;</code></p>
+		<p><code>&lt;h2&gt;</code></p>
+		<p><code>&lt;h3&gt;</code></p>
+		<p><code>&hellip;</code></p>
+	</div>
+
+	<div class="slide middle centre">
+		<p class=story>Indicating the nature of the regions of the page (we'll talk a bit more about the accessibility
+			benefits of these elements towards the end of the presentation):</p>
+		<p><code>&lt;main&gt;</code></p>
+		<p><code>&lt;nav&gt;</code></p>
+		<p><code>&hellip;</code></p>
+	</div>
+
+	<h3 class="slide middle centre hyowger">
+		<span class=story>But what makes these standard elements accessible</span>?
+	</h3>
+
+	<div class="slide middle centre">
+		<p><span class=story>&hellip;and what if you want to make your own custom element, a
+			</span><code>&lt;my-super-widget&gt;</code><span class=story>? How do you make that accesible?</p>
+	</div>
+
+	<div class="slide middle centre">
+		<div class=story>
+			<p>One primary example of things you can't do (yet) with standard HTML is putting images inside of a
+				<code>&lt;select&gt;</code> element. This is a common ask from developers, but requires a custom element,
+				because the standard one doesn't provide this functionality.
+			</p>
+			<p>Well the good news is that the Open UI project is working on making things like this a reality&mdash;check out
+				their site for more info!</p>
+		</div>
+		<figure>
+			<img src="images/selectlist-usecase-rich.png"
+				alt="Example of a custom select-like widget that displays country flags next to country names">
+			<div data-pause>
+				<figcaption>
+					<p><a href="https://open-ui.org/components/customizableselect/#rich-content-in-options">Open UI Customizable
+							Select</a>
+					</p>
+				</figcaption>
+			</div>
+		</figure>
+		<p class=story>But, getting back to the main topic&hellip;</p>
+	</div>
+
+	<!-- TODO: layout changes when going fullscreen/not on Firefox at least -->
+	<h3 class="slide middle centre">
+		How do we make things not&nbsp;inaccessible?
+	</h3>
+
+	<div class="slide middle centre">
+		<p>
+			<span class=story>We can use the W3C's </span>
+			<span class="bottom"><strong>W</strong>eb <strong>C</strong>ontent</span>
+			<br class="slides">
+			<span class="top"><strong>A</strong>ccessibility <strong>G</strong>uidelines</span>
+			<span class=story>. They contain a lot of technical checkpoints, but they're grouped into four numbered sections,
+				under four fundamental and pretty relatable principles. If you make sure your content is all of these things,
+				then it'll be accessible to a range of people, across
+				devices, browsers, and assistive technologies:</span>
+		</p>
+	</div>
+
+	<div class="slide middle position-centre">
+		<ol data-pause class=wcag>
+			<li>
+				<p><strong>P</strong>erceivable<span class=story>&mdash;in order to be able to get anything out of it, the user
+						has to be able to take it in.</span></p>
+			</li>
+			<li>
+				<p><strong>O</strong>perable<span class=story>&mdash;it must be possible to interact with the content.</span>
+				</p>
+			</li>
+			<li>
+				<p><strong>U</strong>nderstandable<span class=story>&mdash;content is only useful if it makes sense to the
+						person browsing it.</span></p>
+			</li>
+			<li>
+				<p><strong>R</strong>obust<span class=story>&mdash;people could be using a range of browsers, assistive
+						technologies, and/or devices to access the content, and it needs to work across these.</p>
+			</li>
+		</ol>
+	</div>
+
+	<div class="slide middle centre">
+		<p class=story>For detailed information on <em>how</em> to actually do this, consult the WCAG Quick Reference (which
+			actually provides links to a lot of great, deep info).</p>
+
+		<figure>
+			<img class="padded" src="images/wcag-quick-ref.png" alt="How to Meet WCAG (Quick Reference)">
+			<figcaption class=big>
+				<a href="https://www.w3.org/WAI/WCAG22/quickref/">w3.org/WAI/WCAG22/quickref/</a>
+			</figcaption>
+		</figure>
+
+		<p class=story>But again, how come following these guidelines actually <em>works</em>? We'll expand upon this later,
+			but to start understanding this, we need
+			to consider how web content is usually delivered to the user. We can think of a simple flow of content, from the
+			server to the user, via the browser:</p>
+	</div>
+
+	<div class="slide middle centre horizontal no-padding" data-split data-pause>
+		<p>Content</p>
+		<p>Browser<br class="slides">(User Agent)</p>
+		<p>User</p>
+	</div>
+
+	<div class="slide middle centre horizontal no-padding" data-split data-pause>
+		<p class=story>When someone's using an assistive technology, then conceptually we can see it as part of the browser.
+			The browser <em>exposes</em> certain relevant info to the assistive technology, which then <em>renders</em> that
+			info in an appropriate way for the user.</p>
+		<p>Content</p>
+		<p>Browser<br class="slides">(User Agent)</p>
+		<p>Assistive technology (AT)</p>
+		<p>User</p>
+
+		<div class=story>
+			<p>In addition, the user may provide input to the web app/content <em>via</em> the assistive technology
+				(e.g. via speech recognition, instead of typing). In this case, the web app/content still recieves the input it
+				was expecting (e.g. text) in a standard way, via OS APIs, and the standard textbox control and events in the
+				browser, and doesn't (and ideally <em>shouldn't</em>) know how the text was input.</p>
+			<p>So, how does this exposing of info actually work? Where does the info come from, and how can we understand, and
+				debug it?</p>
+		</div>
+	</div>
+
+	<h2 class="slide middle centre">2. Accessibility in terms you know</h2>
+
+	<div class="slide middle centre no-padding" data-pause data-split>
+		<div class=story>
+			<p>As a developer, you already understand the fundamentals of how this process works, because you work with the
+				following every day&hellip;</p>
+			<ul>
+				<li>
+					<p>Tree data structures</p>
+				</li>
+				<li>
+					<p>The idea of objects that have properties</p>
+				</li>
+				<li>
+					<p>Orders of precedence</p>
+				</li>
+			</ul>
+			<p>We'll explore each of these next.</p>
+		</div>
+		<span class="slides hyowge">🌲</span>
+		<span class="slides">objects &amp; properties</span>
+		<span class="slides hyowge">&gt;</span>
+	</div>
+
+	<h3 class="slide middle centre">The accessibility tree</h3>
+
+	<div class="slide middle centre">
+		<div class=story>
+			<p>Let's consider a simple page, with a figure and a button. The figure has some alternative text, and the button might, in some frameworks, end up being wrapped in multiple layers of <code>&lt;div&gt;</code>s, creating the infamous &quot;<code>&lt;div&gt;</code> soup&quot; effect. If you inspect this page in the DevTools DOM panel, you get a representation of the living DOM tree in memory. It looks like HTML, but it's live and you (and your scripts) can do anything with it.</p>
+			<p>But what sort of info is important to assistive technologies? Definitely similar stuff: the order or structure; some of the types of elements (the semantic ones); and things like content alternatives for images, for example. Some other stuff isn't so important&mdash;the semantically-neutral <code>&lt;div&gt;</code> soup could be losslessly stripped out, for example.</p>
+			<p>If you activate the accessibility tree view in the DevTools, you'll find something similar to the DOM, but pared back in some ways (and maybe quite detailed in others). The accessibility tree provides the subset of the DOM tree that is relevant to assistive technologies, and it is the thing that assistive technologies can query in order to do their job of both presenting the content in the appropriate way for the user, and in some cases to help the user navigate about the page.</p>
+		</div>
+		<figure class="example">
+			<figcaption>
+				<p>Example 2</p>
+			</figcaption>
+			<div class="aperture-science-cake-container">
+				<img src="images/rainbow-cake.jpg" alt="Cake">
+			</div>
+			<div class="aperture-science-super-duper-panel">
+				<div class="aperture-science-1500mw-supercoliding-superbutton-container-wrapper">
+					<div class="aperture-science-1500mw-supercoliding-superbutton-container">
+						<button type=button class="aperture-science-1500mw-supercoliding-superbutton">
+							Light candle
+						</button>
+					</div>
+				</div>
+			</div>
+		</figure>
+	</div>
+
+	<h3 class="slide middle centre">Objects &amp; properties</h3>
+
+	<!-- FIXME data-pause on slide includes a stop for the story-mode element; oops. -->
+	<div class="slide middle centre">
+		<p class=story>When the browser loads the page into memory, and creates the Document Object Model (DOM) tree, it
+			brings each HTML element to life&mdash;perhaps as some kind of content, or perhaps as an interactive control. The
+			&quot;living&quot; DOM tree elements (or even some parts of them) can be thought of as objects. Depending on the
+			source element, the corresponding DOM tree node object may have a number of different properties. For example, an
+			image has a source, and an anchor (link)
+			has a
+			destination.
+		<p>
+		<div data-pause>
+			<p><code>&lt;a <mark>href</mark>="&hellip;"&gt;<mark>ACME Home Page</mark>&lt;/a&gt;</code></p>
+			<p><code>&lt;img <mark>src</mark>="&hellip;" <mark>alt</mark>="ACME"&gt</code></p>
+		</div>
+	</div>
+
+	<div class="slide middle position-centre" data-pause>
+		<p class=story>From an accessibility perspective, the important properties that any element may have are:</p>
+		<dl class=properties data-pause>
+			<dt><strong>Name</strong></dt>
+			<dd>what's it called?</dd>
+			<dt><strong>Description</strong></dt>
+			<dd>ancillary info</dd>
+			<dt><strong>Role</strong></dt>
+			<dd>what does it do?</dd>
+			<dt><strong>State</strong></dt>
+			<dd>what's been done to it?</dd>
+			<dt><strong>Value</strong></dt>
+			<dd>input from the user</dd>
+		</dl>
+		<p class=story>We'll explore some examples of these next. Not every type of property is applicable to every type of
+			element. Also, in some cases, the way to make something accessible is actually to provide a different,
+			alternative, version of it&mdash;we'll see an example of this, too. Also, for simplicity, we'll discount some
+			elements have a standard <code>disabled</code> property set, as this is one you have probably come across
+			before&mdash;but it, too, does have an impact on accessibility and usability, because if an element is
+			<code>disabled</code>, it is not possible to interact with it.
+		</p>
+	</div>
+
+	<div class="slide middle centre objects">
+		<div class=story>
+			<h4>Buttons</h4>
+		</div>
+		<button id="release-the-hounds">Release the hounds</button>
+		<output id="hound-alert">&nbsp;</output>
+		<dl class=story>
+			<dt><strong>Name</strong></dt>
+			<dd>Release the hounds</dd>
+			<dt><strong>Description</strong></dt>
+			<dd>(not set)</dd>
+			<dt><strong>Role</strong></dt>
+			<dd>Button</dd>
+			<dt><strong>State</strong></dt>
+			<dd>(not applicable)</dd>
+			<dt><strong>Value</strong></dt>
+			<dd>(not applicable)</dd>
+		</dl>
+	</div>
+
+	<div class="slide middle centre objects">
+		<div class=story>
+			<h4>Textboxes</h4>
+		</div>
+		<input type="text" value="text in a box">
+		<dl class=story>
+			<dt><strong>Name</strong></dt>
+			<dd>(not set&mdash;very naughty!)</dd>
+			<dt><strong>Description</strong></dt>
+			<dd>(not set)</dd>
+			<dt><strong>Role</strong></dt>
+			<dd>Textbox</dd>
+			<dt><strong>State</strong></dt>
+			<dd>(not applicable)</dd>
+			<dt><strong>Value (when example is loaded)</strong></dt>
+			<dd>text in a box</dd>
+		</dl>
+		<p class=story>If we were to use the DevTools to add a <code>&lt;label&gt;</code> element that is associated with
+			the textbox, then it <em>would</em> have an accessible name, and be providing all the required info for the user,
+			via any assistive technology they may be using.</p>
+	</div>
+
+	<div class="slide middle centre objects">
+		<div class=story>
+			<h4>Checkboxes</h4>
+		</div>
+		<input type="checkbox" checked>
+		<dl class=story>
+			<dt><strong>Name</strong></dt>
+			<dd>(not set&mdash;very naughty!)</dd>
+			<dt><strong>Description</strong></dt>
+			<dd>(not set)</dd>
+			<dt><strong>Role</strong></dt>
+			<dd>Checkbox</dd>
+			<dt><strong>State</strong></dt>
+			<dd>(not applicable)</dd>
+			<dt><strong>Value (when example is loaded)</strong></dt>
+			<dd>checked</dd>
+		</dl>
+	</div>
+
+	<div class="slide middle centre objects">
+		<div class=story>
+			<h4>Images</h4>
+		</div>
+		<img class="padded width-25 story-size-thing" src="images/samsung-internet.svg" alt="Samsung Internet Browser">
+		<dl class=story>
+			<dt><strong>Name (from <code>alt</code> attribute value)</strong></dt>
+			<dd>Samsung Internet Browser</dd>
+			<dt><strong>Description</strong></dt>
+			<dd>(not set)</dd>
+			<dt><strong>Role</strong></dt>
+			<dd>Image</dd>
+			<dt><strong>State</strong></dt>
+			<dd>(not applicable)</dd>
+			<dt><strong>Value</strong></dt>
+			<dd>(not applicable)</dd>
+		</dl>
+	</div>
+
+	<div class="slide middle centre" data-pause>
+		<div class=story>
+			<h4>Bringing it together</h4>
+		</div>
+		<p><span class=story>The above examples pratically demonstrate why the best practices, that you already follow, and that we discussed earlier actually work: </span><strong>Standard HTML elements expose these properties for you.</strong></p>
+		<p data-pause><span>Though sometimes you need to provide appropriate attribute <strong>values</strong>, <span>or
+					<strong>alternative
+						content</strong><span class=story>, you get all the accessibility info exposed, and all the keyboard, touch, and any other input handling, for free with standard HTML elements</span>.</span></span></p>
+	</div>
+
+	<div class="slide middle centre" data-pause>
+		<p><span class=story>The converse is also true. </span>If you're making <strong>custom widgets</strong>, you need to <strong>provide all of this
+				information&hellip;</strong></p>
+		<p><strong>&hellip;and the behaviour&hellip;</strong></p>
+		<p><strong>&hellip;(including keyboard handling)&hellip;</strong></p>
+		<p><strong>&hellip;and the styling!</strong></p>
+	</div>
+
+	<div class="slide middle centre" data-pause>
+		<p class=story>You can ensure the correct information is exposed via the following attributes.</p>
+		<p><code>role</code></p>
+		<p><code>aria-</code>*</p>
+		<p>
+			<span class=story>You may've seen these attributes before. They come from a W3C specification called</span>
+			<span class="bottom"><strong>A</strong>ccessible <strong>R</strong>ich</span>
+			<br class="slides">
+			<span class="top"><strong>I</strong>nternet <strong>A</strong>pplications</span><span class=story>. This gives you
+				the mechanism for providing these important properties to elements that don't automatically expose them, and
+				explains the rules around doing so.
+		</p>
+	</div>
+
+	<div class="slide middle centre">
+		<p class=story>The ARIA spec can be challenging to dive in to, as it's meant for both browser engine implementors as
+			well as developers. You can find some clear, practical examples across a range of widget types in the ARIA
+			Authoring Practices Guide (APG).</p>
+
+		<figure>
+			<img class="padded" src="images/aria-apg.jpeg" alt="ARIA Authoring Practices Guide (APG) home page">
+			<figcaption class=big>
+				<a href="https://www.w3.org/WAI/ARIA/apg/">https://www.w3.org/WAI/ARIA/apg/</a>
+			</figcaption>
+		</figure>
+
+		<p class=story>However it's vital to understand that all the ARIA markup does is expose the <em>accessibility
+				info</em>&mdash;it doesn't
+			affect the behaviour or styling&mdash;that's still all down to you.</p>
+	</div>
+
+	<h3 class="slide middle centre">Order of precedence</h3>
+
+	<div class="slide middle centre">
+		<div class=story>
+			<p>Orders of precedence come up a lot in computing, and you have most likely come accross them before. The next example shows how we might improve the labelling of buttons in a table, and also demonstrates the effect of the order of precedence we use to calculate an element's accessible name.</p>
+			<p>This table represents a shopping basket with some items in it. The buttons at the end of each row are for deleting that item from the basket. They are standard HTML button elements, labelled by a unicode &quot;wastebasket&quot; character&mdash;which is announced correctly as &quot;wastebasket&quote; by screen readers. Also, if you <kbd>Tab</kbd> around the table, moving between rows will cause most screen readers to announce the row header (if semantically provided) before the name of the button, so you'd hear something like &quot;Pineapple Wastebasket button&quot; and &quot;Ironing board Wastebasket button&quot; as you <kbd>Tab</kbd> into and through the table.</p>
+		</div>
+		<figure class="example">
+			<figcaption>
+				<p>Example 3</p>
+			</figcaption>
+			<table>
+				<thead>
+					<tr>
+						<th>Item</th>
+						<th>Quantity</th>
+						<th>Price</th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<th id="item-1">Pineapple</th>
+						<td>42</td>
+						<td>£111.30</td>
+						<td><button id="remove-1" type="button" class="remove"><span>&#x01f5d1;</span></button></td>
+					</tr>
+					<tr>
+						<th id="item-2">Ironing board</th>
+						<td>1</td>
+						<td>£10.59</td>
+						<td><button id="remove-2" type="button" class="remove"><span>&#x01f5d1;</span></button></td>
+					</tr>
+				</tbody>
+			</table>
+		</figure>
+		<div class=story>
+			<p>This behaviour is quite helpful already, but we can improve it. One way that people using screen readers navigate is to bring up a list of controls, such as a list of buttons, on the page. In this case, having the buttons labelled just &quot;wastebasket&quot; isn't very helpful. Also the idea of a bin meaning &quot;delete&quot; may be clear to some, but it's quite a visual metaphor, and may not be clear to everyone (visually-browsing or otherwise).</p>
+			<p>So the first thing we could do is to inspect the <code>&lt;button&gt;</code> elements, and see indeed that their accessible names come from their contents: the Unicode &quot;wastebasket&quot; character.</p>
+			<p>We could then override this by supplying each <code>&lt;button&gt;</code> element with an <code>aria-label="Remove"</code> attribute that gives it an invisible accessible name of &quot;Remove&quot;, which would be announced by a screen reader. In fact, if you inspect the <code>&lt;button&gt;</code> now, you will see that the previous name (the wastebasket character) has been superceded by the <code>aria-label</code> value. This is becuase <code>aria-label</code> has higher precedence in the accessible name calculation than the contents of the element.</p>
+			<p>But we've just made the names clearer&mdash;we've not solved the ambiguity problem: they're all just going to be called &quot;Remove&quot; now instead.</p>
+			<p>We can solve this by employing two neat tricks; one of which we just used:</p>
+			<ul>
+				<li><p>We can override the accessible name of the button again, by using the highest-precedence <code>aria-labelledby</code> attribute&mdash;which takes the IDs of the elements whose contents should form our buttons' accessible names, rather than a text string that directly <em>is</em> intended to be the accessible name.</p></li>
+				<li><p>We can make that <code>aria-labelledby</code> attribute value self-referencing&mdash;so it uses the button's current name (from its existing <code>aria-label</code> attribute <em>in conjunction with the table's row header</em>).</p></li>
+			</ul>
+			<p>Sounds complicated, but it's as simple as just adding another attribute to the <code>&lt;button&gt;</code> element: <code>aria-labelledby="remove-1 item-1"</code> for example. Check it out and you'll see the effect in the accessibility inspector, and in a screen reader. Voilà: bringing up a list of buttons (if you do the same thing to the other one!) will clearly show which button does what.</p>
+		</div>
+	</div>
+
+	<div class="slide middle centre">
+		<div class=story>
+			<p>We can now understand what was going wonky in the first example, where the visually-apparent &quot;Log in&quot; button was being announced as &quot;Sign in&quot;: this was becuase an <code>aria-label</code> attribute had been set to override the text within the <code>&lt;button&gt;</code> element. You might think this is a contrived example&mdash;and, technically, this one is, because I made it on purpose&mdash;but this sort of thing happens <em>loads</em> in the wild; partly becuase many frameworks get a bit over-the-top about setting attributes like <code>aria-label</code>.</p>
+		</div>
+		<figure class="example">
+			<figcaption>
+				<p>Example 1b</p>
+			</figcaption>
+			<div class="gird22">
+				<label for="user-1bx">Username:</label>
+				<input id="user-1bx">
+				<label for="pass-1bx">Password:</label>
+				<input id="pass-1bx" type="password">
+			</div>
+			<p class="right"><button aria-label="Sign in">Log in</button></p>
+		</figure>
+		<div class=story>
+			<p>Frameworks do this in an effort to be helpful, no doubt, but as the saying goes: &quot;ot of sight, out of mind&quot; and this is especially true if you're not aware that your framework is doing this, nor the huge impact doing this could have if&mdash;or rather when, inevitably&mdash;the two competing &quot;labels&quot; go out of synch.</p>
+			<p>This is why it's such good practice to:</p>
+			<ul>
+				<li><p>Try to keep all important text visible on the page, for everyone. Don't make things <em>just</em> for people you think are using some sort of assistive technology (quite often this leads to wrong assumptions of all kinds, as helpfully as it may be intended).</p></li>
+				<li><p>If you <em>must</em> provide an invisible accessible name, like in the table example above, which referenced the row header: again, try to use <code>aria-labelledby</code> to ensure that the association is made to another <em>visible</em> element on the page, to avoid repetition, and synchronisation issues in future. Or, at the least, be sure that your framework or back-end code is architected in a clean, <a href="https://en.wikipedia.org/wiki/Don%27t_repeat_yourself">&quot;don't repeat yourself&quot;</a> manner.</p></li>
+			</ul>
+		</div>
+	</div>
+
+	<h2 class="slide middle centre">3. Practical tools</h2>
+
+	<div class="slide middle centre hyowger">
+		<p class=story>We've already been using a hugely important one: your browser's DevTools. You'll already be familiar
+			with them, but perhaps you've now seen some parts of them that you have not used much before. Whilst the DevTools
+			are extremely helpful, there are some more fundamental tools you probably have, and you've probably already done
+			some accessibility inspection with them, without knowing it&hellip;</p>
+		<span class=slides>🐁</span>
+		<div class=story>
+			<h3>The mouse</h3>
+			<p>You can do a lot of casual debugging, as we've seen, with the mouse.</p>
+		</div>
+	</div>
+
+	<div class="slide middle">
+		<p class=story>Here we see an example of the sort of info in a pop-up that you can get when using the DevTools inspector, and hovering over an element. You can get information on the element's role, state, and other interactivity properties and even the contrast ratio between text foreground and background.</p>
+		<img src="images/inspector-hover.png"
+			alt="Screengrab of a DevTools pop-up that appears over an element when inspecting it in the page, via the mouse. The pop-up shows us info about the element such as its name and role, and contrast ratio (and whether this is WCAG-compliant or not).">
+	</div>
+
+	<div class="slide middle">
+		<div class=story>
+			<p>Also, you can do some spot-checking that can tell you if a visually apparent label is likely associated with a form control. As we discussed before, you know it's best practice to use a <code>&lt;label&gt;</code> element, and make the association semantically. That causes the accessible name of the form control to be set for you. It also makes the visible label act as a larger click, or touch, area for toggling checkboxes, or focusing textboxes. This makes it a lot easier for many of us to use.</p>
+			<p>In the example below, the same visually-apparent label is present next to each checkbox, but the second one is correctly associated in this way.</p>
+		</div>
+		<figure class="example">
+			<figcaption>
+				<p>Example 4</p>
+			</figcaption>
+			<div class=centre>
+				<p><input type=checkbox> Agree to terms and conditions</p>
+				<p><label><input type=checkbox> Agree to terms and conditions</label></p>
+			</div>
+		</figure>
+		<div class=story>
+			<p>Now, it's true that the techniques for manually providing accessibility info that we've discussed <em>could</em> be used in both of these examples to counter-intuitive effects&hellip;</p>
+			<p>It's possible to use an <code>aria-labelledby</code> attribute to link the non-<code>&lt;label&gt;</code> visible text programmatically to the first checkbox&mdash;but whilst that <em>would</em> give the first checkbox a suitable accessible name, it wouldn't bring the advantage of the larger click/touch target.</p>
+			<p>It's also possible to take the second, correctly-associated example, and explicitly set an <code>aria-label</code> attribute on the checkbox&mdash;that would override the accessible name, so it may no longer match the visible <code>&lt;label&gt;</code>, but the larger click/touch target behaviour would be preserved.</p>
+			<p>Both of those cases demonstrate the need for more than just spot checks, but you can get a good impression of the level of consideration of accessibility that went into a site or app by making checks like this.</p>
+		</div>
+	</div>
+
+	<div class="slide middle centre hyowger">
+		<span class=slides>⌨️</span>
+		<div class=story>
+			<h4>The keyboard</h4>
+			<p>This is where it gets interesting; you can oftne highlight a wide range of accessibility barriers posed by a
+				site or app by interacting with it via the keyboard. This is because a lot of assistive technologies (the interaction side of them, at least) either emulate, or <em>are</em> some kind of keyboard (e.g. for inputting text that was recognised from the user's speech).</p>
+		</div>
+	</div>
+
+	<div class="slide middle centre">
+		<p class=story>In this example, a thing that looks like a button is provided in between the text box and the link, but it only looks like a button when you use the mouse: if you use the keyboard, you find that it's not really a button at all!</p>
+		<figure class="example">
+			<figcaption>
+				<p>Example 5</p>
+			</figcaption>
+			<!-- TODO: w/o br, input is on separate line in non-fullscreen mode -->
+			<!-- TODO: Why does .centre here not get moved up, but does on the <figure>? -->
+			<div class="centre">
+				<p><label>Email address:<br><input type="text"></label></p>
+				<p><span class="custom-btn">Sign in with access code</span></p>
+				<p><a href="javascript:void;">Terms and conditions</a></p>
+			</div>
+		</figure>
+		<p class=story>Another way that using the keyboard can help you find accessibility barriers is that it can highlight (maybe that's the wrong word) situations in which your focus indication is poor or lacking. Try using a site or app with the keyboard alone, and see if you can always be clear as to &quot;where you are&quot; on the page.</p>
+	</div>
+
+	<h2 class="slide middle centre">Browser limitations</h2>
+
+	<div class="slide middle centre" data-pause>
+		<div class=story>
+			<p>The DevTools are awesome, but there are some things browsers don't show you&mdash;or at least don't show you in
+				much detail (yet).</p>
+			<p>For example,
+				there are a set of HTML elements that automatically create invisible regions of the page, called
+				&quot;landmark
+				regions&quot;. These landmarks provide a broad overview of the content on the page, and thus can be really
+				helpful for
+				people using assistive technologies, because they can help users do things like skip over the navigation links,
+				straight to the main content, or otherwise quickly access the part of the page they're after. Check out my <a
+					href="https://matatk.agrip.org.uk/talks/2020/landmarks/">a11yTO talk on Landmarks</a> for more info. Anyway,
+				those elements are:</p>
+		</div>
+
+		<ul class=no-number>
+			<li><code>&lt;aside&gt;</code></li>
+			<li><code>&lt;footer&gt;</code></li>
+			<li><code>&lt;header&gt;</code></li>
+			<li><code>&lt;main&gt;</code></li>
+			<li><code>&lt;nav&gt;</code></li>
+			<li><code>&lt;section&gt;</code></li>
+		</ul>
+
+		<div class=story>
+			<p>Whilst DevTools does show you the role that an element is exposing, there's currently no way to highlight
+				landmarks visually (for debugging), nor is there a way to bring up a tree of landmarks on the page. Such
+				debugging tools would be helpful, because some elements only form landmark regions if they're given accessible
+				names, or in other circumstances.</p>
+			<p>It's also of note that browsers don't currently expose landmark regions to keyboard users who are <em>not</em>
+				using some sort of assistive technology, which would also be pretty cool, but that's outside the scope of
+				DevTools.</p>
+			<p>To acheive all of the above today, you can use extensions&mdash;which could become part of the browser, as well
+				as part of the DevTools, in future.
+			</p>
+		</div>
+	</div>
+
+	<div class="slide middle centre">
+		<figure>
+			<img src="images/firefox-4.png"
+				alt="Screengrab of the Landmarks extension, showing the DevTools panel that gives you the ability to inspect the landmarks tree, and highlights potential accessibility problems, such as multiple unlabelled landmarks having the same role.">
+			<figcaption>
+				<a href="https://matatk.agrip.org.uk/landmarks/">Landmarks browser extension</a>
+			</figcaption>
+		</figure>
+	</div>
+
+	<h2 class="slide middle centre">The bigger picture</h2>
+
+	<div class="slide centre middle">
+		<img src="images/traffic-sign-160686_1280.png" alt="Left-pointing road-sign-style arrow">
+		<div class=story>
+			<p>Remember that it's <em>vital</em> to consider
+			accessibility from the inception of a project, and at all stages&mdash;exactly as <a
+				href="https://londonwebstandards.org/talks/shift-left-on-accessibility/">Geri has
+				outlined in her talk
+				on &quot;shifting left&quot;</a>.</p>
+			<p>Please listen to Geri's story; it's great! But, brutally briefly, a couple of ways to think about accessibility in design include&hellip;</p>
+			<ul>
+				<li>
+					<p>As a designer, think about the heading hierarchy and landmark structure of your pages.</p>
+				</li>
+				<li>
+					<p>Also think about what the keyboard interaction would be with any interactive widget.</p>
+				</li>
+			</ul>
+			<p>In addition, it's really important to&hellip;</p>
+		</div>
+	</div>
+
+	<ul class="slide middle centre" data-pause data-split>
+		<li>
+			<p>Prefer using standard HTML elements.</p>
+		</li>
+		<li>
+			<p>Have real people test your work.</p>
+		</li>
+		<li>
+			<p>Experiment with stuff in the DevTools!</p>
+	</ul>
+
+	<div class="slide centre middle no-padding">
+		<p class=story>I hope that this has enabled you to see that you can already grok accessibility. Maybe the scary
+			robot&hellip;</p>
+		<img src="images/Terminator-salvation-poster.jpg"
+			alt="Poster for the film Terminator: Salvation, depicting an angry-looking humanoid 'terminator' robot toting a big multi-barrelled gun.">
+	</div>
+
+	<div class="slide centre middle no-padding">
+		<p class=story>&hellip;might start to sound a bit more friendly 😊.</p>
+		<img src="images/the-wild-robot-poster.jpg"
+			alt="Poster for the film The Wild Robot, depicting a gentle robot named Roz delicately holding in her hand a small bird that she has adopted.">
+	</div>
+
+	<div class="slide centre" data-split="75% 25%">
+		<h2 class="bottom">Thanks for <span class=slides>listening</span><span class=story>reading</span></h2>
+		<div></div>
+		<p class="story">If you have any questions, please <a href="https://front-end.social/@matatk">contact me on Mastadon</a>.</p>
+	</div>
+
+	<div class="slide smaller">
+		<h2>Image acknowledgements</h2>
+		<ul>
+			<li><a href="https://commons.wikimedia.org/wiki/File:W3C%C2%AE_Icon.svg">W3C Logo, by W3C</a></li>
+			<li><a href="https://commons.wikimedia.org/wiki/File:Samsung_Internet_logo_(2025).png">Samsung Internet Logo, by
+					Samsung</a></li>
+			<li><a href="https://pixabay.com/vectors/desert-nature-landscape-sand-dunes-6189007/">Desert, by LilyED</a></li>
+			<li><a href="https://en.wikipedia.org/wiki/File:Terminator-salvation-poster.jpg">Terminator: Salvation poster, by
+					Warner Bros</a>
+			</li>
+			<li><a href="https://pixabay.com/vectors/traffic-sign-turn-left-left-sign-160686/">Left sign, by
+					OpenClipart-Vectors</a></li>
+			<li><a href="https://pixabay.com/sound-effects/dog-bark-type-04-293288/">Dog bark, by RibhavAgrawal</a>
+			<li><a href="https://pixabay.com/photos/date-of-birth-cake-cute-cakes-2901945/">Rainbow cake, by
+					SZimmermann_DE</a></li>
+			<li><a href="https://www.dreamworks.com/movies/the-wild-robot">The Wild Robot poster, by DreamWorks</a>
+			</li>
+		</ul>
+	</div>
+
+	<script src="story-slides.js" data-no-overflow-check></script>
+	<script>
+		const buttyWuttons = document.querySelectorAll('.custom-btn');
+		for (const customButton of buttyWuttons) {
+			customButton.addEventListener('click', () => alert('Signing in...'));
+		}
+
+		document.getElementById('release-the-hounds').addEventListener('click', function () {
+			const button = this;
+			const houndAlert = document.getElementById('hound-alert');
+			button.disabled = true;
+			houndAlert.append('Hounds released!');
+			new Audio('dog-bark-type-04-293288.mp3').play();
+			setTimeout(() => {
+				houndAlert.replaceChildren('\u00a0');
+				button.disabled = false
+			}, 2e3)
+		});
+	</script>
+</body>
+
+</html>

@@ -1,0 +1,80 @@
+/* Use this file to declare rules that apply to story and slides modes */
+@media screen {
+	:root {
+		--scaled-image-px-to-percent: 16;
+		/* px per 1% of container width */
+		color-scheme: dark light;
+	}
+
+	input,
+	button {
+		font-size: inherit;
+	}
+
+	input[type="checkbox"] {
+		width: 0.75em;
+		height: 0.75em;
+	}
+
+	input[type="number"] {
+		width: 2em;
+	}
+
+	figure.example {
+		outline: 0.1em solid orange;
+		text-align: left;
+		padding: 0.5em;
+		padding-block-start: 0;
+	}
+
+	figure.example figcaption {
+		font-weight: bold;
+		position: relative;
+		color: orange;
+		margin-bottom: 0.5em;
+	}
+
+	figure>blockquote+p:before {
+		content: "\2014";
+	}
+
+	.gird22 {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 0.5em;
+		margin-bottom: 0.5em;
+	}
+
+	.custom-btn {
+		outline: 0.1em dashed currentColor;
+		padding: 0.25em;
+		border-radius: 0.5em;
+		cursor: grab;
+	}
+
+	.custom-btn:hover {
+		background-color: var(--text-colour);
+		color: var(--background-colour);
+	}
+
+	.invisible {
+		visibility: hidden;
+	}
+
+	.aperture-science-1500mw-supercoliding-superbutton-container {
+		margin: 0.5em;
+		text-align: center;
+	}
+
+	.aperture-science-1500mw-supercoliding-superbutton {
+		border-image: linear-gradient(42deg, red, orange, yellow, green, blue, indigo, violet) 1;
+		font-weight: 900;
+		color: white;
+	}
+
+	.aperture-science-1500mw-supercoliding-superbutton:hover,
+	.aperture-science-1500mw-supercoliding-superbutton:focus {
+		background-image: linear-gradient(42deg, red, orange, yellow, green, blue, indigo, violet);
+		color: black;
+	}
+}

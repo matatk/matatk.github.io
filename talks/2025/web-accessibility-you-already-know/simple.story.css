@@ -1,0 +1,144 @@
+/*
+
+Story Slides
+
+Copyright © 2019-2022 Matthew Tylee Atkinson
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+*/
+
+/*
+ * Simple theme
+ * Story mode (and introduction screen)
+ *
+ * FIXME: update docs
+ * FIXME: print styles
+ */
+
+@media screen {
+	:root {
+		--body-width: 45rem;  /* Used in multiple places in the theme */
+	}
+}
+
+html {
+	font-family: Georgia, serif;
+	font-size: 1.5rem;
+	line-height: 1.5;
+}
+
+body {
+	width: var(--body-width);
+	max-width: calc(100% - 1em);
+	margin: auto;
+	margin-bottom: 1em;
+
+	/* To fix the horizontal scrolling caused by wide images and tables - seems
+	 * hacky but is also the way the pros are doing it... */
+	overflow-x: hidden;
+}
+
+/* Images are sized to be drawn as widely as possible. Their heights are then
+ * capped so that tall images fit on the screen vertically. */
+img {
+	display: block;
+	width: 100%;
+	max-height: 98vh;
+	object-fit: contain;
+}
+
+/* If you have an image that's really wide and you want it to be able to break
+ * out from the body column, this is the class for you!
+ *
+ * All tables will be rendered "wide" by default (this will only be visually
+ * apparent if they're naturally wider than the body column).
+ *
+ * TODO: doc table wrapper part in the tutorial?
+ * TODO: open the wide class to other elements?
+ *
+ * HT https://gomakethings.com/how-to-break-an-image-out-of-its-parent-container-with-css/
+ * HT https://css-tricks.com/full-width-containers-limited-width-parents/
+ */
+img.wide,
+.table-wrapper {
+	left: 50%;
+	margin-left: -50vw;
+	margin-right: -50vw;
+	max-width: 100vw;
+	position: relative;
+	right: 50%;
+	width: 100vw;
+}
+
+/* This class allows an image to be rendered at its full height—even if that
+ * will be taller than the viewport. */
+img.tall { max-height: 100%; }
+
+/* FIXME: doc */
+img.really-inline,
+img.natural-size {
+	display: inline;
+	width: calc((var(--width-px) / var(--scaled-image-px-to-percent)) * (var(--body-width) / 100));
+}
+
+/* FIXME: doc */
+img.natural-size:not(.really-inline) { vertical-align: middle; }
+
+figcaption { text-align: center; }
+
+img + figcaption,
+figcaption + img { margin-top: 0.5em; }
+
+/* TODO: wide class for iframes? */
+iframe {
+	width: 100%;
+	height: calc(var(--body-width) / (16 / 9));
+}
+
+pre { overflow: scroll; }
+
+@media print {
+	/* By default, make images 'not too big' */
+	img {
+		/* FIXME: removed: max-height: var(  rendered width); */
+		display: block;
+		width: 40%;
+		object-fit: contain;
+		margin: auto;
+	}
+
+	/* Not sure how to centre <iframe>s */
+	iframe {
+		width: 50%;
+		height: calc(50% / (16 / 9));
+	}
+}
+
+/*
+ * Extras that apply when printed too
+ */
+
+figcaption a { overflow-wrap: break-word; }
+
+/* Thanks https://fvsch.com/object-fit-decoration/ :-) */
+img.border { filter: drop-shadow(0 0 0.1em var(--text-colour, var(--text-color))); }
+
+dt,
+summary { font-weight: bold; }

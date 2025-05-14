@@ -1,0 +1,18 @@
+:root {
+	--text-colour: #333;
+	--background-colour: white;
+	--accent-colour: #007bbb;
+}
+
+@media screen and (prefers-color-scheme: dark) {
+	:root {
+		--text-colour: #ddd;
+		--background-colour: #222;
+		--accent-colour: deepskyblue;
+	}
+
+	a { color: #8f8fff; }
+	a:visited { color: #ff8fff; }
+
+	.story-size-thing { height: 4rem; }
+}

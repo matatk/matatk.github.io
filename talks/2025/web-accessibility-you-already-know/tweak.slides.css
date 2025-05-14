@@ -1,0 +1,113 @@
+/* You can use "colour" or "colour" (and, in the slides, "centre" or "center") */
+@media screen {
+	:root {
+		/* Base colours */
+		--text-colour: white;
+		--background-colour: hsl(0, 0%, 0%);
+		--accent-colour: springgreen;
+		--secondary-accent-colour: #7882FF;
+
+		/* Size and aspect ratio */
+		--slide-font-height-percent-of-slide: 8;
+		--slide-aspect-ratio: calc(16 / 9);
+
+		/* Gap around the slides */
+		--slide-padding-vertical: 0.25rem;
+		--slide-padding-horizontal: 1rem;
+
+		font-family: "Open Sans";
+	}
+
+	ol.wcag {
+		counter-reset: wcag;
+	}
+
+	ol.wcag li {
+		list-style: none;
+		counter-increment: wcag;
+	}
+
+	ol.wcag li::marker {
+		font-size: 0.5em;
+		content: counter(wcag) "  ";
+		font-weight: normal;
+		color: var(--text-colour, var(--text-color));
+	}
+
+	.much-smaller {
+		font-size: 0.6rem;
+	}
+
+	.smaller {
+		font-size: 0.8rem;
+	}
+
+	.big {
+		font-size: 1.2rem;
+	}
+
+	.hyowge {
+		font-size: 2rem;
+	}
+
+	.hyowger {
+		font-size: 4rem;
+	}
+
+	.slide.desert {
+		background-image: url('images/desert-6189007_1920.png');
+		background-size: cover;
+	}
+
+	.slide.bkg figure {
+		background-color: var(--background-colour);
+		opacity: 0.7;
+		/* FIXME: find a neat way to do background only */
+		width: auto;
+		padding: 0.25em 0.75em;
+	}
+
+	.slide.bkg blockquote {
+		margin: 0;
+	}
+
+	blockquote+p {
+		font-size: 0.75em;
+	}
+
+	.part-odd a {
+		color: var(--background-colour);
+	}
+
+	.part-odd a:focus,
+	.part-odd a:hover {
+		outline-color: var(--background-colour);
+	}
+
+	ul.slide,
+	ul.no-number {
+		list-style: none;
+	}
+
+	ul.slide,
+	ol.slide {
+		padding: 0;
+	}
+
+	ol.slide li::marker {
+		font-weight: bold;
+	}
+
+	.slide.objects {
+		gap: 1rem;
+	}
+
+	dl.properties {
+		display: grid;
+		grid-template-columns: auto auto;
+	}
+
+	dl.properties dt {
+		text-align: right;
+	}
+}
